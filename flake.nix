@@ -15,6 +15,7 @@
             (python313.withPackages (pypkgs: with pypkgs; [
               django
               djangorestframework
+              drf-spectacular
             ]))
           ];
         };
