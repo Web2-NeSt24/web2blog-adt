@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.base import post_save
+from django.dispatch import receiver
 
 class Image(models.Model):
     class ImageType(models.TextChoices):
@@ -19,7 +21,13 @@ class Profile(models.Model):
     profile_picture = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return str(user)
+        return str(self.user)
+
+@receiver(post_save, sender=User)
+def create_user_profile(instance: User, created: bool, **_):
+    if created:
+        Profile(user=instance).save()
+
 
 class Hashtag(models.Model):
     value = models.TextField(unique=True)
