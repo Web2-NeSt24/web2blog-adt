@@ -1,1 +1,1 @@
-from . import image, auth
+from . import auth, image, profile
