@@ -1,12 +1,14 @@
 from io import BytesIO
 
 from django.http import FileResponse
+from drf_spectacular.utils import extend_schema
 from rest_framework import views
 from rest_framework.decorators import api_view
 
 from blog_api import models
 
 
+@extend_schema(responses={ 200: None, 404: None })
 @api_view(["GET"])
 def image(_request: views.Request, id: int):
     try:

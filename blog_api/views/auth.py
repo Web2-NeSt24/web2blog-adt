@@ -7,7 +7,7 @@ from blog_api import models
 from blog_api.serializers import CredentialsSerializer
 
 
-@extend_schema(request=CredentialsSerializer)
+@extend_schema(request=CredentialsSerializer, responses={ 200: None, 400: None, 409: None })
 @api_view(["POST"])
 def register(request: views.Request):
     serializer = CredentialsSerializer(data=request.data)
@@ -34,7 +34,7 @@ def register(request: views.Request):
     return views.Response(f"Created user {user.id}")
             
 
-@extend_schema(request=CredentialsSerializer)
+@extend_schema(request=CredentialsSerializer, responses={ 200: None, 403: None })
 @api_view(["POST"])
 def login(request: views.Request):
     serializer = CredentialsSerializer(data=request.data)
