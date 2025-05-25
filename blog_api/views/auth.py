@@ -1,6 +1,6 @@
 from django.contrib import auth
 from drf_spectacular.utils import extend_schema
-from rest_framework import views
+from rest_framework import status, views
 from rest_framework.decorators import api_view
 
 from blog_api import models
@@ -20,12 +20,12 @@ def register(request: views.Request):
     if not username.isalnum():
         return views.Response({
             "error": "Username must be alphanumeric"
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     
     if models.User.objects.filter(username=username).exists():
         return views.Response({
             "error": "User already exists"
-        })
+        }, status=status.HTTP_409_CONFLICT)
 
     user = models.User.objects.create_user(username=username, password=password)
 
@@ -51,6 +51,6 @@ def login(request: views.Request):
     else:
         return views.Response({
             "error": "Invalid credentials",
-        })
+        }, status=status.HTTP_403_FORBIDDEN)
 
 
