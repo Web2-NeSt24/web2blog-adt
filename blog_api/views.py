@@ -8,14 +8,14 @@ from rest_framework.decorators import api_view
 from blog_api import models
 from blog_api.serializers import CredentialsSerializer
 
-class ImageView(views.APIView):
-    def get(self, _request: views.Request, id: int):
-        try:
-            image: models.Image = models.Image.objects.get(pk=id)
-        except models.Image.DoesNotExist:
-            return views.Response(status=views.status.HTTP_404_NOT_FOUND)
+@api_view(["GET"])
+def image(_request: views.Request, id: int):
+    try:
+        image: models.Image = models.Image.objects.get(pk=id)
+    except models.Image.DoesNotExist:
+        return views.Response(status=views.status.HTTP_404_NOT_FOUND)
 
-        return FileResponse(BytesIO(image.data), content_type=f"image/{image.type}")
+    return FileResponse(BytesIO(image.data), content_type=f"image/{image.type}")
 
 @extend_schema(request=CredentialsSerializer)
 @api_view(["POST"])
@@ -62,4 +62,5 @@ def login(request: views.Request):
         return views.Response({
             "error": "Invalid credentials",
         })
+
 
