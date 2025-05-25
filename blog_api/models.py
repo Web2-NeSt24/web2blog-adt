@@ -36,11 +36,11 @@ class Hashtag(models.Model):
         return f"#{self.value}"
 
 class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     title = models.TextField(blank=False)
     content = models.TextField(blank=True)
     image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL)
     tags = models.ManyToManyField(Hashtag, blank=True)
 
     def __str__(self):
-        return f"Post(author={self.author}, title={self.title})"
+        return f"Post(profile={self.profile}, title={self.title})"
