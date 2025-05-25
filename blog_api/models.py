@@ -17,8 +17,8 @@ class Image(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    biography = models.TextField()
-    profile_picture = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
+    biography = models.TextField(blank=True)
+    profile_picture = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.user)
@@ -37,10 +37,10 @@ class Hashtag(models.Model):
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.TextField()
-    content = models.TextField()
-    image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
-    tags = models.ManyToManyField(Hashtag)
+    title = models.TextField(blank=False)
+    content = models.TextField(blank=True)
+    image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Hashtag, blank=True)
 
     def __str__(self):
         return f"Post(author={self.author}, title={self.title})"
