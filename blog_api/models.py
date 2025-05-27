@@ -41,6 +41,35 @@ class Post(models.Model):
     content = models.TextField(blank=True)
     image = models.ForeignKey(Image, null=True, blank=True, on_delete=models.SET_NULL)
     tags = models.ManyToManyField(Hashtag, blank=True)
+    draft = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Post(profile={self.profile}, title={self.title})"
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    content = models.TextField()
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    liker_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            "post_id",
+            "liker_profile_id",
+            name="blog_api_unique_like"
+        )]
+
+class Bookmark(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    creator_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            "post_id",
+            "creator_profile_id",
+            name="blog_api_unique_bookmark"
+        )]
+
