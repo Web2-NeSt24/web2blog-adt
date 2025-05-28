@@ -27,3 +27,17 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         model = models.Profile
         fields = ["biography", "profile_picture_id"]
 
+class PostSerializer(serializers.ModelSerializer):
+    profile = ProfileSerialzier()
+    tags = serializers.SlugRelatedField(slug_field="value", read_only=True, many=True)
+
+    class Meta:
+        model = models.Post
+        fields = ["id", "profile", "title", "content", "image", "tags"]
+
+class PostUpdateSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(child=serializers.CharField())
+
+    class Meta:
+        model = models.Post
+        fields = ["title", "content", "image", "tags"]

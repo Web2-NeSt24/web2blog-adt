@@ -9,4 +9,5 @@ urlpatterns = [
     path("user/by-id/<int:user_id>/profile", views.profile.ProfileView.as_view()),
     path("user/by-name/<str:username>/profile", views.profile.username_profile_view),
     path("user/me/profile", views.profile.me_profile_view),
+    path("post/by-id/<int:post_id>", views.post.PostView.as_view()),
 ]
