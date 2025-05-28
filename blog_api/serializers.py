@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username"]
 
 
-class ProfileSerialzier(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     post_ids = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source="post_set")
 

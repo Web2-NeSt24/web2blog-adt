@@ -8,11 +8,11 @@ from blog_api import models, serializers
 class ProfileView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(responses={ 200: serializers.ProfileSerialzier, 404: None })
+    @extend_schema(responses={ 200: serializers.ProfileSerializer, 404: None })
     def get(self, _request: views.Request, user_id: int):
         try:
             profile = models.User.objects.get(pk=user_id).profile
-            serializer = serializers.ProfileSerialzier(profile)
+            serializer = serializers.ProfileSerializer(profile)
             return views.Response(serializer.data)
         except models.User.DoesNotExist:
             return views.Response({
