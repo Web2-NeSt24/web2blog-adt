@@ -28,7 +28,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         fields = ["biography", "profile_picture"]
 
 class PostSerializer(serializers.ModelSerializer):
-    profile = ProfileSerialzier()
+    profile = ProfileSerializer()
     tags = serializers.SlugRelatedField(slug_field="value", read_only=True, many=True)
 
     class Meta:
