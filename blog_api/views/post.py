@@ -48,3 +48,20 @@ class PostView(views.APIView):
         post.save()
 
         return views.Response()
+
+    def delete(self, request: views.Request, post_id: int):
+        try:
+            post = models.Post.objects.get(pk=post_id)
+        except models.Post.DoesNotExist:
+            return views.Response({
+                "error": "Post does not exist"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user.id != post.profile.user.id:
+            return views.Response({
+                "error": "You can only delete your own posts"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        post.delete()
+
+        return views.Response()
