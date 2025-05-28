@@ -20,12 +20,12 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Profile
-        fields = ["user", "biography", "profile_picture_id", "post_ids"]
+        fields = ["user", "biography", "profile_picture", "post_ids"]
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
-        fields = ["biography", "profile_picture_id"]
+        fields = ["biography", "profile_picture"]
 
 
 class CommentSerializer(serializers.ModelSerializer):
