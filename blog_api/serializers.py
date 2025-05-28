@@ -40,3 +40,17 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         model = models.Comment
         fields = ["content"]
 
+class PostSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+    tags = serializers.SlugRelatedField(slug_field="value", read_only=True, many=True)
+
+    class Meta:
+        model = models.Post
+        fields = ["id", "profile", "title", "content", "image", "tags"]
+
+class PostUpdateSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(child=serializers.CharField())
+
+    class Meta:
+        model = models.Post
+        fields = ["title", "content", "image", "tags"]
