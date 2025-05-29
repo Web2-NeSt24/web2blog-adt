@@ -6,7 +6,7 @@ from rest_framework import status
 class AuthenticationTests(TestCase):
     
     def setUp(self):
-        """Set up test data"""
+        """Test Data"""
         self.register_url = "/api/auth/register"
         self.login_url = "/api/auth/login"
         self.valid_credentials = {
