@@ -10,6 +10,7 @@ class CredentialsSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -24,6 +25,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = models.Profile
         fields = ["user", "biography", "profile_picture", "post_ids"]
 
+
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
@@ -32,6 +34,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     author_profile = ProfileSerializer(read_only=True)
+
     class Meta:
         model = models.Comment
         fields = ["id", "post", "author_profile", "content"]
@@ -51,6 +54,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = models.Post
         fields = ["id", "profile", "title", "content", "image", "tags"]
 
+
 class PostUpdateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(child=serializers.CharField())
 
@@ -58,12 +62,36 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         model = models.Post
         fields = ["title", "content", "image", "tags"]
 
+class BookmarkSerializer(serializers.ModelSerializer):
+    post = PostSerializer(read_only=True)
+    creator_profile = ProfileSerializer(read_only=True)
+
+    class Meta:
+        model = models.Bookmark
+        fields = ["id", "post", "creator_profile", "title"]
+
+
+class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Bookmark
+        fields = ["title"]
+
+
+class BookmarkStatusSerializer(serializers.Serializer):
+    bookmarked = serializers.BooleanField()
+
+
+class LikeStatusSerializer(serializers.Serializer):
+    liked = serializers.BooleanField()
+
+
 class DraftSerializer(serializers.ModelSerializer):
     draft_post_id = serializers.IntegerField(source="id")
 
     class Meta:
         model = models.Post
         fields = ["draft_post_id"]
+
 
 class ProfileDraftsSerializer(serializers.ModelSerializer):
     draft_post_ids = serializers.SerializerMethodField()

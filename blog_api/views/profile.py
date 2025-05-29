@@ -70,7 +70,7 @@ def me_profile_view(request: views.Request):
     methods=['PUT'],
     request=serializers.ProfileUpdateSerializer,
     responses={ 
-        200: None,  # PUT returns no data
+        200: None,
         403: None,
         404: None 
     }

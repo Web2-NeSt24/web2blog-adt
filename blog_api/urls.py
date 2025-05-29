@@ -12,5 +12,9 @@ urlpatterns = [
     path("post/by-id/<int:post_id>", views.post.PostView.as_view()),
     path("post/<int:post_id>/comments/", views.comment.CommentView.as_view()),  # GET (list), POST (create)
     path("comments/<int:comment_id>/", views.comment.CommentInstanceView.as_view()),  # PATCH (edit), DELETE (delete)
+    path("post/<int:post_id>/bookmark/", views.bookmark.BookmarkPostView.as_view()),  # POST (create bookmark)
+    path("bookmarks/", views.bookmark.BookmarkListView.as_view()),  # GET (list all bookmarks)
+    path("bookmarks/<int:bookmark_id>/", views.bookmark.BookmarkInstanceView.as_view()),  # PATCH (edit), DELETE (delete)
+    path("post/<int:post_id>/like/", views.like.LikeView.as_view()),  # POST (like), GET (check like status)
     path("drafts/", views.draft.DraftsView.as_view()),
 ]
