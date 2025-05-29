@@ -37,13 +37,44 @@ class ProfileView(views.APIView):
         return views.Response()
 
 
-@extend_schema(responses={ 200: None, 401: None })
+@extend_schema(
+    methods=['GET'],
+    responses={ 
+        200: serializers.ProfileSerializer,
+        401: None, 
+        404: None 
+    }
+)
+@extend_schema(
+    methods=['PUT'],
+    request=serializers.ProfileUpdateSerializer,
+    responses={ 
+        200: None, 
+        401: None, 
+        403: None 
+    }
+)
 @api_view(ProfileView().allowed_methods)
 @permission_classes([permissions.IsAuthenticated])
 def me_profile_view(request: views.Request):
     return ProfileView.as_view()(request._request, user_id=request.user.id)
 
-@extend_schema(responses={ 200: None, 404: None })
+@extend_schema(
+    methods=['GET'],
+    responses={ 
+        200: serializers.ProfileSerializer, 
+        404: None 
+    }
+)
+@extend_schema(
+    methods=['PUT'],
+    request=serializers.ProfileUpdateSerializer,
+    responses={ 
+        200: None,  # PUT returns no data
+        403: None,
+        404: None 
+    }
+)
 @api_view(ProfileView().allowed_methods)
 def username_profile_view(request: views.Request, username: str):
     try:
