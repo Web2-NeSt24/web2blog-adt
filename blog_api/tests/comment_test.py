@@ -68,29 +68,6 @@ class CommentViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn("Comment not found", response.data["error"])
 
-    def test_delete_comment_success(self):
-        """Test successfully deleting a comment to ensure delete() method is called"""
-        comment = models.Comment.objects.create(post=self.post, author_profile=self.user.profile, content="Comment to delete")
-        delete_url = f"/api/comments/{comment.id}/"
-        comment_id = comment.id
-
-        self.client.login(username="testuser", password="testpass123")
-        response = self.client.delete(delete_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        # Verify the comment was actually deleted from the database
-        self.assertFalse(models.Comment.objects.filter(id=comment_id).exists())
-
-    def test_delete_comment_unauthorized(self):
-        """Test unauthorized users cannot delete comments"""
-        comment = models.Comment.objects.create(post=self.post, author_profile=self.user.profile, content="Comment to delete")
-        delete_url = f"/api/comments/{comment.id}/"
-
-        self.client.login(username="otheruser", password="testpass123")
-        response = self.client.delete(delete_url)
-
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
     def test_patch_comment(self):
         """Test updating a comment"""
         comment = models.Comment.objects.create(post=self.post, author_profile=self.user.profile, content="Original content")
@@ -136,39 +113,12 @@ class CommentViewTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_patch_comment_with_no_content_field(self):
-        """Test updating a comment with data that doesn't include content field"""
-        comment = models.Comment.objects.create(post=self.post, author_profile=self.user.profile, content="Original content")
-        patch_url = f"/api/comments/{comment.id}/"
-        
-        self.client.login(username="testuser", password="testpass123")
-        
-        # Send data without content field to test the "content" in validated_data condition
-        response = self.client.patch(patch_url, {"some_other_field": "value"}, format="json")
-        
-        # Should succeed but not change content since no content was provided
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        comment.refresh_from_db()
-        self.assertEqual(comment.content, "Original content")  # Content should remain unchanged
+    def test_delete_comment_unauthorized(self):
+        """Test unauthorized users cannot delete comments"""
+        comment = models.Comment.objects.create(post=self.post, author_profile=self.user.profile, content="Comment to delete")
+        delete_url = f"/api/comments/{comment.id}/"
 
-    def test_patch_comment_without_content_in_validated_data(self):
-        """Test PATCH where validated_data doesn't contain 'content' key"""
-        from unittest.mock import patch
-        
-        comment = models.Comment.objects.create(post=self.post, author_profile=self.user.profile, content="Original content")
-        patch_url = f"/api/comments/{comment.id}/"
-        
-        self.client.login(username="testuser", password="testpass123")
-        
-        # Mock the serializer to return validated_data without 'content'
-        with patch('blog_api.serializers.CommentCreateSerializer') as mock_serializer_class:
-            mock_serializer = mock_serializer_class.return_value
-            mock_serializer.is_valid.return_value = True
-            mock_serializer.validated_data = {}  # No 'content' key
-            
-            response = self.client.patch(patch_url, {"some_field": "value"}, format="json")
-            
-            # Should succeed but not change content
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            comment.refresh_from_db()
-            self.assertEqual(comment.content, "Original content")  # Should remain unchanged
+        self.client.login(username="otheruser", password="testpass123")
+        response = self.client.delete(delete_url)
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

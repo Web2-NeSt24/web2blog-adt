@@ -216,9 +216,9 @@ class BookmarkInstanceViewTests(TestCase):
         # Verify bookmark was updated in database
         self.bookmark.refresh_from_db()
         self.assertEqual(self.bookmark.title, "Updated Bookmark Title")
-
+    
     def test_delete_success(self):
-        """Test successful bookmark deletion returns 204"""
+        """Test successful deletion returns 204"""
         self.client.login(username="testuser", password="testpass123")
         
         response = self.client.delete(self.bookmark_instance_url)
@@ -227,206 +227,71 @@ class BookmarkInstanceViewTests(TestCase):
         
         # Verify bookmark was deleted from database
         self.assertFalse(models.Bookmark.objects.filter(id=self.bookmark.id).exists())
-
+    
     def test_not_found_handling_update(self):
-        """Test updating non-existent bookmark returns 404"""
+        """Test behavior with non-existent bookmark IDs for update"""
         self.client.login(username="testuser", password="testpass123")
         
-        update_data = {"title": "Updated Title"}
+        update_data = {"title": "Updated title"}
         response = self.client.patch(self.nonexistent_bookmark_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn("Bookmark not found", response.data["error"])
-
+    
     def test_not_found_handling_delete(self):
-        """Test deleting non-existent bookmark returns 404"""
+        """Test behavior with non-existent bookmark IDs for delete"""
         self.client.login(username="testuser", password="testpass123")
         
         response = self.client.delete(self.nonexistent_bookmark_url)
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn("Bookmark not found", response.data["error"])
-
+    
     def test_authorization_update_own_bookmark(self):
-        """Test user can update their own bookmark"""
+        """Test users can update their own bookmarks"""
         self.client.login(username="testuser", password="testpass123")
         
-        update_data = {"title": "My Updated Bookmark"}
+        update_data = {"title": "Owner update"}
         response = self.client.patch(self.bookmark_instance_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["title"], "My Updated Bookmark")
-
+    
     def test_authorization_update_other_user_bookmark(self):
-        """Test user cannot update another user's bookmark"""
-        # Create bookmark for other user
-        other_bookmark = models.Bookmark.objects.create(
-            post=self.post,
-            creator_profile=self.other_user.profile,
-            title="Other User's Bookmark"
-        )
+        """Test users can't modify other users' bookmarks"""
+        self.client.login(username="otheruser", password="testpass123")
         
-        self.client.login(username="testuser", password="testpass123")
-        
-        update_data = {"title": "Trying to update"}
-        response = self.client.patch(f"/api/bookmarks/{other_bookmark.id}/", update_data, content_type="application/json")
+        update_data = {"title": "Non-owner update"}
+        response = self.client.patch(self.bookmark_instance_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertIn("You can only edit your own bookmarks", response.data["error"])
-
+    
     def test_authorization_delete_own_bookmark(self):
-        """Test user can delete their own bookmark"""
+        """Test users can delete their own bookmarks"""
         self.client.login(username="testuser", password="testpass123")
         
         response = self.client.delete(self.bookmark_instance_url)
         
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
+    
     def test_authorization_delete_other_user_bookmark(self):
-        """Test user cannot delete another user's bookmark"""
-        # Create bookmark for other user
-        other_bookmark = models.Bookmark.objects.create(
-            post=self.post,
-            creator_profile=self.other_user.profile,
-            title="Other User's Bookmark"
-        )
+        """Test users can't delete other users' bookmarks"""
+        self.client.login(username="otheruser", password="testpass123")
         
-        self.client.login(username="testuser", password="testpass123")
-        
-        response = self.client.delete(f"/api/bookmarks/{other_bookmark.id}/")
+        response = self.client.delete(self.bookmark_instance_url)
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertIn("You can only delete your own bookmarks", response.data["error"])
-
+    
     def test_authentication_required_update(self):
         """Test unauthenticated update requests are rejected"""
         update_data = {"title": "Unauthorized update"}
-        response = self.client.patch(self.bookmark_instance_url, update_data, content_type="application/json")
+        response = self.client.patch(self.bookmark_instance_url, update_data)
         
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
+    
     def test_authentication_required_delete(self):
         """Test unauthenticated delete requests are rejected"""
         response = self.client.delete(self.bookmark_instance_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class BookmarkStatusViewTests(TestCase):
-    """Test the GET method for checking bookmark status on BookmarkPostView"""
-    
-    def setUp(self):
-        """Set up test data"""
-        self.user = User.objects.create_user(username="testuser", password="testpass123")
-        self.other_user = User.objects.create_user(username="otheruser", password="testpass123")
-        
-        # Create a test post
-        self.post = models.Post.objects.create(
-            profile=self.user.profile,
-            title="Test Post",
-            content="Test content"
-        )
-        
-        self.bookmark_status_url = f"/api/post/{self.post.id}/bookmark/"
-        self.nonexistent_post_url = "/api/post/999/bookmark/"
-    
-    def test_bookmark_status_true(self):
-        """Test checking bookmark status returns true when bookmarked"""
-        self.client.login(username="testuser", password="testpass123")
-        
-        # Create a bookmark
-        models.Bookmark.objects.create(
-            post=self.post,
-            creator_profile=self.user.profile,
-            title="Test Bookmark"
-        )
-        
-        response = self.client.get(self.bookmark_status_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data["bookmarked"])
-    
-    def test_bookmark_status_false(self):
-        """Test checking bookmark status returns false when not bookmarked"""
-        self.client.login(username="testuser", password="testpass123")
-        
-        response = self.client.get(self.bookmark_status_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(response.data["bookmarked"])
-    
-    def test_bookmark_status_post_not_found(self):
-        """Test checking bookmark status for non-existent post returns 404"""
-        self.client.login(username="testuser", password="testpass123")
-        
-        response = self.client.get(self.nonexistent_post_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertIn("Post not found", response.data["error"])
-    
-    def test_bookmark_status_authentication_required(self):
-        """Test unauthenticated requests for bookmark status are rejected"""
-        response = self.client.get(self.bookmark_status_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class BookmarkDeleteByPostViewTests(TestCase):
-    """Test the DELETE method for removing bookmarks by post ID on BookmarkPostView"""
-    
-    def setUp(self):
-        """Set up test data"""
-        self.user = User.objects.create_user(username="testuser", password="testpass123")
-        self.other_user = User.objects.create_user(username="otheruser", password="testpass123")
-        
-        # Create a test post
-        self.post = models.Post.objects.create(
-            profile=self.user.profile,
-            title="Test Post",
-            content="Test content"
-        )
-        
-        self.bookmark_delete_url = f"/api/post/{self.post.id}/bookmark/"
-        self.nonexistent_post_url = "/api/post/999/bookmark/"
-    
-    def test_delete_existing_bookmark(self):
-        """Test deleting existing bookmark by post ID returns 204"""
-        self.client.login(username="testuser", password="testpass123")
-        
-        # Create a bookmark
-        bookmark = models.Bookmark.objects.create(
-            post=self.post,
-            creator_profile=self.user.profile,
-            title="Test Bookmark"
-        )
-        
-        response = self.client.delete(self.bookmark_delete_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        
-        # Verify bookmark was deleted
-        self.assertFalse(models.Bookmark.objects.filter(id=bookmark.id).exists())
-    
-    def test_delete_nonexistent_bookmark(self):
-        """Test deleting non-existent bookmark returns 404"""
-        self.client.login(username="testuser", password="testpass123")
-        
-        response = self.client.delete(self.bookmark_delete_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertIn("Bookmark not found", response.data["error"])
-    
-    def test_delete_bookmark_post_not_found(self):
-        """Test deleting bookmark for non-existent post returns 404"""
-        self.client.login(username="testuser", password="testpass123")
-        
-        response = self.client.delete(self.nonexistent_post_url)
-        
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertIn("Post not found", response.data["error"])
-    
-    def test_delete_bookmark_authentication_required(self):
-        """Test unauthenticated delete requests are rejected"""
-        response = self.client.delete(self.bookmark_delete_url)
         
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

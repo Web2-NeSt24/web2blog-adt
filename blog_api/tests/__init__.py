@@ -1,10 +1,10 @@
-from .auth_tests import AuthenticationTests
-from .bookmark_tests import BookmarkPostViewTests, BookmarkListViewTests, BookmarkInstanceViewTests
-from .comment_tests import CommentViewTests
-from .image_tests import ImageViewTests
-from .like_tests import LikeViewTests
-from .post_tests import PostViewTests
-from .profile_tests import ProfileViewTests, MeProfileViewTests, UsernameProfileViewTests
+from .auth_test import AuthenticationTests
+from .bookmark_test import BookmarkPostViewTests, BookmarkListViewTests, BookmarkInstanceViewTests
+from .comment_test import CommentViewTests
+from .image_test import ImageViewTests
+from .like_test import LikeViewTests
+from .post_test import PostViewTests
+from .profile_test import ProfileViewTests, MeProfileViewTests, UsernameProfileViewTests
 
 __all__ = [
     "AuthenticationTests",
