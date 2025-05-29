@@ -44,7 +44,8 @@ class Post(models.Model):
     draft = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Post(profile={self.profile}, title={self.title})"
+        name = "Draft" if self.draft else "Post"
+        return f"{name}(id={self.id}, profile={self.profile}, title={self.title})"
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

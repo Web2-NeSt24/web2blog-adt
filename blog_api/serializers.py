@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from blog_api import models
@@ -60,7 +62,6 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         model = models.Post
         fields = ["title", "content", "image", "tags"]
 
-
 class BookmarkSerializer(serializers.ModelSerializer):
     post = PostSerializer(read_only=True)
     creator_profile = ProfileSerializer(read_only=True)
@@ -82,3 +83,23 @@ class BookmarkStatusSerializer(serializers.Serializer):
 
 class LikeStatusSerializer(serializers.Serializer):
     liked = serializers.BooleanField()
+
+
+class DraftSerializer(serializers.ModelSerializer):
+    draft_post_id = serializers.IntegerField(source="id")
+
+    class Meta:
+        model = models.Post
+        fields = ["draft_post_id"]
+
+
+class ProfileDraftsSerializer(serializers.ModelSerializer):
+    draft_post_ids = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Profile
+        fields = ["draft_post_ids"]
+    
+    @extend_schema_field(list[int])
+    def get_draft_post_ids(self, profile):
+        return profile.post_set.filter(draft=True).values_list("id", flat=True).all()
