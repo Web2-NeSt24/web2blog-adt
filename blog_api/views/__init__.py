@@ -1,1 +1,1 @@
-from . import auth, bookmark, comment, image, post, profile
+from . import auth, bookmark, comment, draft, image, post, profile
