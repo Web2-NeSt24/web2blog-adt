@@ -40,7 +40,7 @@ class PostView(views.APIView):
             models.Hashtag.objects.get_or_create(value=tag)[0] 
             for tag in serializer.validated_data["tags"]
         ]
-
+        
         post.title = serializer.validated_data["title"]
         post.content = serializer.validated_data["content"]
         post.image = serializer.validated_data["image"]
@@ -49,6 +49,7 @@ class PostView(views.APIView):
 
         return views.Response()
 
+    @extend_schema(responses={ 200: None, 404: None, 403: None })
     def delete(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
