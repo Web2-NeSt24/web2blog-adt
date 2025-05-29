@@ -7,7 +7,7 @@ from blog_api import serializers
 class DraftsView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     
-    @extend_schema(responses={ 200: serializers.DraftSerializer })
+    @extend_schema(responses={ 201: serializers.DraftSerializer })
     def post(self, request: views.Request):
         draft = request.user.profile.post_set.create(profile=request.user.profile, title="", content="", image=None, draft=True)
         serializer = serializers.DraftSerializer(draft)
