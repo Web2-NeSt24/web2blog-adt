@@ -76,5 +76,9 @@ class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
         fields = ["title"]
 
 
+class BookmarkStatusSerializer(serializers.Serializer):
+    bookmarked = serializers.BooleanField()
+
+
 class LikeStatusSerializer(serializers.Serializer):
     liked = serializers.BooleanField()
