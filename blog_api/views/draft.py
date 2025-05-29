@@ -4,7 +4,6 @@ from rest_framework import permissions, status, views
 from blog_api import serializers
 
 
-
 class DraftsView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
     
@@ -18,6 +17,3 @@ class DraftsView(views.APIView):
     def get(self, request: views.Request):
         serializer = serializers.ProfileDraftsSerializer(request.user.profile)
         return views.Response(serializer.data)
-
-
-
