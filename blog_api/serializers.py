@@ -17,10 +17,6 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
-class ChangePasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField()
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -33,6 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
         fields = ["user", "biography", "profile_picture"]
+
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -93,3 +90,7 @@ class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bookmark
         fields = ["title"]
+
+
+class LikeStatusSerializer(serializers.Serializer):
+    liked = serializers.BooleanField()
