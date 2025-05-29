@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
+from django.test import TestCase
 from rest_framework import status
-from blog_api import models
 
 
-class AuthenticationTests(APITestCase):
+class AuthenticationTests(TestCase):
     
     def setUp(self):
         """Set up test data"""

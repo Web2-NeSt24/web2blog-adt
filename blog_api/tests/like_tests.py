@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
+from django.test import TestCase
 from rest_framework import status
 from blog_api import models
 
 
-class LikeViewTests(APITestCase):
+class LikeViewTests(TestCase):
     
     def setUp(self):
         """Set up test data"""
@@ -23,7 +23,7 @@ class LikeViewTests(APITestCase):
     
     def test_create_like(self):
         """Test liking a post returns 201"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.post(self.like_url)
         
@@ -35,7 +35,7 @@ class LikeViewTests(APITestCase):
     
     def test_toggle_like_unlike(self):
         """Test unliking a previously liked post returns 200"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         # First like the post
         models.Like.objects.create(post=self.post, liker_profile=self.user.profile)
@@ -50,7 +50,7 @@ class LikeViewTests(APITestCase):
     
     def test_check_liked_status_true(self):
         """Test correct response when post is liked"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         # Create a like
         models.Like.objects.create(post=self.post, liker_profile=self.user.profile)
@@ -62,7 +62,7 @@ class LikeViewTests(APITestCase):
     
     def test_check_liked_status_false(self):
         """Test correct response when post is not liked"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.get(self.like_url)
         
@@ -71,7 +71,7 @@ class LikeViewTests(APITestCase):
     
     def test_post_not_found_like(self):
         """Test behavior with non-existent post IDs for POST"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.post(self.nonexistent_post_url)
         
@@ -80,7 +80,7 @@ class LikeViewTests(APITestCase):
     
     def test_post_not_found_get(self):
         """Test behavior with non-existent post IDs for GET"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.get(self.nonexistent_post_url)
         
@@ -101,14 +101,14 @@ class LikeViewTests(APITestCase):
     
     def test_multiple_users_like_same_post(self):
         """Test multiple users can like the same post"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         # First user likes
         response = self.client.post(self.like_url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
         # Second user likes
-        self.client.force_authenticate(user=self.other_user)
+        self.client.login(username="otheruser", password="testpass123")
         response = self.client.post(self.like_url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
@@ -121,7 +121,7 @@ class LikeViewTests(APITestCase):
         models.Like.objects.create(post=self.post, liker_profile=self.user.profile)
         
         # User 2 checks like status
-        self.client.force_authenticate(user=self.other_user)
+        self.client.login(username="otheruser", password="testpass123")
         response = self.client.get(self.like_url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)

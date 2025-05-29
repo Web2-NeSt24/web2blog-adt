@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
+from django.test import TestCase
 from rest_framework import status
 from blog_api import models
 
 
-class BookmarkPostViewTests(APITestCase):
+class BookmarkPostViewTests(TestCase):
     
     def setUp(self):
         """Set up test data"""
@@ -23,7 +23,7 @@ class BookmarkPostViewTests(APITestCase):
     
     def test_successful_bookmark_creation(self):
         """Test creating a bookmark returns 201 and correct data"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         bookmark_data = {"title": "My Bookmark"}
         response = self.client.post(self.bookmark_url, bookmark_data)
@@ -40,7 +40,7 @@ class BookmarkPostViewTests(APITestCase):
     
     def test_bookmark_creation_empty_title(self):
         """Test creating bookmark with empty title"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         bookmark_data = {"title": ""}
         response = self.client.post(self.bookmark_url, bookmark_data)
@@ -50,7 +50,7 @@ class BookmarkPostViewTests(APITestCase):
     
     def test_bookmark_creation_no_title(self):
         """Test creating bookmark without title field"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.post(self.bookmark_url, {})
         
@@ -59,7 +59,7 @@ class BookmarkPostViewTests(APITestCase):
     
     def test_post_not_found(self):
         """Test attempting to bookmark non-existent post returns 404"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         bookmark_data = {"title": "Non-existent post bookmark"}
         response = self.client.post(self.nonexistent_post_url, bookmark_data)
@@ -69,7 +69,7 @@ class BookmarkPostViewTests(APITestCase):
     
     def test_duplicate_bookmark(self):
         """Test attempting to bookmark same post twice returns 409"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         # Create first bookmark
         models.Bookmark.objects.create(
@@ -93,7 +93,7 @@ class BookmarkPostViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class BookmarkListViewTests(APITestCase):
+class BookmarkListViewTests(TestCase):
     
     def setUp(self):
         """Set up test data"""
@@ -116,15 +116,15 @@ class BookmarkListViewTests(APITestCase):
     
     def test_list_retrieval(self):
         """Test all user bookmarks are returned"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         # Create bookmarks
-        bookmark1 = models.Bookmark.objects.create(
+        models.Bookmark.objects.create(
             post=self.post1,
             creator_profile=self.user.profile,
             title="Bookmark 1"
         )
-        bookmark2 = models.Bookmark.objects.create(
+        models.Bookmark.objects.create(
             post=self.post2,
             creator_profile=self.user.profile,
             title="Bookmark 2"
@@ -142,7 +142,7 @@ class BookmarkListViewTests(APITestCase):
     
     def test_empty_list(self):
         """Test behavior when user has no bookmarks"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.get(self.bookmarks_url)
         
@@ -171,7 +171,7 @@ class BookmarkListViewTests(APITestCase):
             title="Other user bookmark"
         )
         
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         response = self.client.get(self.bookmarks_url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -179,7 +179,7 @@ class BookmarkListViewTests(APITestCase):
         self.assertEqual(response.data[0]["title"], "User bookmark")
 
 
-class BookmarkInstanceViewTests(APITestCase):
+class BookmarkInstanceViewTests(TestCase):
     
     def setUp(self):
         """Set up test data"""
@@ -205,10 +205,10 @@ class BookmarkInstanceViewTests(APITestCase):
     
     def test_update_success(self):
         """Test successful title update returns 200 with updated data"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         update_data = {"title": "Updated Bookmark Title"}
-        response = self.client.patch(self.bookmark_instance_url, update_data)
+        response = self.client.patch(self.bookmark_instance_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], "Updated Bookmark Title")
@@ -219,7 +219,7 @@ class BookmarkInstanceViewTests(APITestCase):
     
     def test_delete_success(self):
         """Test successful deletion returns 204"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.delete(self.bookmark_instance_url)
         
@@ -230,17 +230,17 @@ class BookmarkInstanceViewTests(APITestCase):
     
     def test_not_found_handling_update(self):
         """Test behavior with non-existent bookmark IDs for update"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         update_data = {"title": "Updated title"}
-        response = self.client.patch(self.nonexistent_bookmark_url, update_data)
+        response = self.client.patch(self.nonexistent_bookmark_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn("Bookmark not found", response.data["error"])
     
     def test_not_found_handling_delete(self):
         """Test behavior with non-existent bookmark IDs for delete"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.delete(self.nonexistent_bookmark_url)
         
@@ -249,26 +249,26 @@ class BookmarkInstanceViewTests(APITestCase):
     
     def test_authorization_update_own_bookmark(self):
         """Test users can update their own bookmarks"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         update_data = {"title": "Owner update"}
-        response = self.client.patch(self.bookmark_instance_url, update_data)
+        response = self.client.patch(self.bookmark_instance_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     def test_authorization_update_other_user_bookmark(self):
         """Test users can't modify other users' bookmarks"""
-        self.client.force_authenticate(user=self.other_user)
+        self.client.login(username="otheruser", password="testpass123")
         
         update_data = {"title": "Non-owner update"}
-        response = self.client.patch(self.bookmark_instance_url, update_data)
+        response = self.client.patch(self.bookmark_instance_url, update_data, content_type="application/json")
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertIn("You can only edit your own bookmarks", response.data["error"])
     
     def test_authorization_delete_own_bookmark(self):
         """Test users can delete their own bookmarks"""
-        self.client.force_authenticate(user=self.user)
+        self.client.login(username="testuser", password="testpass123")
         
         response = self.client.delete(self.bookmark_instance_url)
         
@@ -276,7 +276,7 @@ class BookmarkInstanceViewTests(APITestCase):
     
     def test_authorization_delete_other_user_bookmark(self):
         """Test users can't delete other users' bookmarks"""
-        self.client.force_authenticate(user=self.other_user)
+        self.client.login(username="otheruser", password="testpass123")
         
         response = self.client.delete(self.bookmark_instance_url)
         
