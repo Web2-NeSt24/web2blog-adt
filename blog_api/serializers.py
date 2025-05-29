@@ -27,19 +27,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         model = models.Profile
         fields = ["biography", "profile_picture"]
 
-
-class CommentSerializer(serializers.ModelSerializer):
-    author_profile = ProfileSerializer(read_only=True)
-    class Meta:
-        model = models.Comment
-        fields = ["id", "post", "author_profile", "content"]
-
-
-class CommentCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Comment
-        fields = ["content"]
-
 class PostSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
     tags = serializers.SlugRelatedField(slug_field="value", read_only=True, many=True)
