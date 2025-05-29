@@ -52,7 +52,7 @@ class CommentInstanceView(views.APIView):
         serializer = serializers.CommentCreateSerializer(comment, data=request.data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
-        except serializers.ValidationError as e:
+        except drf_serializers.ValidationError as e:
             return views.Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
         if "content" in serializer.validated_data:
             comment.content = serializer.validated_data["content"]
