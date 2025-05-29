@@ -2,9 +2,9 @@ name: Django tests
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   test:
@@ -27,6 +27,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-django coverage
 
-      - name: Run pytest with coverage (fails < 99 %)
+      - name: Run pytest with coverage (fails < 95 %)
         run: |
           pytest --cov=blog_api --cov-report=xml --cov-report=term-missing --cov-fail-under=95
