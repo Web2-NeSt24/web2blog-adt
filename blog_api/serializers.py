@@ -55,3 +55,24 @@ class PostUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Post
         fields = ["title", "content", "image", "tags"]
+
+
+class BookmarkSerializer(serializers.ModelSerializer):
+    post = PostSerializer(read_only=True)
+    creator_profile = ProfileSerializer(read_only=True)
+
+    class Meta:
+        model = models.Bookmark
+        fields = ["id", "post", "creator_profile", "title"]
+
+
+class BookmarkCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Bookmark
+        fields = ["title"]
+
+
+class BookmarkUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Bookmark
+        fields = ["title"]

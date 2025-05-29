@@ -65,6 +65,7 @@ class Like(models.Model):
 class Bookmark(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     creator_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.TextField(blank=True)  
 
     class Meta:
         constraints = [models.UniqueConstraint(
