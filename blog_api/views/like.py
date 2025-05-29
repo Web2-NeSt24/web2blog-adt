@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
 from rest_framework import status, views, permissions
-from blog_api import models, serializers
+from blog_api import models
 
 class LikeView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -15,7 +15,7 @@ class LikeView(views.APIView):
             404: OpenApiResponse(description="Post not found")
         }
     )
-    def post(self, request: views.Request, post_id: int) -> views.Response:
+    def post(self, request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
@@ -32,15 +32,14 @@ class LikeView(views.APIView):
         description="Returns whether the authenticated user has liked the given post.",
         parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH)],
         responses={
-            200: serializers.LikeStatusSerializer,
+            200: OpenApiResponse(description='{{ "liked": true/false }}'),
             404: OpenApiResponse(description="Post not found")
         }
     )
-    def get(self, request: views.Request, post_id: int) -> views.Response:
+    def get(self, request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
             return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         exists = models.Like.objects.filter(post=post, liker_profile=request.user.profile).exists()
-        serializer = serializers.LikeStatusSerializer({"liked": exists})
-        return views.Response(serializer.data, status=status.HTTP_200_OK)
+        return views.Response({"liked": exists}, status=status.HTTP_200_OK)
