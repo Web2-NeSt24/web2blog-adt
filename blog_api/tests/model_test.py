@@ -32,5 +32,5 @@ class ModelStringRepresentationTests(TestCase):
             profile=self.user.profile,
             title="Test Post"
         )
-        expected = f"Post(profile={self.user.profile}, title=Test Post)"
+        expected = f"Post(id={post.id}, profile={self.user.profile}, title=Test Post)"
         self.assertEqual(str(post), expected)
