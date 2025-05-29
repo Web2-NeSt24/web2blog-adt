@@ -15,7 +15,7 @@ class LikeView(views.APIView):
             404: OpenApiResponse(description="Post not found")
         }
     )
-    def post(self, request, post_id: int):
+    def post(self, request: views.Request, post_id: int) -> views.Response:
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
@@ -36,10 +36,14 @@ class LikeView(views.APIView):
             404: OpenApiResponse(description="Post not found")
         }
     )
-    def get(self, request, post_id: int):
+    def get(self, request: views.Request, post_id: int) -> views.Response:
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
             return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         exists = models.Like.objects.filter(post=post, liker_profile=request.user.profile).exists()
-        return views.Response({"liked": exists}, status=status.HTTP_200_OK)
+        data = {"liked": exists}
+        class LikeStatusSerializer(views.serializers.Serializer):
+            liked = views.serializers.BooleanField()
+        serializer = LikeStatusSerializer(data)
+        return views.Response(serializer.data, status=status.HTTP_200_OK)
