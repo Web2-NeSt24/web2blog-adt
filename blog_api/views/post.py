@@ -48,6 +48,25 @@ class PostView(views.APIView):
         post.save()
 
         return views.Response()
+    
+    @extend_schema(description="Publish a draft", responses={ 200: None, 404: None, 403: None })
+    def post(self, request: views.Request, post_id: int):
+        try:
+            post = models.Post.objects.get(pk=post_id)
+        except models.Post.DoesNotExist:
+            return views.Response({
+                "error": "Draft does not exist"
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user.id != post.profile.user.id:
+            return views.Response({
+                "error": "You can only publish your own drafts"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        post.draft = False
+        post.save()
+
+        return views.Response()
 
     @extend_schema(responses={ 200: None, 404: None, 403: None })
     def delete(self, request: views.Request, post_id: int):
