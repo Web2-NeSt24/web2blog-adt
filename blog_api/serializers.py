@@ -8,6 +8,7 @@ class CredentialsSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -22,6 +23,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = models.Profile
         fields = ["user", "biography", "profile_picture", "post_ids"]
 
+
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
@@ -30,6 +32,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     author_profile = ProfileSerializer(read_only=True)
+
     class Meta:
         model = models.Comment
         fields = ["id", "post", "author_profile", "content"]
@@ -48,6 +51,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Post
         fields = ["id", "profile", "title", "content", "image", "tags"]
+
 
 class PostUpdateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(child=serializers.CharField())
@@ -70,3 +74,7 @@ class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bookmark
         fields = ["title"]
+
+
+class LikeStatusSerializer(serializers.Serializer):
+    liked = serializers.BooleanField()
