@@ -27,6 +27,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
+    biography = serializers.CharField(required=False, allow_blank=True)
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
+
+    def validate(self, data):
+        if not data.get("biography") and not data.get("profile_picture"):
+            raise serializers.ValidationError("At least one field (biography or profile_picture) must be provided.")
+        return data
+
     class Meta:
         model = models.Profile
         fields = ["biography", "profile_picture"]
@@ -62,6 +70,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         model = models.Post
         fields = ["title", "content", "image", "tags"]
 
+
 class BookmarkSerializer(serializers.ModelSerializer):
     post = PostSerializer(read_only=True)
     creator_profile = ProfileSerializer(read_only=True)
@@ -77,12 +86,18 @@ class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
         fields = ["title"]
 
 
-class BookmarkStatusSerializer(serializers.Serializer):
-    bookmarked = serializers.BooleanField()
-
-
 class LikeStatusSerializer(serializers.Serializer):
     liked = serializers.BooleanField()
+
+
+class BookmarkUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Bookmark
+        fields = ["title"]
+
+
+class BookmarkStatusSerializer(serializers.Serializer):
+    bookmarked = serializers.BooleanField()
 
 
 class DraftSerializer(serializers.ModelSerializer):
@@ -99,7 +114,7 @@ class ProfileDraftsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
         fields = ["draft_post_ids"]
-    
+
     @extend_schema_field(list[int])
     def get_draft_post_ids(self, profile):
         return profile.post_set.filter(draft=True).values_list("id", flat=True).all()

@@ -1,5 +1,5 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework import status, views, permissions
+from rest_framework import status, views, permissions, serializers as drf_serializers
 
 from blog_api import models, serializers
 
@@ -44,9 +44,18 @@ class CommentInstanceView(views.APIView):
             return views.Response({"error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
         if comment.author_profile != request.user.profile:
             return views.Response({"error": "You can only edit your own comments"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check if any data is provided for update
+        if not request.data:
+            return views.Response({"content": ["This field is required."]}, status=status.HTTP_400_BAD_REQUEST)
+        
         serializer = serializers.CommentCreateSerializer(comment, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        comment.content = serializer.validated_data["content"]
+        try:
+            serializer.is_valid(raise_exception=True)
+        except drf_serializers.ValidationError as e:
+            return views.Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+        if "content" in serializer.validated_data:
+            comment.content = serializer.validated_data["content"]
         comment.save()
         return views.Response(serializers.CommentSerializer(comment).data)
 

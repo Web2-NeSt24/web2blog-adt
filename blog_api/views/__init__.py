@@ -1,1 +1,12 @@
-from . import auth, bookmark, comment, draft, image, like, post, profile
+from . import auth, bookmark, comment, draft, image, post, profile, like
+#(fixes annoying but irrelevant error)
+__all__ = [
+    "auth",
+    "bookmark",
+    "comment",
+    "draft",
+    "image",
+    "post",
+    "profile",
+    "like",
+]

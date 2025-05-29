@@ -30,8 +30,12 @@ class ProfileView(views.APIView):
         serializer.is_valid(raise_exception=True)
 
         profile = request.user.profile
-        profile.biography = serializer.validated_data["biography"]
-        profile.profile_picture = serializer.validated_data["profile_picture"]
+        # Add a default value for biography to avoid KeyError
+        if "biography" in serializer.validated_data:
+            profile.biography = serializer.validated_data["biography"]
+        # Add a default value for profile_picture to avoid KeyError
+        if "profile_picture" in serializer.validated_data:
+            profile.profile_picture = serializer.validated_data["profile_picture"]
         profile.save()
 
         return views.Response()
