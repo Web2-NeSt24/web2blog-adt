@@ -89,55 +89,13 @@ class BookmarkSerializer(serializers.ModelSerializer):
         fields = ["id", "post", "creator_profile", "title"]
 
 
-class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
+class BookmarkCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bookmark
         fields = ["title"]
-
-
-class LikeStatusSerializer(serializers.Serializer):
-    liked = serializers.BooleanField()
 
 
 class BookmarkUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Bookmark
         fields = ["title"]
-
-
-class BookmarkStatusSerializer(serializers.Serializer):
-    bookmarked = serializers.BooleanField()
-
-
-class DraftSerializer(serializers.ModelSerializer):
-    draft_post_id = serializers.IntegerField(source="id")
-
-    class Meta:
-        model = models.Post
-        fields = ["draft_post_id"]
-
-
-class ProfileDraftsSerializer(serializers.ModelSerializer):
-    draft_post_ids = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Profile
-        fields = ["draft_post_ids"]
-
-    @extend_schema_field(list[int])
-    def get_draft_post_ids(self, profile):
-        return profile.post_set.filter(draft=True).values_list("id", flat=True).all()
-
-class PostSortingMethod(enum.Enum):
-    DATE = "DATE"
-    LIKES = "LIKES"
-
-class PostFilterSerializer(serializers.Serializer):
-    author_id = serializers.IntegerField(required=False)
-    author_name = serializers.CharField(required=False)
-    keywords = serializers.ListField(child=serializers.CharField(), default=[])
-    tags = serializers.ListField(child=serializers.CharField(), default=[])
-    sort_by = serializers.ChoiceField(choices=[entry.value for entry in PostSortingMethod], default=PostSortingMethod.DATE.value)
-
-class PostListSerializer(serializers.Serializer):
-    post_ids = serializers.ListField(child=serializers.IntegerField())
