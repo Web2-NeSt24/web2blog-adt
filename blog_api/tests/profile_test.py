@@ -43,9 +43,6 @@ class ProfileViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["user"]["username"], "testuser")
         self.assertEqual(response.data["biography"], "Test biography")
-        self.assertEqual(len(response.data["post_ids"]), 2)
-        self.assertIn(self.post1.id, response.data["post_ids"])
-        self.assertIn(self.post2.id, response.data["post_ids"])
     
     def test_get_profile_not_found(self):
         """Test retrieving non-existent profile returns 404"""

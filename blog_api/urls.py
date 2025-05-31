@@ -17,4 +17,5 @@ urlpatterns = [
     path("bookmarks/<int:bookmark_id>/", views.bookmark.BookmarkInstanceView.as_view()),  # PATCH (edit), DELETE (delete)
     path("post/<int:post_id>/like/", views.like.LikeView.as_view()),  # POST (like), GET (check like status)
     path("drafts/", views.draft.DraftsView.as_view()),
+    path("filter/", views.post_filter.PostFilterView.as_view()),
 ]
