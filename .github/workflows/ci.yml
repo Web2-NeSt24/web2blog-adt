@@ -2,7 +2,7 @@ name: Django tests
 
 on:
   push:
-    branches: [master]
+    branches: [master, ci-flake]
   pull_request:
     branches: [master]
 
@@ -16,17 +16,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      
+      - uses: cachix/install-nix-action@v31
         with:
-          python-version: '3.12'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-django coverage
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run pytest with coverage (fails < 95 %)
         run: |
-          pytest --cov=blog_api --cov-report=xml --cov-report=term-missing --cov-fail-under=95
+          nix develop -c pytest --cov=blog_api --cov-report=xml --cov-report=term-missing --cov-fail-under=95
