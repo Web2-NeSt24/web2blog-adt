@@ -1,3 +1,4 @@
+import enum
 from django.contrib.auth.models import User
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
@@ -28,11 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    post_ids = serializers.PrimaryKeyRelatedField(many=True, read_only=True, source="post_set")
 
     class Meta:
         model = models.Profile
-        fields = ["user", "biography", "profile_picture", "post_ids"]
+        fields = ["user", "biography", "profile_picture"]
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -127,3 +127,17 @@ class ProfileDraftsSerializer(serializers.ModelSerializer):
     @extend_schema_field(list[int])
     def get_draft_post_ids(self, profile):
         return profile.post_set.filter(draft=True).values_list("id", flat=True).all()
+
+class PostSortingMethod(enum.Enum):
+    DATE = "DATE"
+    LIKES = "LIKES"
+
+class PostFilterSerializer(serializers.Serializer):
+    author_id = serializers.IntegerField(required=False)
+    author_name = serializers.CharField(required=False)
+    keywords = serializers.ListField(child=serializers.CharField(), default=[])
+    tags = serializers.ListField(child=serializers.CharField(), default=[])
+    sort_by = serializers.ChoiceField(choices=[entry.value for entry in PostSortingMethod], default=PostSortingMethod.DATE.value)
+
+class PostListSerializer(serializers.Serializer):
+    post_ids = serializers.ListField(child=serializers.IntegerField())
