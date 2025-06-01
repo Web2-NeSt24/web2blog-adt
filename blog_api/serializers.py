@@ -1,14 +1,23 @@
 from django.contrib.auth.models import User
-from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from blog_api import models
 
 
-class CredentialsSerializer(serializers.Serializer):
+class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+
+class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField()
 
 
 class UserSerializer(serializers.ModelSerializer):
