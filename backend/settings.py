@@ -129,7 +129,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': ["backend.SessionAuthentication401"]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'backend.SessionAuthentication401',
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
@@ -140,7 +143,8 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_SETTINGS': {
         'tagsSorter': 'alpha',
         'operationsSorter': 'alpha',
-    },    'TAGS': [
+    },
+    'TAGS': [
         {'name': 'Authentication', 'description': 'User registration, login, password management'},
         {'name': 'Posts', 'description': 'Create, retrieve, update and list posts'},
         {'name': 'Comments', 'description': 'Comment creation, editing and deletion'},
@@ -151,6 +155,21 @@ SPECTACULAR_SETTINGS = {
         {'name': 'Filters', 'description': 'Custom post filtering'},
         {'name': 'Profiles', 'description': 'User profile management'},
     ],
+    'SECURITY': [
+        {'basicAuth': []},
+        {'sessionAuth': []},
+    ],
+    'SECURITY_SCHEMES': {
+        'basicAuth': {
+            'type': 'http',
+            'scheme': 'basic',
+        },
+        'sessionAuth': {
+            'type': 'apiKey',
+            'in': 'cookie',
+            'name': 'sessionid',
+        },
+    },
 }
 
 # Enable CORS for all origins during development
