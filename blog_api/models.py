@@ -3,9 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models.base import post_save
 from django.dispatch import receiver
 
-# Add a property to User to access the related Profile
-setattr(User, 'profile', property(lambda u: Profile.objects.get_or_create(user=u)[0]))
-
 class Image(models.Model):
     class ImageType(models.TextChoices):
         PNG = "PNG"

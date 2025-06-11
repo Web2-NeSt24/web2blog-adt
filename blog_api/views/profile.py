@@ -20,12 +20,17 @@ class ProfileView(views.APIView):
     )
     def get(self, _request: views.Request, user_id: int):
         try:
-            profile = models.User.objects.get(pk=user_id).profile
+            user = models.User.objects.get(pk=user_id)
+            profile = models.Profile.objects.get(user=user)
             serializer = serializers.ProfileSerializer(profile)
             return views.Response(serializer.data)
         except models.User.DoesNotExist:
             return views.Response({
                 "error": "User not found"
+            }, status=status.HTTP_404_NOT_FOUND)
+        except models.Profile.DoesNotExist:
+            return views.Response({
+                "error": "Profile not found"
             }, status=status.HTTP_404_NOT_FOUND)
     
     @extend_schema(
@@ -49,13 +54,15 @@ class ProfileView(views.APIView):
         serializer = serializers.ProfileUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        profile = request.user.profile
-        # Add a default value for biography to avoid KeyError
-        if "biography" in serializer.validated_data:
-            profile.biography = serializer.validated_data["biography"]
-        # Add a default value for profile_picture to avoid KeyError
-        if "profile_picture" in serializer.validated_data:
-            profile.profile_picture = serializer.validated_data["profile_picture"]
+        try:
+            profile = models.Profile.objects.get(user=request.user)
+        except models.Profile.DoesNotExist:
+            return views.Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        validated = serializer.validated_data if isinstance(serializer.validated_data, dict) else {}
+        if validated and "biography" in validated and isinstance(validated["biography"], str):
+            profile.biography = validated["biography"]
+        if validated and "profile_picture" in validated:
+            profile.profile_picture = validated["profile_picture"]
         profile.save()
 
         return views.Response()
@@ -102,10 +109,13 @@ def me_profile_view(request: views.Request):
 def get_profile_by_username(request: views.Request, username: str):
     try:
         user = models.User.objects.get(username__iexact=username)
-        serializer = serializers.ProfileSerializer(user.profile)
+        profile = models.Profile.objects.get(user=user)
+        serializer = serializers.ProfileSerializer(profile)
         return views.Response(serializer.data)
     except models.User.DoesNotExist:
         return views.Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    except models.Profile.DoesNotExist:
+        return views.Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
     
 @extend_schema(
     methods=['PUT'],
@@ -129,8 +139,10 @@ def username_profile_view(request: views.Request, username: str):
         return views.Response({
             "error": "Username does not exist"
         }, status=status.HTTP_404_NOT_FOUND)
-
-    return ProfileView.as_view()(request._request, user_id=user.id)
+    user_id = getattr(user, 'id', None)
+    if user_id is None:
+        return views.Response({"error": "User ID not found"}, status=status.HTTP_404_NOT_FOUND)
+    return ProfileView.as_view()(request._request, user_id=user_id)
 
 # @extend_schema(
 #         methods=['GET'],

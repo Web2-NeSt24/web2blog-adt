@@ -16,7 +16,7 @@ from blog_api import models
     description="Get an image file by its ID. Returns the image in its original format (PNG, JPEG, or SVG).",
     parameters=[OpenApiParameter("id", int, OpenApiParameter.PATH, description="Unique identifier of the image")],
     responses={
-        200: OpenApiResponse(description="Image file returned", content={"image/*": {"schema": {"type": "string", "format": "binary"}}}),
+        200: OpenApiResponse(description="Image file returned"),
         404: OpenApiResponse(description="Image not found")
     }, 
     tags=['Images']
@@ -56,8 +56,7 @@ def image(_request: views.Request, id: int):
     },
     responses={
         201: OpenApiResponse(
-            description="Image uploaded successfully",
-            content={"application/json": {"schema": {"type": "object", "properties": {"id": {"type": "integer", "description": "Unique identifier of the uploaded image"}}}}}
+            description="Image uploaded successfully"
         ),
         400: OpenApiResponse(description="Invalid input data or unsupported image type"),
         401: OpenApiResponse(description="Authentication required")
