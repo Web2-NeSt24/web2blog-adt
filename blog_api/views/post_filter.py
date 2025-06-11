@@ -13,10 +13,10 @@ class PostFilterView(views.APIView):
 
         queryset = models.Post.objects.filter(draft=False)
 
-        if "author_id" in serializer.validated_data:
+        if serializer.validated_data.get("author_id") is not None:
             queryset = queryset.filter(profile__user__id=serializer.validated_data["author_id"])
 
-        if "author_name" in serializer.validated_data:
+        if serializer.validated_data.get("author_name") is not None:
             queryset = queryset.filter(profile__user__username__iexact=serializer.validated_data["author_name"])
 
         for tag in serializer.validated_data["tags"]:

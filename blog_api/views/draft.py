@@ -10,7 +10,7 @@ class DraftsView(views.APIView):
     
     @extend_schema(responses={ 201: serializers.DraftSerializer })
     def post(self, request: views.Request):
-        draft = request.user.profile.post_set.create(profile=request.user.profile, title="", content="", image=None, draft=True)
+        draft = request.user.profile.post_set.create(title="", content="", image=None, draft=True)
         serializer = serializers.DraftSerializer(draft)
         return views.Response(serializer.data, status=status.HTTP_201_CREATED)
     

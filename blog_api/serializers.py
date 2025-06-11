@@ -159,8 +159,8 @@ class PostSortingMethod(enum.Enum):
     LIKES = "LIKES"
 
 class PostFilterSerializer(serializers.Serializer):
-    author_id = serializers.IntegerField(required=False)
-    author_name = serializers.CharField(required=False)
+    author_id = serializers.IntegerField(required=False, allow_null=True)
+    author_name = serializers.CharField(required=False, allow_null=True)
     keywords = serializers.ListField(child=serializers.CharField(), default=[])
     tags = serializers.ListField(child=serializers.CharField(), default=[])
     sort_by = serializers.ChoiceField(choices=[entry.value for entry in PostSortingMethod], default=PostSortingMethod.DATE.value)
