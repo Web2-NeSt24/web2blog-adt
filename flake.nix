@@ -16,7 +16,9 @@
               django
               djangorestframework
               drf-spectacular
+
             ]))
+              nodejs
           ];
         };
       };
