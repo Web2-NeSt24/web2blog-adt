@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'blog_api.apps.BlogApiConfig',
     'rest_framework',
     'drf_spectacular',
+    'corsheaders',  # Added for CORS support
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Must be first for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -129,3 +131,11 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': ["backend.SessionAuthentication401"]
 }
+
+# Enable CORS for all origins during development
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Allow frontend dev server for CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+]

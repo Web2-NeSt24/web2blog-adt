@@ -17,6 +17,10 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField()
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -29,7 +33,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Profile
         fields = ["user", "biography", "profile_picture"]
-
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -63,10 +66,36 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
     tags = serializers.SlugRelatedField(slug_field="value", read_only=True, many=True)
+    like_count = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
+    bookmark_count = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    is_bookmarked = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Post
-        fields = ["id", "profile", "title", "content", "image", "tags"]
+        fields = ["id", "profile", "title", "content", "image", "tags", "like_count", "comment_count", "bookmark_count", "is_liked", "is_bookmarked"]
+
+    def get_like_count(self, obj):
+        return obj.like_set.count()
+
+    def get_comment_count(self, obj):
+        return obj.comment_set.count()
+
+    def get_bookmark_count(self, obj):
+        return obj.bookmark_set.count()
+
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.like_set.filter(liker_profile=request.user.profile).exists()
+        return False
+
+    def get_is_bookmarked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.bookmark_set.filter(creator_profile=request.user.profile).exists()
+        return False
 
 
 class PostUpdateSerializer(serializers.ModelSerializer):
@@ -94,3 +123,47 @@ class BookmarkCreateUpdateSerializer(serializers.ModelSerializer):
 
 class LikeStatusSerializer(serializers.Serializer):
     liked = serializers.BooleanField()
+
+
+class BookmarkUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Bookmark
+        fields = ["title"]
+
+
+class BookmarkStatusSerializer(serializers.Serializer):
+    bookmarked = serializers.BooleanField()
+
+
+class DraftSerializer(serializers.ModelSerializer):
+    draft_post_id = serializers.IntegerField(source="id")
+
+    class Meta:
+        model = models.Post
+        fields = ["draft_post_id"]
+
+
+class ProfileDraftsSerializer(serializers.ModelSerializer):
+    draft_post_ids = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Profile
+        fields = ["draft_post_ids"]
+
+    @extend_schema_field(list[int])
+    def get_draft_post_ids(self, profile):
+        return profile.post_set.filter(draft=True).values_list("id", flat=True).all()
+
+class PostSortingMethod(enum.Enum):
+    DATE = "DATE"
+    LIKES = "LIKES"
+
+class PostFilterSerializer(serializers.Serializer):
+    author_id = serializers.IntegerField(required=False)
+    author_name = serializers.CharField(required=False)
+    keywords = serializers.ListField(child=serializers.CharField(), default=[])
+    tags = serializers.ListField(child=serializers.CharField(), default=[])
+    sort_by = serializers.ChoiceField(choices=[entry.value for entry in PostSortingMethod], default=PostSortingMethod.DATE.value)
+
+class PostListSerializer(serializers.Serializer):
+    post_ids = serializers.ListField(child=serializers.IntegerField())

@@ -1,14 +1,24 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status, views
+from rest_framework.response import Response
 
 from blog_api import models, serializers
+
+
+class PostListView(views.APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        posts = models.Post.objects.filter(draft=False)
+        serializer = serializers.PostSerializer(posts, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 class PostView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(responses={ 200: serializers.PostSerializer, 404: None })
-    def get(self, _request: views.Request, post_id: int):
+    @extend_schema(responses={200: serializers.PostSerializer, 404: None})
+    def get(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
@@ -16,10 +26,10 @@ class PostView(views.APIView):
                 "error": "Post does not exist"
             }, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = serializers.PostSerializer(post)
+        serializer = serializers.PostSerializer(post, context={'request': request})
         return views.Response(serializer.data)
-    
-    @extend_schema(request=serializers.PostUpdateSerializer, responses={ 200: None, 404: None, 403: None })
+
+    @extend_schema(request=serializers.PostUpdateSerializer, responses={200: None, 404: None, 403: None})
     def put(self, request: views.Request, post_id: int):
         serializer = serializers.PostUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -37,10 +47,10 @@ class PostView(views.APIView):
             }, status=status.HTTP_403_FORBIDDEN)
 
         tags = [
-            models.Hashtag.objects.get_or_create(value=tag)[0] 
+            models.Hashtag.objects.get_or_create(value=tag)[0]
             for tag in serializer.validated_data["tags"]
         ]
-        
+
         post.title = serializer.validated_data["title"]
         post.content = serializer.validated_data["content"]
         post.image = serializer.validated_data["image"]
@@ -68,7 +78,7 @@ class PostView(views.APIView):
 
         return views.Response()
 
-    @extend_schema(responses={ 200: None, 404: None, 403: None })
+    @extend_schema(responses={200: None, 404: None, 403: None})
     def delete(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
