@@ -132,14 +132,14 @@ def username_profile_view(request: views.Request, username: str):
 
     return ProfileView.as_view()(request._request, user_id=user.id)
 
-@extend_schema(
-        methods=['GET'],
-        summary="Get profile by username",
-        description="Retrieve profile information for a user by their username. Username lookup is case-insensitive.",
-        parameters=[OpenApiParameter("username", str, OpenApiParameter.PATH, description="Username of the user")],
-        responses={
-            200: serializers.ProfileSerializer,
-            404: OpenApiResponse(description="User not found")
-        },
-        tags=['Profiles']
-    )
+# @extend_schema(
+#         methods=['GET'],
+#         summary="Get profile by username",
+#         description="Retrieve profile information for a user by their username. Username lookup is case-insensitive.",
+#         parameters=[OpenApiParameter("username", str, OpenApiParameter.PATH, description="Username of the user")],
+#         responses={
+#             200: serializers.ProfileSerializer,
+#             404: OpenApiResponse(description="User not found")
+#         },
+#         tags=['Profiles']
+#     )

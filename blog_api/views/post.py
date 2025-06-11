@@ -21,6 +21,10 @@ class PostListView(views.APIView):
         serializer = serializers.PostSerializer(posts, many=True, context={'request': request})
         return Response(serializer.data)
 
+
+class PostView(views.APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     @extend_schema(
         summary="Retrieve a post",
         description="Get the details of a specific post by its ID. This includes the post's content, title, and engagement metrics.",
@@ -40,9 +44,7 @@ class PostListView(views.APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
         serializer = serializers.PostSerializer(post, context={'request': request})
-        return views.Response(serializer.data)
-
-    @extend_schema(
+        return views.Response(serializer.data)    @extend_schema(
         summary="Update a post",
         description="Update the content of an existing post. Only the post author can perform this operation. All fields are optional for partial updates.",
         parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH, description="Unique identifier of the post")],
