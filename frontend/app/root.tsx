@@ -9,6 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import MainNavigator from "./components/MainNavigator";
+import Footer from "./components/Footer";
 
 export const links: Route.LinksFunction = () => [
   {
@@ -36,7 +39,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return <div className="d-flex flex-column min-vh-100">
+    <MainNavigator />
+    <main className="flex-grow-1" >
+      <Outlet />
+    </main>
+    <Footer />
+  </div>
+
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
