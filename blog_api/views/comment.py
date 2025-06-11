@@ -7,7 +7,7 @@ class CommentView(views.APIView):
     """Handles comment listing and creation for a specific post."""
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(responses={200: serializers.CommentSerializer(many=True), 404: None})
+    @extend_schema(responses={200: serializers.CommentSerializer(many=True), 404: None}, tags=['Comments'])
     def get(self, _request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
@@ -17,7 +17,7 @@ class CommentView(views.APIView):
         serializer = serializers.CommentSerializer(comments, many=True)
         return views.Response(serializer.data)
 
-    @extend_schema(request=serializers.CommentCreateSerializer, responses={201: serializers.CommentSerializer, 404: None})
+    @extend_schema(request=serializers.CommentCreateSerializer, responses={201: serializers.CommentSerializer, 404: None}, tags=['Comments'])
     def post(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
@@ -36,7 +36,7 @@ class CommentInstanceView(views.APIView):
     """Handles updating and deleting individual comments."""
     permission_classes = [permissions.IsAuthenticated]
 
-    @extend_schema(request=serializers.CommentCreateSerializer, responses={200: serializers.CommentSerializer, 403: None, 404: None})
+    @extend_schema(request=serializers.CommentCreateSerializer, responses={200: serializers.CommentSerializer, 403: None, 404: None}, tags=['Comments'])
     def patch(self, request: views.Request, comment_id: int):
         try:
             comment = models.Comment.objects.get(pk=comment_id)
@@ -59,7 +59,7 @@ class CommentInstanceView(views.APIView):
         comment.save()
         return views.Response(serializers.CommentSerializer(comment).data)
 
-    @extend_schema(responses={204: None, 403: None, 404: None})
+    @extend_schema(responses={204: None, 403: None, 404: None}, tags=['Comments'])
     def delete(self, request: views.Request, comment_id: int):
         try:
             comment = models.Comment.objects.get(pk=comment_id)

@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from blog_api import models
 
 
-@extend_schema(responses={ 200: None, 404: None })
+@extend_schema(responses={ 200: None, 404: None }, tags=['Images'])
 @api_view(["GET"])
 def image(_request: views.Request, id: int):
     try:
@@ -22,7 +22,7 @@ def image(_request: views.Request, id: int):
     return FileResponse(BytesIO(image.data), content_type=f"image/{image.type}")
 
 
-@extend_schema(responses={ 201: None, 400: None })
+@extend_schema(responses={ 201: None, 400: None }, tags=['Images'])
 @api_view(["POST"])
 def upload_image(request: views.Request):
     """Upload a new image"""

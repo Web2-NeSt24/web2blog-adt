@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from blog_api import models, serializers
 
 
-@extend_schema(request=serializers.RegisterSerializer, responses={ 200: None, 400: None, 409: None })
+@extend_schema(request=serializers.RegisterSerializer, responses={ 200: None, 400: None, 409: None }, tags=['Authentication'])
 @api_view(["POST"])
 def register(request: views.Request):
     serializer = serializers.RegisterSerializer(data=request.data)
@@ -34,7 +34,7 @@ def register(request: views.Request):
     return views.Response(status=status.HTTP_201_CREATED)
             
 
-@extend_schema(request=serializers.LoginSerializer, responses={ 200: None, 403: None })
+@extend_schema(request=serializers.LoginSerializer, responses={ 200: None, 403: None }, tags=['Authentication'])
 @api_view(["POST"])
 def login(request: views.Request):
     serializer = serializers.LoginSerializer(data=request.data)
@@ -54,7 +54,7 @@ def login(request: views.Request):
         }, status=status.HTTP_403_FORBIDDEN)
 
 
-@extend_schema(request=serializers.ChangePasswordSerializer, responses={ 200: None })
+@extend_schema(request=serializers.ChangePasswordSerializer, responses={ 200: None }, tags=['Authentication'])
 @api_view(["PUT"])
 @permission_classes([permissions.IsAuthenticated])
 def password(request: views.Request):

@@ -6,7 +6,7 @@ from blog_api import models, serializers
 
 
 class PostFilterView(views.APIView):
-    @extend_schema(request=serializers.PostFilterSerializer, responses={ 200: serializers.PostListSerializer })
+    @extend_schema(request=serializers.PostFilterSerializer, responses={ 200: serializers.PostListSerializer }, tags=['Filters'])
     def post(self, request: views.Request):
         serializer = serializers.PostFilterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

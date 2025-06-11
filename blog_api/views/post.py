@@ -8,6 +8,7 @@ from blog_api import models, serializers
 class PostListView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @extend_schema(responses={200: serializers.PostSerializer(many=True)}, tags=['Posts'])
     def get(self, request):
         posts = models.Post.objects.filter(draft=False)
         serializer = serializers.PostSerializer(posts, many=True, context={'request': request})
@@ -17,7 +18,7 @@ class PostListView(views.APIView):
 class PostView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(responses={200: serializers.PostSerializer, 404: None})
+    @extend_schema(responses={200: serializers.PostSerializer, 404: None}, tags=['Posts'])
     def get(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
@@ -29,7 +30,7 @@ class PostView(views.APIView):
         serializer = serializers.PostSerializer(post, context={'request': request})
         return views.Response(serializer.data)
 
-    @extend_schema(request=serializers.PostUpdateSerializer, responses={200: None, 404: None, 403: None})
+    @extend_schema(request=serializers.PostUpdateSerializer, responses={200: None, 404: None, 403: None}, tags=['Posts'])
     def put(self, request: views.Request, post_id: int):
         serializer = serializers.PostUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -59,7 +60,7 @@ class PostView(views.APIView):
 
         return views.Response()
     
-    @extend_schema(description="Publish a draft", responses={ 200: None, 404: None, 403: None })
+    @extend_schema(description="Publish a draft", responses={ 200: None, 404: None, 403: None }, tags=['Posts'])
     def post(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
@@ -78,7 +79,7 @@ class PostView(views.APIView):
 
         return views.Response()
 
-    @extend_schema(responses={200: None, 404: None, 403: None})
+    @extend_schema(responses={200: None, 404: None, 403: None}, tags=['Posts'])
     def delete(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)

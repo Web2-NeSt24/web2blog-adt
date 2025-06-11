@@ -14,7 +14,8 @@ class LikeView(views.APIView):
             201: OpenApiResponse(description="Post liked"),
             200: OpenApiResponse(description="Post unliked"),
             404: OpenApiResponse(description="Post not found")
-        }
+        },
+        tags=['Likes']
     )
     def post(self, request: views.Request, post_id: int) -> views.Response:
         try:
@@ -26,16 +27,15 @@ class LikeView(views.APIView):
             like.delete()
             return views.Response(status=status.HTTP_200_OK)
         models.Like.objects.create(post=post, liker_profile=request.user.profile)
-        return views.Response(status=status.HTTP_201_CREATED)
-
-    @extend_schema(
+        return views.Response(status=status.HTTP_201_CREATED)    @extend_schema(
         summary="Check if user liked a post",
         description="Returns whether the authenticated user has liked the given post.",
         parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH)],
         responses={
             200: OpenApiResponse(response=LikeStatusSerializer),
             404: OpenApiResponse(description="Post not found")
-        }
+        },
+        tags=['Likes']
     )
     def get(self, request: views.Request, post_id: int) -> views.Response:
         try:

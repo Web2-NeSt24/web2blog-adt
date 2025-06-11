@@ -132,6 +132,27 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ["backend.SessionAuthentication401"]
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Blog - API',
+    'DESCRIPTION': 'Backend for our Web Engineering Project',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    'SWAGGER_UI_SETTINGS': {
+        'tagsSorter': 'alpha',
+        'operationsSorter': 'alpha',
+    },    'TAGS': [
+        {'name': 'Authentication', 'description': 'User registration, login, password management'},
+        {'name': 'Posts', 'description': 'Create, retrieve, update and list posts'},
+        {'name': 'Comments', 'description': 'Comment creation, editing and deletion'},
+        {'name': 'Bookmarks', 'description': 'Bookmark posts'},
+        {'name': 'Likes', 'description': 'Like and check like status of posts'},
+        {'name': 'Drafts', 'description': 'Draft creation and publishing'},
+        {'name': 'Images', 'description': 'Image upload and retrieval'},
+        {'name': 'Filters', 'description': 'Custom post filtering'},
+        {'name': 'Profiles', 'description': 'User profile management'},
+    ],
+}
+
 # Enable CORS for all origins during development
 CORS_ALLOW_ALL_ORIGINS = True
 

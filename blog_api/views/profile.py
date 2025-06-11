@@ -8,7 +8,7 @@ from blog_api import models, serializers
 class ProfileView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(responses={ 200: serializers.ProfileSerializer, 404: None })
+    @extend_schema(responses={ 200: serializers.ProfileSerializer, 404: None }, tags=['Profiles'])
     def get(self, _request: views.Request, user_id: int):
         try:
             profile = models.User.objects.get(pk=user_id).profile
@@ -19,7 +19,7 @@ class ProfileView(views.APIView):
                 "error": "User not found"
             }, status=status.HTTP_404_NOT_FOUND)
     
-    @extend_schema(request=serializers.ProfileUpdateSerializer, responses={ 200: None, 403: None })
+    @extend_schema(request=serializers.ProfileUpdateSerializer, responses={ 200: None, 403: None }, tags=['Profiles'])
     def put(self, request: views.Request, user_id: int):
         if request.user.id != user_id:
             return views.Response({ 
@@ -47,7 +47,8 @@ class ProfileView(views.APIView):
         200: serializers.ProfileSerializer,
         401: None, 
         404: None 
-    }
+    },
+    tags=['Profiles']
 )
 @extend_schema(
     methods=['PUT'],
@@ -56,7 +57,8 @@ class ProfileView(views.APIView):
         200: None, 
         401: None, 
         403: None 
-    }
+    },
+    tags=['Profiles']
 )
 @api_view(ProfileView().allowed_methods)
 @permission_classes([permissions.IsAuthenticated])
@@ -68,7 +70,8 @@ def me_profile_view(request: views.Request):
     responses={ 
         200: serializers.ProfileSerializer, 
         404: None 
-    }
+    },
+    tags=['Profiles']
 )
 @extend_schema(
     methods=['PUT'],
@@ -77,7 +80,8 @@ def me_profile_view(request: views.Request):
         200: None,
         403: None,
         404: None 
-    }
+    },
+    tags=['Profiles']
 )
 @api_view(ProfileView().allowed_methods)
 def username_profile_view(request: views.Request, username: str):
