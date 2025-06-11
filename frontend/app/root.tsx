@@ -13,12 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import MainNavigator from "./components/MainNavigator";
 import Footer from "./components/Footer";
 
-export const links: Route.LinksFunction = () => [
-  {
-    rel: "stylesheet",
-    href: "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css",
-  },
-];
+export const links: Route.LinksFunction = () => [];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -46,7 +41,6 @@ export default function App() {
     </main>
     <Footer />
   </div>
-
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
