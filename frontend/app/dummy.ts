@@ -1,5 +1,3 @@
-// dummyData.ts
-
 export const dummyImages = [
   {
     id: 1,

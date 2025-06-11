@@ -1,7 +1,4 @@
-import React from "react";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
-import { dummyPosts } from "../dummy";
 
 const cardVariants = [
   "primary",
@@ -14,13 +11,14 @@ const cardVariants = [
   "light",
 ];
 
-function getRandomVariant(idx) {
+function getRandomVariant(idx: number) {
   return cardVariants[idx];
 }
 
-function RandomCard({ post, idx }) {
+
+
+export function RandomCard({ post, idx }: any) {
   const randomVariant = getRandomVariant(idx);
-  console.log(post, "post");
 
   return (
     <Card border={randomVariant} style={{ width: "18rem" }} key={post.id}>
@@ -30,10 +28,10 @@ function RandomCard({ post, idx }) {
         <Card.Text>{post.content || "Nincs tartalom"}</Card.Text>
         <Card.Text className="d-flex gap-3">
           {post.tags && post.tags.length > 0 ? (
-            post.tags.map((tag) => (
-              <div className="p-1" key={tag.id}>
+            post.tags.map((tag: any) => (
+              <span className="p-1" key={tag.id}>
                 #{tag.value}
-              </div>
+              </span>
             ))
           ) : (
             <span>No tags</span>
@@ -62,5 +60,3 @@ function RandomCard({ post, idx }) {
     </Card>
   );
 }
-
-export default RandomCard;

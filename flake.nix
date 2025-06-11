@@ -16,11 +16,9 @@
               django
               djangorestframework
               drf-spectacular
-              pytest
-              pytest-django
-              pytest-cov
-              coverage
+
             ]))
+              nodejs
           ];
         };
       };
