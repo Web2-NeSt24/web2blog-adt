@@ -44,12 +44,13 @@ class BookmarkPostView(views.APIView):
             status=status.HTTP_201_CREATED,
         )
 
-    @extend_schema(
-        summary="Check if post is bookmarked",
+    @extend_schema(        summary="Check if post is bookmarked",
         description="Returns whether the authenticated user has bookmarked the given post.",
-        parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH)],
-        responses={
-            200: OpenApiResponse(description='{"bookmarked": true/false}'),
+        parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH)],responses={
+            200: OpenApiResponse(
+            response=serializers.BookmarkStatusSerializer,
+            description="Indicates whether the current user bookmarked the post."
+         ),
             404: OpenApiResponse(description="Post not found"),
         },
     )
@@ -65,10 +66,7 @@ class BookmarkPostView(views.APIView):
         ).exists()
         data = {"bookmarked": exists}
 
-        class BookmarkStatusSerializer(serializers.Serializer):
-            bookmarked = serializers.BooleanField()
-
-        serializer = BookmarkStatusSerializer(data)
+        serializer = serializers.BookmarkStatusSerializer(data)
         return views.Response(serializer.data, status=status.HTTP_200_OK)
 
     @extend_schema(
