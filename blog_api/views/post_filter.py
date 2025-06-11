@@ -1,11 +1,12 @@
 from django.db.models import Q, Count
 from drf_spectacular.utils import extend_schema
-from rest_framework import views
+from rest_framework import views, permissions
 
 from blog_api import models, serializers
 
 
 class PostFilterView(views.APIView):
+    permission_classes = [permissions.AllowAny]  # Public filtering functionality
     @extend_schema(request=serializers.PostFilterSerializer, responses={ 200: serializers.PostListSerializer }, tags=['Filters'])
     def post(self, request: views.Request):
         serializer = serializers.PostFilterSerializer(data=request.data)

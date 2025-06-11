@@ -3,8 +3,8 @@ import base64
 
 from django.http import FileResponse
 from drf_spectacular.utils import extend_schema
-from rest_framework import views
-from rest_framework.decorators import api_view
+from rest_framework import views, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -24,6 +24,7 @@ def image(_request: views.Request, id: int):
 
 @extend_schema(responses={ 201: None, 400: None }, tags=['Images'])
 @api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
 def upload_image(request: views.Request):
     """Upload a new image"""
     try:

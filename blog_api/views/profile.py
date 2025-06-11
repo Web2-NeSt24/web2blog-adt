@@ -84,6 +84,7 @@ def me_profile_view(request: views.Request):
     tags=['Profiles']
 )
 @api_view(ProfileView().allowed_methods)
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def username_profile_view(request: views.Request, username: str):
     try:
         user = models.User.objects.get(username__iexact=username)

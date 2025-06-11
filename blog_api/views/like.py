@@ -21,13 +21,15 @@ class LikeView(views.APIView):
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
-            return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+            return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)        
         like = models.Like.objects.filter(post=post, liker_profile=request.user.profile).first()
         if like:
             like.delete()
             return views.Response(status=status.HTTP_200_OK)
         models.Like.objects.create(post=post, liker_profile=request.user.profile)
-        return views.Response(status=status.HTTP_201_CREATED)    @extend_schema(
+        return views.Response(status=status.HTTP_201_CREATED)
+
+    @extend_schema(
         summary="Check if user liked a post",
         description="Returns whether the authenticated user has liked the given post.",
         parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH)],
