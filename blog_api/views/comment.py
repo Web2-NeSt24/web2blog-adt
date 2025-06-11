@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import status, views, permissions, serializers as drf_serializers
 
 from blog_api import models, serializers
@@ -7,7 +7,16 @@ class CommentView(views.APIView):
     """Handles comment listing and creation for a specific post."""
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(responses={200: serializers.CommentSerializer(many=True), 404: None}, tags=['Comments'])
+    @extend_schema(
+        summary="List comments for a post",
+        description="Retrieve all comments for a specific post. Comments are returned with author information and timestamps.",
+        parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH, description="Unique identifier of the post")],
+        responses={
+            200: serializers.CommentSerializer(many=True),
+            404: OpenApiResponse(description="Post not found")
+        }, 
+        tags=['Comments']
+    )
     def get(self, _request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
@@ -17,7 +26,18 @@ class CommentView(views.APIView):
         serializer = serializers.CommentSerializer(comments, many=True)
         return views.Response(serializer.data)
 
-    @extend_schema(request=serializers.CommentCreateSerializer, responses={201: serializers.CommentSerializer, 404: None}, tags=['Comments'])
+    @extend_schema(
+        summary="Create a comment",
+        description="Add a new comment to a specific post. Requires authentication. The comment will be associated with the authenticated user.",
+        parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH, description="Unique identifier of the post")],
+        request=serializers.CommentCreateSerializer, 
+        responses={
+            201: serializers.CommentSerializer,
+            404: OpenApiResponse(description="Post not found"),
+            401: OpenApiResponse(description="Authentication required")
+        }, 
+        tags=['Comments']
+    )
     def post(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
@@ -36,7 +56,19 @@ class CommentInstanceView(views.APIView):
     """Handles updating and deleting individual comments."""
     permission_classes = [permissions.IsAuthenticated]
 
-    @extend_schema(request=serializers.CommentCreateSerializer, responses={200: serializers.CommentSerializer, 403: None, 404: None}, tags=['Comments'])
+    @extend_schema(
+        summary="Update a comment",
+        description="Update the content of an existing comment. Only the comment author can perform this operation.",
+        parameters=[OpenApiParameter("comment_id", int, OpenApiParameter.PATH, description="Unique identifier of the comment")],
+        request=serializers.CommentCreateSerializer, 
+        responses={
+            200: serializers.CommentSerializer,
+            400: OpenApiResponse(description="Invalid input data"),
+            403: OpenApiResponse(description="Not authorized to edit this comment"),
+            404: OpenApiResponse(description="Comment not found")
+        }, 
+        tags=['Comments']
+    )
     def patch(self, request: views.Request, comment_id: int):
         try:
             comment = models.Comment.objects.get(pk=comment_id)
@@ -59,7 +91,17 @@ class CommentInstanceView(views.APIView):
         comment.save()
         return views.Response(serializers.CommentSerializer(comment).data)
 
-    @extend_schema(responses={204: None, 403: None, 404: None}, tags=['Comments'])
+    @extend_schema(
+        summary="Delete a comment",
+        description="Permanently delete a comment. Only the comment author can perform this operation. This action cannot be undone.",
+        parameters=[OpenApiParameter("comment_id", int, OpenApiParameter.PATH, description="Unique identifier of the comment")],
+        responses={
+            204: OpenApiResponse(description="Comment deleted successfully"),
+            403: OpenApiResponse(description="Not authorized to delete this comment"),
+            404: OpenApiResponse(description="Comment not found")
+        }, 
+        tags=['Comments']
+    )
     def delete(self, request: views.Request, comment_id: int):
         try:
             comment = models.Comment.objects.get(pk=comment_id)

@@ -2,7 +2,7 @@ from io import BytesIO
 import base64
 
 from django.http import FileResponse
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import views, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
@@ -11,7 +11,16 @@ from rest_framework.response import Response
 from blog_api import models
 
 
-@extend_schema(responses={ 200: None, 404: None }, tags=['Images'])
+@extend_schema(
+    summary="Retrieve an image",
+    description="Get an image file by its ID. Returns the image in its original format (PNG, JPEG, or SVG).",
+    parameters=[OpenApiParameter("id", int, OpenApiParameter.PATH, description="Unique identifier of the image")],
+    responses={
+        200: OpenApiResponse(description="Image file returned", content={"image/*": {"schema": {"type": "string", "format": "binary"}}}),
+        404: OpenApiResponse(description="Image not found")
+    }, 
+    tags=['Images']
+)
 @api_view(["GET"])
 def image(_request: views.Request, id: int):
     try:
@@ -22,7 +31,39 @@ def image(_request: views.Request, id: int):
     return FileResponse(BytesIO(image.data), content_type=f"image/{image.type}")
 
 
-@extend_schema(responses={ 201: None, 400: None }, tags=['Images'])
+@extend_schema(
+    summary="Upload an image",
+    description="Upload a new image file. Accepts base64-encoded image data for PNG, JPEG, or SVG formats. Returns the image ID for use in posts or profiles.",
+    request={
+        "application/json": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["PNG", "JPEG", "SVG"],
+                        "description": "Image format type"
+                    },
+                    "data": {
+                        "type": "string",
+                        "format": "byte",
+                        "description": "Base64-encoded image data"
+                    }
+                },
+                "required": ["type", "data"]
+            }
+        }
+    },
+    responses={
+        201: OpenApiResponse(
+            description="Image uploaded successfully",
+            content={"application/json": {"schema": {"type": "object", "properties": {"id": {"type": "integer", "description": "Unique identifier of the uploaded image"}}}}}
+        ),
+        400: OpenApiResponse(description="Invalid input data or unsupported image type"),
+        401: OpenApiResponse(description="Authentication required")
+    }, 
+    tags=['Images']
+)
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
 def upload_image(request: views.Request):

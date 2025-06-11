@@ -7,18 +7,37 @@ from blog_api import models
 
 
 class RegisterSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    email = serializers.EmailField()
-    password = serializers.CharField()
+    username = serializers.CharField(
+        help_text="Alphanumeric username (case-insensitive). Must be unique.",
+        max_length=150,
+        min_length=3
+    )
+    email = serializers.EmailField(
+        help_text="Valid email address for the user account."
+    )
+    password = serializers.CharField(
+        help_text="Password for the user account. Should be secure.",
+        min_length=6,
+        style={'input_type': 'password'}
+    )
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+    username = serializers.CharField(
+        help_text="Username (case-insensitive)"
+    )
+    password = serializers.CharField(
+        help_text="User password",
+        style={'input_type': 'password'}
+    )
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField()
+    new_password = serializers.CharField(
+        help_text="New password for the account",
+        min_length=6,
+        style={'input_type': 'password'}
+    )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -99,7 +118,27 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class PostUpdateSerializer(serializers.ModelSerializer):
-    tags = serializers.ListField(child=serializers.CharField())
+    tags = serializers.ListField(
+        child=serializers.CharField(),
+        help_text="List of hashtags for the post (without # symbol). Example: ['django', 'api']",
+        required=False,
+        allow_empty=True
+    )
+    title = serializers.CharField(
+        help_text="Post title. Example: 'My First Blog Post'",
+        required=False,
+        allow_blank=True
+    )
+    content = serializers.CharField(
+        help_text="Post content in markdown or plain text. Example: 'This is the content of my blog post.'",
+        required=False,
+        allow_blank=True
+    )
+    image = serializers.IntegerField(
+        help_text="ID of uploaded image to attach to the post. Example: 42",
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = models.Post
@@ -159,11 +198,34 @@ class PostSortingMethod(enum.Enum):
     LIKES = "LIKES"
 
 class PostFilterSerializer(serializers.Serializer):
-    author_id = serializers.IntegerField(required=False, allow_null=True)
-    author_name = serializers.CharField(required=False, allow_null=True)
-    keywords = serializers.ListField(child=serializers.CharField(), default=[])
-    tags = serializers.ListField(child=serializers.CharField(), default=[])
-    sort_by = serializers.ChoiceField(choices=[entry.value for entry in PostSortingMethod], default=PostSortingMethod.DATE.value)
+    author_id = serializers.IntegerField(
+        required=False, 
+        allow_null=True,
+        help_text="Filter posts by author's user ID. Example: 1"
+    )
+    author_name = serializers.CharField(
+        required=False, 
+        allow_null=True,
+        help_text="Filter posts by author's username (case-insensitive). Example: 'john_doe'"
+    )
+    keywords = serializers.ListField(
+        child=serializers.CharField(), 
+        default=[],
+        help_text="Search keywords in post title and content (OR logic). Example: ['django', 'tutorial']"
+    )
+    tags = serializers.ListField(
+        child=serializers.CharField(), 
+        default=[],
+        help_text="Filter by hashtags (AND logic - all tags must be present). Example: ['api', 'backend']"
+    )
+    sort_by = serializers.ChoiceField(
+        choices=[entry.value for entry in PostSortingMethod], 
+        default=PostSortingMethod.DATE.value,
+        help_text="Sort results by date (newest first) or likes (most popular first). Example: 'DATE'"
+    )
 
 class PostListSerializer(serializers.Serializer):
-    post_ids = serializers.ListField(child=serializers.IntegerField())
+    post_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        help_text="List of post IDs. Example: [1, 2, 3]"
+    )

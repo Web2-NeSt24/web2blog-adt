@@ -1,5 +1,5 @@
 from django.db.models import Q, Count
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework import views, permissions
 
 from blog_api import models, serializers
@@ -7,7 +7,27 @@ from blog_api import models, serializers
 
 class PostFilterView(views.APIView):
     permission_classes = [permissions.AllowAny]  # Public filtering functionality
-    @extend_schema(request=serializers.PostFilterSerializer, responses={ 200: serializers.PostListSerializer }, tags=['Filters'])
+    
+    @extend_schema(
+        summary="Filter and search posts",
+        description="""
+        Advanced post filtering and search functionality. Filter posts by multiple criteria:
+        
+        - **author_id**: Filter by specific user ID
+        - **author_name**: Filter by username (case-insensitive)
+        - **tags**: Filter by hashtags (all specified tags must be present)
+        - **keywords**: Search in title and content (any keyword match)
+        - **sort_by**: Sort results by date (newest first) or popularity (most liked first)
+        
+        All filters are combined with AND logic, except keywords which use OR logic.
+        Only published posts are included in results.
+        """,
+        request=serializers.PostFilterSerializer, 
+        responses={
+            200: serializers.PostListSerializer
+        }, 
+        tags=['Filters']
+    )
     def post(self, request: views.Request):
         serializer = serializers.PostFilterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
