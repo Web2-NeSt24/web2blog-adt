@@ -1,20 +1,49 @@
 import { useLoaderData, Link } from "react-router";
-import { dummyPosts } from "~/dummy";
+import CommentSection from "~/components/CommentSection";
 import type { Route } from "./$types/postId";
 
-export const loader = ({ params }: Route.LoaderArgs) => {
+// Interface for API data
+interface Post {
+  id: number;
+  profile: {
+    user: {
+      id: number;
+      username: string;
+    };
+    biography: string;
+    profile_picture: string | null;
+  };
+  title: string;
+  content: string;
+  image: string | null;
+  image_url?: string;
+  tags: string[];
+}
+
+export const loader = async ({ params }: Route.LoaderArgs) => {
   const postId = parseInt(params.postId || "0", 10);
-  const post = dummyPosts.find(p => p.id === postId);
   
-  if (!post) {
+  try {
+    const response = await fetch(`http://localhost:8000/api/post/by-id/${postId}`, {
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Response("Post not found", { status: 404 });
+    }
+    
+    const post = await response.json();
+    return { post };
+  } catch (error) {
+    console.error('Error fetching post:', error);
     throw new Response("Post not found", { status: 404 });
   }
-  
-  return { post };
 };
 
 export function meta({ data }: Route.MetaArgs) {
-  if (!data?.post) {
+  const postData = data as { post?: Post };
+  
+  if (!postData?.post) {
     return [
       { title: "Post Not Found" },
       { name: "description", content: "The requested post could not be found." },
@@ -22,13 +51,13 @@ export function meta({ data }: Route.MetaArgs) {
   }
 
   return [
-    { title: data.post.title },
-    { name: "description", content: data.post.content.substring(0, 160) },
+    { title: postData.post.title },
+    { name: "description", content: postData.post.content.substring(0, 160) },
   ];
 }
 
 export default function PostDetail() {
-  const { post } = useLoaderData<typeof loader>();
+  const { post } = useLoaderData<typeof loader>() as { post: Post };
 
   return (
     <div className="container py-5">
@@ -42,10 +71,10 @@ export default function PostDetail() {
           
           <div className="d-flex align-items-center mb-4">
             <div className="d-flex align-items-center">
-              {post.image?.data ? (
+              {post.profile.profile_picture ? (
                 <img
-                  src={post.profile?.profile_picture?.data || post.image?.data}
-                  alt={`Profile picture of ${post.profile?.user?.username || "Unknown author"}`}
+                  src={post.profile.profile_picture}
+                  alt={`Profile picture of ${post.profile.user.username}`}
                   className="rounded-circle me-2"
                   width="50"
                   height="50"
@@ -59,27 +88,22 @@ export default function PostDetail() {
                 />
               )}
               <div>
-                <div className="fw-bold">{post.profile?.user?.username || "Unknown author"}</div>
-                {post.created_at && (
-                  <div className="text-muted small">
-                    <time dateTime={post.created_at}>
-                      {new Date(post.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </time>
-                  </div>
-                )}
+                <Link 
+                  to={`/profile/${post.profile.user.username}`}
+                  className="fw-bold text-decoration-none"
+                >
+                  {post.profile.user.username}
+                </Link>
+                {/* Note: created_at is not available in the API response */}
               </div>
             </div>
           </div>
         </header>
         
-        {post.image && (
+        {post.image_url && (
           <div className="mb-4 text-center">
             <img
-              src={post.image.data}
+              src={post.image_url}
               alt={`Featured image for ${post.title}`}
               className="img-fluid rounded"
               style={{ maxHeight: "500px", width: "100%", objectFit: "cover" }}
@@ -93,17 +117,24 @@ export default function PostDetail() {
         
         {post.tags && post.tags.length > 0 && (
           <div className="d-flex flex-wrap gap-2 mb-4">
-            {post.tags.map(tag => (
+            {post.tags.map((tag, index) => (
               <span 
                 className="badge bg-secondary"
-                key={tag.id}
+                key={index}
               >
-                #{tag.value}
+                #{tag}
               </span>
             ))}
           </div>
         )}
       </article>
+      
+      {/* Comment Section */}
+      <CommentSection 
+        postId={post.id}
+        initialLikeCount={0}
+        initialIsLiked={false}
+      />
     </div>
   );
 }

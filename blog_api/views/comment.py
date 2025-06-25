@@ -5,7 +5,7 @@ from blog_api import models, serializers
 
 class CommentView(views.APIView):
     """Handles comment listing and creation for a specific post."""
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]  # Allow anonymous comments
 
     @extend_schema(responses={200: serializers.CommentSerializer(many=True), 404: None})
     def get(self, _request: views.Request, post_id: int):
@@ -13,7 +13,7 @@ class CommentView(views.APIView):
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
             return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-        comments = models.Comment.objects.filter(post=post)
+        comments = models.Comment.objects.filter(post=post).order_by('-created_at')
         serializer = serializers.CommentSerializer(comments, many=True)
         return views.Response(serializer.data)
 
@@ -25,11 +25,19 @@ class CommentView(views.APIView):
             return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.CommentCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        comment = models.Comment.objects.create(
-            post=post,
-            author_profile=request.user.profile,
-            content=serializer.validated_data["content"]
-        )
+        
+        # Create comment with either authenticated user or anonymous name
+        comment_data = {
+            'post': post,
+            'content': serializer.validated_data['content']
+        }
+        
+        if request.user.is_authenticated:
+            comment_data['author_profile'] = request.user.profile
+        else:
+            comment_data['author_name'] = serializer.validated_data.get('author_name', 'Anonymous')
+        
+        comment = models.Comment.objects.create(**comment_data)
         return views.Response(serializers.CommentSerializer(comment).data, status=status.HTTP_201_CREATED)
 
 class CommentInstanceView(views.APIView):

@@ -9,10 +9,10 @@ class ProfileView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @extend_schema(responses={ 200: serializers.ProfileSerializer, 404: None })
-    def get(self, _request: views.Request, user_id: int):
+    def get(self, request: views.Request, user_id: int):
         try:
             profile = models.User.objects.get(pk=user_id).profile
-            serializer = serializers.ProfileSerializer(profile)
+            serializer = serializers.ProfileSerializer(profile, context={'request': request})
             return views.Response(serializer.data)
         except models.User.DoesNotExist:
             return views.Response({
@@ -30,14 +30,38 @@ class ProfileView(views.APIView):
         serializer.is_valid(raise_exception=True)
 
         profile = request.user.profile
-        # Add a default value for biography to avoid KeyError
+        
+        # Update biography if provided
         if "biography" in serializer.validated_data:
             profile.biography = serializer.validated_data["biography"]
-        # Add a default value for profile_picture to avoid KeyError
-        if "profile_picture" in serializer.validated_data:
-            profile.profile_picture = serializer.validated_data["profile_picture"]
+        
+        # Handle profile picture upload
+        if "profile_picture" in serializer.validated_data and serializer.validated_data["profile_picture"]:
+            uploaded_file = serializer.validated_data["profile_picture"]
+            
+            # Determine image type from file extension
+            file_extension = uploaded_file.name.split('.')[-1].lower()
+            if file_extension in ['jpg', 'jpeg']:
+                image_type = models.Image.ImageType.JPEG
+            elif file_extension == 'png':
+                image_type = models.Image.ImageType.PNG
+            elif file_extension == 'svg':
+                image_type = models.Image.ImageType.SVG
+            else:
+                return views.Response({
+                    "error": "Unsupported image format. Please use JPG, PNG, or SVG."
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Create new Image object
+            image = models.Image.objects.create(
+                type=image_type,
+                data=uploaded_file.read()
+            )
+            
+            # Update profile picture reference
+            profile.profile_picture = image
+        
         profile.save()
-
         return views.Response()
 
 

@@ -1,9 +1,19 @@
 from django.contrib import auth
+from django.middleware.csrf import get_token
 from drf_spectacular.utils import extend_schema
 from rest_framework import status, views, permissions
 from rest_framework.decorators import api_view, permission_classes
 
 from blog_api import models, serializers
+
+
+@extend_schema(responses={ 200: None })
+@api_view(["GET"])
+@permission_classes([permissions.AllowAny])
+def csrf_token(request: views.Request):
+    """Get CSRF token for authenticated requests."""
+    token = get_token(request)
+    return views.Response({"csrfToken": token})
 
 
 @extend_schema(request=serializers.RegisterSerializer, responses={ 200: None, 400: None, 409: None })
@@ -31,7 +41,13 @@ def register(request: views.Request):
 
     auth.login(request._request, user)
 
-    return views.Response(status=status.HTTP_201_CREATED)
+    return views.Response({
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
+    }, status=status.HTTP_201_CREATED)
             
 
 @extend_schema(request=serializers.LoginSerializer, responses={ 200: None, 403: None })
@@ -47,11 +63,26 @@ def login(request: views.Request):
     user = auth.authenticate(username=username, password=password)
     if user is not None:
         auth.login(request._request, user)
-        return views.Response()
+        return views.Response({
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            }
+        })
     else:
         return views.Response({
             "error": "Invalid credentials",
         }, status=status.HTTP_403_FORBIDDEN)
+
+
+@extend_schema(responses={ 200: None })
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
+def logout(request: views.Request):
+    """Logout the current user."""
+    auth.logout(request._request)
+    return views.Response({"message": "Logged out successfully"})
 
 
 @extend_schema(request=serializers.ChangePasswordSerializer, responses={ 200: None })

@@ -29,15 +29,24 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    profile_picture_url = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Profile
-        fields = ["user", "biography", "profile_picture"]
+        fields = ["user", "biography", "profile_picture", "profile_picture_url"]
+    
+    def get_profile_picture_url(self, obj):
+        if obj.profile_picture:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(f'/api/image/{obj.profile_picture.id}')
+            return f'/api/image/{obj.profile_picture.id}'
+        return None
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     biography = serializers.CharField(required=False, allow_blank=True)
-    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    profile_picture = serializers.FileField(required=False, allow_null=True)
 
     def validate(self, data):
         if not data.get("biography") and not data.get("profile_picture"):
@@ -54,30 +63,43 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Comment
-        fields = ["id", "post", "author_profile", "content"]
+        fields = ["id", "post", "author_profile", "author_name", "content", "created_at"]
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(required=False, allow_blank=True)
+    
     class Meta:
         model = models.Comment
-        fields = ["content"]
+        fields = ["content", "author_name"]
 
 
 class PostSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
     tags = serializers.SlugRelatedField(slug_field="value", read_only=True, many=True)
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Post
-        fields = ["id", "profile", "title", "content", "image", "tags"]
+        fields = ["id", "profile", "title", "content", "image", "image_url", "tags"]
+    
+    def get_image_url(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(f'/api/image/{obj.image.id}')
+            return f'/api/image/{obj.image.id}'
+        return None
 
 
 class PostUpdateSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(child=serializers.CharField())
+    draft = serializers.BooleanField(default=True)
+    image = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = models.Post
-        fields = ["title", "content", "image", "tags"]
+        fields = ["title", "content", "image", "tags", "draft"]
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
