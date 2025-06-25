@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-v7isobfx#!0%_+75jy#2g)(l2p_r&$#gg@%&w^@*r*h7w9z=@i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'blog_api.apps.BlogApiConfig',
     'rest_framework',
     'drf_spectacular',
+    'corsheaders',  # Added for CORS support
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Must be first for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -127,5 +129,207 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': ["backend.SessionAuthentication401"]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'backend.SessionAuthentication401',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    'DEFAULT_PAGINATION_CLASS': None,  # No pagination by default
+    'PAGE_SIZE': 20,  # Default page size if pagination is enabled
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'DEFAULT_THROTTLE_CLASSES': [],
+    'DEFAULT_THROTTLE_RATES': {},
+    'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S.%fZ',
+    'DATE_FORMAT': '%Y-%m-%d',
+    'TIME_FORMAT': '%H:%M:%S',
+    'USE_TZ': True,
+    'COERCE_DECIMAL_TO_STRING': True,
+    'UPLOADED_FILES_USE_URL': True,
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Web2Blog - Blog API',
+    'DESCRIPTION': '''
+    Django Rest Framework API, backend of our Blog project for Web Engineering II
+    ''',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SWAGGER_UI_SETTINGS': {
+        'tagsSorter': 'alpha',
+        'operationsSorter': 'alpha',
+        'deepLinking': True,
+        'displayOperationId': False,
+        'defaultModelsExpandDepth': 2,
+        'defaultModelExpandDepth': 2,
+        'defaultModelRendering': 'model',
+        'displayRequestDuration': True,
+        'docExpansion': 'none',
+        'filter': True,
+        'showExtensions': True,
+        'showCommonExtensions': True,
+        'persistAuthorization': True,
+    },
+    'REDOC_UI_SETTINGS': {
+        'hideDownloadButton': False,
+        'hideHostname': False,
+        'hideLoading': False,
+        'hideSchemaPattern': True,
+        'expandDefaultServerVariables': True,
+        'expandResponses': '200,201',
+        'requiredPropsFirst': True,
+        'sortPropsAlphabetically': True,
+        'theme': {
+            'colors': {
+                'primary': {
+                    'main': '#3f51b5'
+                }
+            }
+        }
+    },
+    'EXTERNAL_DOCS': {
+        'description': 'Project Repository',
+        'url': 'https://github.com/your-org/web2blog-adt'
+    },
+    'CONTACT': {
+        'name': 'Web Engineering Team',
+        'email': 'contact@web2blog.com'
+    },
+    'LICENSE': {
+        'name': 'MIT License',
+        'url': 'https://opensource.org/licenses/MIT'
+    },
+    'SERVERS': [
+        {
+            'url': 'http://localhost:8000',
+            'description': 'Development server'
+        },
+        {
+            'url': 'https://api.web2blog.com',
+            'description': 'Production server'
+        }
+    ],
+    'TAGS': [
+        {
+            'name': 'Authentication', 
+            'description': 'User registration, login, logout, and password management operations. Session-based authentication is used throughout the API.',
+            'externalDocs': {
+                'description': 'Django Authentication Documentation',
+                'url': 'https://docs.djangoproject.com/en/4.2/topics/auth/'
+            }
+        },
+        {
+            'name': 'Posts', 
+            'description': 'Full CRUD operations for blog posts. Includes post creation, retrieval, updating, deletion, and publishing from drafts.',
+            'externalDocs': {
+                'description': 'Post Management Guide',
+                'url': '/docs/posts/'
+            }
+        },
+        {
+            'name': 'Comments', 
+            'description': 'Comment system allowing users to comment on posts. Supports listing, creating, updating, and deleting comments with proper ownership validation.',
+            'externalDocs': {
+                'description': 'Comment System Documentation',
+                'url': '/docs/comments/'
+            }
+        },
+        {
+            'name': 'Bookmarks', 
+            'description': 'Personal bookmark system allowing users to save posts for later reading. Each bookmark can have a custom title.',
+            'externalDocs': {
+                'description': 'Bookmark Features',
+                'url': '/docs/bookmarks/'
+            }
+        },
+        {
+            'name': 'Likes', 
+            'description': 'Like system for posts with toggle functionality. Users can like/unlike posts and check like status.',
+            'externalDocs': {
+                'description': 'Engagement Features',
+                'url': '/docs/likes/'
+            }
+        },
+        {
+            'name': 'Drafts', 
+            'description': 'Draft system allowing users to create unpublished posts and manage them before publishing. Supports draft creation, listing, and publishing.',
+            'externalDocs': {
+                'description': 'Draft Management',
+                'url': '/docs/drafts/'
+            }
+        },
+        {
+            'name': 'Images', 
+            'description': 'Image upload and retrieval system supporting PNG, JPEG, and SVG formats. Images are stored as binary data with base64 upload support.',
+            'externalDocs': {
+                'description': 'Media Upload Guide',
+                'url': '/docs/images/'
+            }
+        },
+        {
+            'name': 'Filters', 
+            'description': 'Advanced post filtering and search functionality. Filter by author, keywords, tags, and sort by date or popularity.',
+            'externalDocs': {
+                'description': 'Search and Filter Guide',
+                'url': '/docs/filtering/'
+            }
+        },
+        {
+            'name': 'Profiles', 
+            'description': 'User profile management including biography updates, profile picture uploads, and profile viewing for all users.',
+            'externalDocs': {
+                'description': 'Profile Management',
+                'url': '/docs/profiles/'
+            }
+        },
+    ],
+    'SECURITY': [
+        {'basicAuth': []},
+        {'sessionAuth': []},
+    ],
+    'SECURITY_SCHEMES': {
+        'basicAuth': {
+            'type': 'http',
+            'scheme': 'basic',
+            'description': 'Basic HTTP authentication using username and password'
+        },
+        'sessionAuth': {
+            'type': 'apiKey',
+            'in': 'cookie',
+            'name': 'sessionid',
+            'description': 'Session-based authentication using Django sessions'
+        },
+    },
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'bearerAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'description': 'Bearer token authentication (if implemented in future)'
+            }
+        }
+    },
+    'ENUM_NAME_OVERRIDES': {
+        'PostSortingMethodEnum': 'blog_api.serializers.PostSortingMethod',
+    },
+    'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
+    'SCHEMA_PATH_PREFIX': '/api/',
+    'SCHEMA_PATH_PREFIX_TRIM': True,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATION_PARAMETERS': True,
+}
+
+# Enable CORS for all origins during development
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Allow frontend dev server for CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+]
