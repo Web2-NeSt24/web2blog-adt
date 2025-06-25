@@ -44,28 +44,50 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = "Oopsie Daisy!";
+  let details = "Looks like you've wandered off the map. This page is as lost as your left sock after laundry. But hey, at least you found this cool error message!";
+  let errorCode = "404";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    errorCode = error.status.toString();
+    message = error.status === 404 ? "Oopsie Daisy!" : "Something went wrong!";
     details =
       error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+        ? "Looks like you've wandered off the map. This page is as lost as your left sock after laundry. But hey, at least you found this cool error message!"
+        : error.statusText || "An unexpected error occurred.";
   } else if (import.meta.env.DEV && error && error instanceof Error) {
+    errorCode = "Error";
+    message = "Development Error";
     details = error.message;
     stack = error.stack;
   }
 
   return (
-    <main className="modal is-active">
-      <article>
-        <h1>{message}</h1>
-        <p>{details}</p>
-        {stack && (<pre><code>{stack}</code></pre>)}
-      </article>
-    </main>
+    <div className="d-flex vh-100 justify-content-center align-items-center bg-light text-center">
+      <div className="container">
+        <h1 className="display-1 text-danger">{errorCode}</h1>
+        <h2 className="mb-3">{message}</h2>
+        <p className="text-muted mb-4">
+          {details.split('. ').map((sentence, index) => (
+            <span key={index}>
+              {sentence}
+              {index < details.split('. ').length - 1 && <><br /></>}
+            </span>
+          ))}
+        </p>
+        <a href="/" className="btn btn-primary">
+          Take me home, country roads!
+        </a>
+        {stack && (
+          <details className="mt-4 text-start">
+            <summary className="btn btn-outline-secondary btn-sm">Show Stack Trace</summary>
+            <pre className="bg-dark text-light p-3 mt-2 rounded">
+              <code>{stack}</code>
+            </pre>
+          </details>
+        )}
+      </div>
+    </div>
   );
 }

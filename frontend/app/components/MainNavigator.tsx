@@ -8,13 +8,13 @@ function MainNavigator() {
   return (
     <Navbar expand="lg" bg="dark" variant="dark" className="position-relative">
       <Container fluid>
-        {/* Bal oldal - logó */}
+        {/* Logo - leftside */}
         <Navbar.Brand href="#">RustyPython</Navbar.Brand>
 
-        {/* Hamburger menü gomb */}
+        {/* Hamburger menu buttonb */}
         <Navbar.Toggle aria-controls="main-navbar" />
 
-        {/* Összecsukható tartalom */}
+        {/* Collapsable content */}
         <Navbar.Collapse id="main-navbar" className="position-relative w-100">
           {/* Kereső mobilon (normál flow) */}
           <Form className="d-flex mt-3 d-lg-none w-100">
@@ -27,7 +27,7 @@ function MainNavigator() {
             <Button variant="outline-light">Search</Button>
           </Form>
 
-          {/* Középen igazított kereső csak nagy képernyőn */}
+          {/* Search bar positioned in middle only on big screen */}
           <div
             className="d-none d-lg-flex position-absolute start-50 translate-middle-x"
             style={{ zIndex: 1 }}
@@ -43,7 +43,7 @@ function MainNavigator() {
             </Form>
           </div>
 
-          {/* Jobb oldali linkek/gombok */}
+          {/* Nav buttons/links on top right */}
           <Nav className="ms-auto mt-3 mt-lg-0 d-flex align-items-center">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#topics">Topics</Nav.Link>
