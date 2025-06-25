@@ -41,13 +41,7 @@ def register(request: views.Request):
 
     auth.login(request._request, user)
 
-    return views.Response({
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email
-        }
-    }, status=status.HTTP_201_CREATED)
+    return views.Response(status=status.HTTP_201_CREATED)
             
 
 @extend_schema(
@@ -72,13 +66,7 @@ def login(request: views.Request):
     user = auth.authenticate(username=username, password=password)
     if user is not None:
         auth.login(request._request, user)
-        return views.Response({
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email
-            }
-        })
+        return views.Response()
     else:
         return views.Response({
             "error": "Invalid credentials",

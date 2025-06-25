@@ -49,14 +49,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    author_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
-    author_name = models.CharField(max_length=100, blank=True, default='')  # For anonymous comments
+    author_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    
-    def __str__(self):
-        author = self.author_profile.user.username if self.author_profile else self.author_name or "Anonymous"
-        return f"Comment by {author} on {self.post.title}"
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
