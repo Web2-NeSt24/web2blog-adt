@@ -1,15 +1,15 @@
-import { useLoaderData, Link } from "react-router";
+import { Link } from "react-router";
 import { dummyPosts } from "~/dummy";
-import type { Route } from "./$types/postId";
+import type { Route } from "./+types/$postId";
 
 export const loader = ({ params }: Route.LoaderArgs) => {
   const postId = parseInt(params.postId || "0", 10);
   const post = dummyPosts.find(p => p.id === postId);
-  
+
   if (!post) {
     throw new Response("Post not found", { status: 404 });
   }
-  
+
   return { post };
 };
 
@@ -27,19 +27,17 @@ export function meta({ data }: Route.MetaArgs) {
   ];
 }
 
-export default function PostDetail() {
-  const { post } = useLoaderData<typeof loader>();
-
+export default function PostDetail({ loaderData: { post } }: Route.ComponentProps) {
   return (
     <div className="container py-5">
       <Link to="/" className="btn btn-outline-primary mb-4">
         &larr; Back to Home
       </Link>
-      
+
       <article className="blog-post">
         <header className="mb-4">
           <h1 className="display-5 fw-bold">{post.title}</h1>
-          
+
           <div className="d-flex align-items-center mb-4">
             <div className="d-flex align-items-center">
               {post.image?.data ? (
@@ -75,7 +73,7 @@ export default function PostDetail() {
             </div>
           </div>
         </header>
-        
+
         {post.image && (
           <div className="mb-4 text-center">
             <img
@@ -86,15 +84,15 @@ export default function PostDetail() {
             />
           </div>
         )}
-        
+
         <div className="blog-content mb-4">
           <p className="lead">{post.content}</p>
         </div>
-        
+
         {post.tags && post.tags.length > 0 && (
           <div className="d-flex flex-wrap gap-2 mb-4">
             {post.tags.map(tag => (
-              <span 
+              <span
                 className="badge bg-secondary"
                 key={tag.id}
               >
