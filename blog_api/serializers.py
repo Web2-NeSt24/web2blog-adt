@@ -48,20 +48,25 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    post_ids = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Profile
-        fields = ["user", "biography", "profile_picture"]
+        fields = ["user", "biography", "profile_picture", "post_ids"]
+
+    @extend_schema_field(serializers.ListField(child=serializers.IntegerField()))
+    def get_post_ids(self, obj: models.Profile) -> list[int]:
+        return list(obj.post_set.values_list('id', flat=True))  # type: ignore
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     biography = serializers.CharField(required=False, allow_blank=True)
     profile_picture = serializers.ImageField(required=False, allow_null=True)
 
-    def validate(self, data):
-        if not data.get("biography") and not data.get("profile_picture"):
+    def validate(self, attrs):
+        if not attrs.get("biography") and not attrs.get("profile_picture"):
             raise serializers.ValidationError("At least one field (biography or profile_picture) must be provided.")
-        return data
+        return attrs
 
     class Meta:
         model = models.Profile
@@ -143,6 +148,13 @@ class PostUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Post
         fields = ["title", "content", "image", "tags"]
+
+    def validate(self, attrs):
+        if not attrs:
+            raise serializers.ValidationError(
+                "At least one field (title, content, image, or tags) must be provided for an update."
+            )
+        return attrs
 
 
 class BookmarkSerializer(serializers.ModelSerializer):

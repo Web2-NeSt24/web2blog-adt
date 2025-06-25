@@ -44,23 +44,21 @@ class PostView(views.APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
         serializer = serializers.PostSerializer(post, context={'request': request})
-        return views.Response(serializer.data)    
+        return views.Response(serializer.data)
+
     @extend_schema(
         summary="Update a post",
         description="Update the content of an existing post. Only the post author can perform this operation. All fields are optional for partial updates.",
         parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH, description="Unique identifier of the post")],
-        request=serializers.PostUpdateSerializer, 
+        request=serializers.PostUpdateSerializer,
         responses={
             200: OpenApiResponse(description="Post updated successfully"),
             403: OpenApiResponse(description="Not authorized to edit this post"),
             404: OpenApiResponse(description="Post not found")
-        }, 
+        },
         tags=['Posts']
     )
     def put(self, request: views.Request, post_id: int):
-        serializer = serializers.PostUpdateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
@@ -68,23 +66,39 @@ class PostView(views.APIView):
                 "error": "Post does not exist"
             }, status=status.HTTP_404_NOT_FOUND)
 
-        if request.user.id != post.profile.user.id:
+        # Ensure the user is authenticated and is the author of the post
+        if not request.user.is_authenticated or request.user.id != post.profile.user.id: # type: ignore
             return views.Response({
                 "error": "You can only edit your own posts"
             }, status=status.HTTP_403_FORBIDDEN)
 
-        tags = [
-            models.Hashtag.objects.get_or_create(value=tag)[0]
-            for tag in serializer.validated_data["tags"]
-        ]
+        # Pass the existing post instance to the serializer for partial updates
+        serializer = serializers.PostUpdateSerializer(post, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
 
-        post.title = serializer.validated_data["title"]
-        post.content = serializer.validated_data["content"]
-        post.image = serializer.validated_data["image"]
-        post.tags.set(tags)
+        # validated_data will now contain existing post data + updated fields
+        validated_data = serializer.validated_data
+
+        tags_data = validated_data.get("tags") 
+        
+        if tags_data is not None: # Check if tags were part of the update
+            tags = [
+                models.Hashtag.objects.get_or_create(value=tag)[0]
+                for tag in tags_data
+            ]
+            post.tags.set(tags)
+
+        # Update fields if they are in validated_data (meaning they were provided in the request)
+        if "title" in validated_data: # type: ignore
+            post.title = validated_data["title"] # type: ignore
+        if "content" in validated_data: # type: ignore
+            post.content = validated_data["content"] # type: ignore
+        if "image" in validated_data: # type: ignore
+            post.image = validated_data["image"] # type: ignore
+        
         post.save()
-
-        return views.Response()
+    
+        return views.Response(serializers.PostSerializer(post, context={'request': request}).data)
     
     @extend_schema(
         summary="Publish a draft",
