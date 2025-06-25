@@ -3,4 +3,3 @@ db.sqlite3
 .coverage
 **/.vscode/*
 coverage.xml
-node_modules/
