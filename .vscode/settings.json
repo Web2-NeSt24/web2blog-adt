@@ -1,0 +1,12 @@
+{
+    "python.defaultInterpreterPath": "C:\\Users\\raine\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./blog_api",
+        "-p",
+        "*_test.py"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false
+}
