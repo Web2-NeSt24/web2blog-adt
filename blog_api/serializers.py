@@ -61,7 +61,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     biography = serializers.CharField(required=False, allow_blank=True)
-    profile_picture = serializers.FileField(required=False, allow_null=True)
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
 
     def validate(self, attrs):
         if not attrs.get("biography") and not attrs.get("profile_picture"):
@@ -78,15 +78,13 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Comment
-        fields = ["id", "post", "author_profile", "author_name", "content", "created_at"]
+        fields = ["id", "post", "author_profile", "content"]
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(required=False, allow_blank=True)
-    
     class Meta:
         model = models.Comment
-        fields = ["content", "author_name"]
+        fields = ["content"]
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -149,7 +147,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Post
-        fields = ["title", "content", "image", "tags", "draft"]
+        fields = ["title", "content", "image", "tags"]
 
     def validate(self, attrs):
         if not attrs:

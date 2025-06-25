@@ -3,12 +3,10 @@ from django.urls import path
 from blog_api import views
 
 urlpatterns = [
-    path("csrf", views.auth.csrf_token),
     path("image/<int:id>", views.image.image),
     path("image/", views.image.upload_image),
     path("auth/register", views.auth.register),
     path("auth/login", views.auth.login),
-    path("auth/logout", views.auth.logout),
     path("auth/password", views.auth.password),
     path("filter/", views.post_filter.PostFilterView.as_view()),
     path("user/by-id/<int:user_id>/profile", views.profile.ProfileView.as_view()),

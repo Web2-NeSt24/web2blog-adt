@@ -64,6 +64,7 @@ class ProfileView(views.APIView):
         if validated and "profile_picture" in validated:
             profile.profile_picture = validated["profile_picture"]
         profile.save()
+
         return views.Response()
 
 
