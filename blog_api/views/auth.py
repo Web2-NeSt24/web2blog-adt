@@ -1,9 +1,27 @@
 from django.contrib import auth
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework import status, views, permissions
 from rest_framework.decorators import api_view, permission_classes
 
 from blog_api import models, serializers
+
+
+@extend_schema(
+    summary="Get CSRF token",
+    description="Get CSRF token for authentication. This endpoint ensures a CSRF cookie is set.",
+    responses={
+        200: OpenApiResponse(description="CSRF token provided in cookie")
+    },
+    tags=['Authentication']
+)
+@api_view(["GET"])
+@ensure_csrf_cookie
+def csrf_token(request: views.Request):
+    """Get CSRF token"""
+    return views.Response({'detail': 'CSRF cookie set'})
 
 
 @extend_schema(

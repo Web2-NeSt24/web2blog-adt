@@ -1,0 +1,212 @@
+2025-07-01 17:33:13,413 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:33:15,138 - INFO - Django imports successful
+2025-07-01 17:33:15,138 - INFO - Starting Django development server
+2025-07-01 17:33:15,517 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:33:15,769 - INFO - Django imports successful
+2025-07-01 17:33:15,769 - INFO - Starting Django development server
+2025-07-01 17:33:15,804 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:33:15,834 - ERROR - Exception in thread django-main-thread: ModuleNotFoundError: No module named 'corsheaders'
+2025-07-01 17:33:15,834 - ERROR - Full traceback: <traceback object at 0x1067cd640>
+2025-07-01 17:36:40,050 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:36:40,286 - INFO - Django imports successful
+2025-07-01 17:36:40,286 - INFO - Starting Django development server
+2025-07-01 17:36:40,687 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:36:40,890 - INFO - Django imports successful
+2025-07-01 17:36:40,890 - INFO - Starting Django development server
+2025-07-01 17:36:40,950 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:36:57,764 - WARNING - Not Found: /user/me/profile
+2025-07-01 17:37:40,144 - WARNING - Not Found: /user/me/profile
+2025-07-01 17:37:53,564 - WARNING - Not Found: /auth/register
+2025-07-01 17:40:36,814 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:40:37,074 - INFO - Django imports successful
+2025-07-01 17:40:37,074 - INFO - Starting Django development server
+2025-07-01 17:40:37,197 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:40:37,411 - INFO - Django imports successful
+2025-07-01 17:40:37,411 - INFO - Starting Django development server
+2025-07-01 17:40:37,479 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:40:46,595 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 17:40:59,536 - ERROR - Internal Server Error: /api/auth/register
+Traceback (most recent call last):
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: auth_user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/auth.py", line 35, in register
+    if models.User.objects.filter(username=username).exists():
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/query.py", line 1296, in exists
+    return self.query.has_results(using=self.db)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/sql/query.py", line 674, in has_results
+    return compiler.has_results()
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1591, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: auth_user
+2025-07-01 17:41:16,575 - INFO - Django management command started: manage.py migrate
+2025-07-01 17:41:16,771 - INFO - Django imports successful
+2025-07-01 17:41:17,075 - INFO - Django command completed successfully
+2025-07-01 17:42:31,559 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 17:42:39,162 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 17:42:46,765 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 17:45:02,133 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/auth.py changed, reloading.
+2025-07-01 17:45:02,330 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:45:03,065 - INFO - Django imports successful
+2025-07-01 17:45:03,065 - INFO - Starting Django development server
+2025-07-01 17:45:03,222 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:45:21,093 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/urls.py changed, reloading.
+2025-07-01 17:45:21,173 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:45:21,357 - INFO - Django imports successful
+2025-07-01 17:45:21,357 - INFO - Starting Django development server
+2025-07-01 17:45:21,411 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:49:45,611 - WARNING - Forbidden: /api/auth/login
+2025-07-01 17:53:03,671 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 17:53:16,117 - WARNING - Forbidden: /api/auth/login
+2025-07-01 17:53:20,966 - WARNING - Forbidden: /api/auth/login
+2025-07-01 17:53:45,519 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 17:53:49,802 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 17:56:07,075 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:56:09,924 - INFO - Django imports successful
+2025-07-01 17:56:09,925 - INFO - Starting Django development server
+2025-07-01 17:56:10,286 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:56:10,456 - INFO - Django imports successful
+2025-07-01 17:56:10,456 - INFO - Starting Django development server
+2025-07-01 17:56:10,495 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:56:10,519 - ERROR - Exception in thread django-main-thread: ModuleNotFoundError: No module named 'corsheaders'
+2025-07-01 17:56:10,520 - ERROR - Full traceback: <traceback object at 0x106b5fcc0>
+2025-07-01 17:56:50,543 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:56:51,516 - INFO - Django imports successful
+2025-07-01 17:56:51,516 - INFO - Starting Django development server
+2025-07-01 17:56:52,298 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:56:52,512 - INFO - Django imports successful
+2025-07-01 17:56:52,512 - INFO - Starting Django development server
+2025-07-01 17:56:52,595 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:56:53,181 - ERROR - Exception in thread django-main-thread: SyntaxError: invalid syntax (post_filter.py, line 51)
+2025-07-01 17:56:53,181 - ERROR - Full traceback: <traceback object at 0x1077adec0>
+2025-07-01 17:57:05,620 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/post_filter.py changed, reloading.
+2025-07-01 17:57:05,711 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:57:05,874 - INFO - Django imports successful
+2025-07-01 17:57:05,874 - INFO - Starting Django development server
+2025-07-01 17:57:05,945 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:57:17,389 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:57:17,574 - INFO - Django imports successful
+2025-07-01 17:57:17,574 - INFO - Starting Django development server
+2025-07-01 17:57:17,674 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:57:17,858 - INFO - Django imports successful
+2025-07-01 17:57:17,858 - INFO - Starting Django development server
+2025-07-01 17:57:17,941 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:57:47,505 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:57:47,735 - INFO - Django imports successful
+2025-07-01 17:57:47,736 - INFO - Starting Django development server
+2025-07-01 17:57:47,869 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:57:48,088 - INFO - Django imports successful
+2025-07-01 17:57:48,088 - INFO - Starting Django development server
+2025-07-01 17:57:48,168 - INFO - Watching for file changes with StatReloader
+2025-07-01 17:59:07,777 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:59:08,061 - INFO - Django imports successful
+2025-07-01 17:59:08,061 - INFO - Starting Django development server
+2025-07-01 17:59:08,213 - INFO - Django management command started: manage.py runserver
+2025-07-01 17:59:08,419 - INFO - Django imports successful
+2025-07-01 17:59:08,419 - INFO - Starting Django development server
+2025-07-01 17:59:08,483 - INFO - Watching for file changes with StatReloader
+2025-07-01 18:00:10,137 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 18:00:35,104 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 18:00:57,557 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 18:01:05,409 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 18:01:38,565 - WARNING - Method Not Allowed: /api/auth/logout
+2025-07-01 18:12:51,467 - WARNING - Unauthorized: /api/auth/logout
+2025-07-01 18:14:00,271 - INFO - Django management command started: manage.py runserver 8001 --verbosity=2
+2025-07-01 18:14:01,995 - INFO - Django imports successful
+2025-07-01 18:14:01,995 - INFO - Starting Django development server
+2025-07-01 18:14:02,520 - INFO - Django management command started: manage.py runserver 8001 --verbosity=2
+2025-07-01 18:14:02,704 - INFO - Django imports successful
+2025-07-01 18:14:02,704 - INFO - Starting Django development server
+2025-07-01 18:14:02,783 - INFO - Watching for file changes with StatReloader
+2025-07-01 18:16:16,029 - INFO - Django management command started: manage.py runserver 8000
+2025-07-01 18:16:16,227 - INFO - Django imports successful
+2025-07-01 18:16:16,227 - INFO - Starting Django development server
+2025-07-01 18:16:16,354 - INFO - Django management command started: manage.py runserver 8000
+2025-07-01 18:16:16,554 - INFO - Django imports successful
+2025-07-01 18:16:16,554 - INFO - Starting Django development server
+2025-07-01 18:16:16,649 - INFO - Watching for file changes with StatReloader
+2025-07-01 18:17:59,441 - WARNING - Method Not Allowed: /api/auth/csrf/
+2025-07-01 18:18:29,860 - WARNING - Unauthorized: /api/auth/logout
+2025-07-01 18:18:35,237 - WARNING - Unauthorized: /api/auth/logout
+2025-07-01 18:20:29,549 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 18:20:44,241 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 18:20:56,732 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 18:21:16,458 - WARNING - Forbidden: /api/auth/logout
+2025-07-01 18:21:54,017 - WARNING - Method Not Allowed: /api/auth/logout
+2025-07-01 18:22:14,970 - WARNING - Unauthorized: /api/auth/logout
+2025-07-01 18:22:44,496 - WARNING - Unauthorized: /api/auth/logout
+2025-07-01 20:04:59,232 - INFO - Django management command started: manage.py runserver 8000
+2025-07-01 20:05:02,785 - INFO - Django imports successful
+2025-07-01 20:05:02,785 - INFO - Starting Django development server
+2025-07-01 20:05:03,688 - INFO - Django management command started: manage.py runserver 8000
+2025-07-01 20:05:03,927 - INFO - Django imports successful
+2025-07-01 20:05:03,927 - INFO - Starting Django development server
+2025-07-01 20:05:04,033 - INFO - Watching for file changes with StatReloader
+2025-07-01 20:06:05,609 - WARNING - Unauthorized: /api/auth/logout
+2025-07-01 20:07:28,930 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 20:11:10,682 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 20:11:15,643 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-01 20:11:29,018 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/urls.py changed, reloading.
+2025-07-01 20:11:29,138 - INFO - Django management command started: manage.py runserver 8000
+2025-07-01 20:11:29,360 - INFO - Django imports successful
+2025-07-01 20:11:29,360 - INFO - Starting Django development server
+2025-07-01 20:11:29,443 - INFO - Watching for file changes with StatReloader
+2025-07-01 20:11:29,886 - WARNING - Unauthorized: /api/user/me/profile

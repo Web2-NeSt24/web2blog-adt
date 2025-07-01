@@ -332,4 +332,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Allow frontend dev server for CSRF
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    'http://localhost:5173',  # Vite dev server
 ]
