@@ -20,6 +20,7 @@
               pytest-django
               pytest-cov
               coverage
+              django-cors-headers
             ]))
           ];
         };
