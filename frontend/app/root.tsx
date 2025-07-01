@@ -10,8 +10,8 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { AuthProvider } from "./hooks/useAuth";
+import MainNavigator from "./components/MainNavigator";
+import Footer from "./components/Footer";
 
 export const links: Route.LinksFunction = () => [];
 
@@ -34,11 +34,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return (
-    <AuthProvider>
+  return <div className="d-flex flex-column min-vh-100">
+    <MainNavigator />
+    <main className="flex-grow-1" >
       <Outlet />
-    </AuthProvider>
-  );
+    </main>
+    <Footer />
+  </div>
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -58,27 +60,12 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card border-danger">
-            <div className="card-header bg-danger text-white">
-              <h1 className="h4 mb-0">{message}</h1>
-            </div>
-            <div className="card-body">
-              <p>{details}</p>
-              {stack && (
-                <details className="mt-3">
-                  <summary>Stack trace</summary>
-                  <pre className="mt-2 p-3 bg-light border rounded">
-                    <code>{stack}</code>
-                  </pre>
-                </details>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <main className="modal is-active">
+      <article>
+        <h1>{message}</h1>
+        <p>{details}</p>
+        {stack && (<pre><code>{stack}</code></pre>)}
+      </article>
+    </main>
   );
 }
