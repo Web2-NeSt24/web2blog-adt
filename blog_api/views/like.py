@@ -1,6 +1,7 @@
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiParameter
 from rest_framework import status, views, permissions
-from blog_api import models, serializers
+from blog_api import models
+from blog_api.serializers import LikeStatusSerializer
 
 class LikeView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -13,13 +14,14 @@ class LikeView(views.APIView):
             201: OpenApiResponse(description="Post liked"),
             200: OpenApiResponse(description="Post unliked"),
             404: OpenApiResponse(description="Post not found")
-        }
+        },
+        tags=['Likes']
     )
     def post(self, request: views.Request, post_id: int) -> views.Response:
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
-            return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+            return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)        
         like = models.Like.objects.filter(post=post, liker_profile=request.user.profile).first()
         if like:
             like.delete()
@@ -32,9 +34,10 @@ class LikeView(views.APIView):
         description="Returns whether the authenticated user has liked the given post.",
         parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH)],
         responses={
-            200: serializers.LikeStatusSerializer,
+            200: OpenApiResponse(response=LikeStatusSerializer),
             404: OpenApiResponse(description="Post not found")
-        }
+        },
+        tags=['Likes']
     )
     def get(self, request: views.Request, post_id: int) -> views.Response:
         try:
@@ -42,5 +45,5 @@ class LikeView(views.APIView):
         except models.Post.DoesNotExist:
             return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         exists = models.Like.objects.filter(post=post, liker_profile=request.user.profile).exists()
-        serializer = serializers.LikeStatusSerializer({"liked": exists})
+        serializer = LikeStatusSerializer({"liked": exists})
         return views.Response(serializer.data, status=status.HTTP_200_OK)
