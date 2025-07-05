@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 import { dummyPosts } from "~/dummy";
 import { RandomCard } from "~/components/Card";
+import { Container, Row, Col } from "react-bootstrap";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -11,12 +12,14 @@ export function meta({ }: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <>
-      {dummyPosts.map((post, idx) => (
-        <div key={post.id || idx}>
-          {<RandomCard post={post} idx={idx}/>}
-        </div>
-      ))}
-    </>
+    <Container className="py-4 main-centered-container" style={{ maxWidth: '1400px' }}>
+      <Row className="g-4">
+        {dummyPosts.map((post, idx) => (
+          <Col key={post.id || idx} xs={12} sm={6} md={4} lg={3}>
+            <RandomCard post={post} idx={idx}/>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 }
