@@ -16,7 +16,11 @@
               django
               djangorestframework
               drf-spectacular
-
+              pytest
+              pytest-django
+              pytest-cov
+              coverage
+              django-cors-headers
             ]))
               nodejs
           ];
