@@ -7,3 +7,151 @@
 2025-07-05 16:37:03,228 - INFO - Watching for file changes with StatReloader
 2025-07-05 17:19:50,299 - INFO - Django command completed successfully
 2025-07-05 17:19:50,423 - INFO - Django command completed successfully
+2025-07-06 01:58:24,965 - INFO - Django management command started: ./manage.py --help
+2025-07-06 01:58:27,327 - INFO - Django imports successful
+2025-07-06 01:58:27,851 - INFO - Django command completed successfully
+2025-07-06 01:58:28,109 - INFO - Django management command started: ./manage.py --help
+2025-07-06 01:58:28,287 - INFO - Django imports successful
+2025-07-06 01:58:28,346 - INFO - Django command completed successfully
+2025-07-06 01:58:50,946 - INFO - Django management command started: manage.py runserver
+2025-07-06 01:58:51,131 - INFO - Django imports successful
+2025-07-06 01:58:51,131 - INFO - Starting Django development server
+2025-07-06 01:58:51,245 - INFO - Django management command started: manage.py runserver
+2025-07-06 01:58:51,414 - INFO - Django imports successful
+2025-07-06 01:58:51,414 - INFO - Starting Django development server
+2025-07-06 01:58:51,475 - INFO - Watching for file changes with StatReloader
+2025-07-06 02:03:45,002 - WARNING - Unauthorized: /api/drafts/
+2025-07-06 02:03:46,513 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:04:12,523 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:16,910 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:25,371 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:29,370 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:34,468 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:37,046 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:46,035 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:49,835 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:54,485 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:23:56,933 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:00,840 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:02,238 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:06,277 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:09,022 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:12,164 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:15,309 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:24:28,614 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:26:50,725 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:26:52,169 - WARNING - Not Found: /api/drafts/undefined/publish/
+2025-07-06 02:27:41,812 - INFO - Django management command started: ./manage.py --help
+2025-07-06 02:27:43,837 - INFO - Django imports successful
+2025-07-06 02:27:44,265 - INFO - Django command completed successfully
+2025-07-06 02:33:26,192 - INFO - Django management command started: manage.py runserver
+2025-07-06 02:33:26,445 - INFO - Django imports successful
+2025-07-06 02:33:26,445 - INFO - Starting Django development server
+2025-07-06 02:33:26,605 - INFO - Django management command started: manage.py runserver
+2025-07-06 02:33:26,836 - INFO - Django imports successful
+2025-07-06 02:33:26,836 - INFO - Starting Django development server
+2025-07-06 02:33:26,916 - INFO - Watching for file changes with StatReloader
+2025-07-06 02:34:29,964 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:34:32,923 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:34:39,004 - WARNING - Not Found: /api/post/by-id/undefined
+2025-07-06 02:35:08,901 - WARNING - Unauthorized: /api/image/
+2025-07-06 02:35:11,296 - WARNING - Bad Request: /api/image/
+2025-07-06 02:35:11,301 - WARNING - Not Found: /api/drafts/undefined/publish/
+2025-07-06 02:38:17,521 - WARNING - Not Found: /api/drafts/undefined/publish/
+2025-07-06 02:39:11,124 - WARNING - Not Found: /api/drafts/undefined/publish/
+2025-07-06 02:39:35,627 - WARNING - Not Found: /
+2025-07-06 02:39:35,782 - WARNING - Not Found: /favicon.ico
+2025-07-06 02:42:45,288 - WARNING - Not Found: /api/schema/swagger-ui/
+2025-07-06 02:52:40,269 - INFO - Django management command started: manage.py runserver 0.0.0.0:8000
+2025-07-06 02:52:43,977 - INFO - Django imports successful
+2025-07-06 02:52:43,978 - INFO - Starting Django development server
+2025-07-06 02:52:44,769 - INFO - Django management command started: manage.py runserver 0.0.0.0:8000
+2025-07-06 02:52:44,957 - INFO - Django imports successful
+2025-07-06 02:52:44,957 - INFO - Starting Django development server
+2025-07-06 02:52:45,021 - INFO - Watching for file changes with StatReloader
+2025-07-06 02:53:00,076 - WARNING - Unauthorized: /api/drafts/
+2025-07-06 02:59:04,254 - WARNING - Unauthorized: /api/post/by-id/16
+2025-07-06 02:59:04,351 - WARNING - Method Not Allowed: /api/post/by-id/16
+2025-07-06 02:59:08,250 - WARNING - Method Not Allowed: /api/post/by-id/16
+2025-07-06 02:59:13,311 - WARNING - Method Not Allowed: /api/post/by-id/16
+2025-07-06 03:00:07,696 - WARNING - Unauthorized: /api/drafts/
+2025-07-06 03:01:20,413 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:01:36,621 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:01:52,177 - INFO - Django management command started: manage.py shell -c from django.contrib.auth.models import User; print('Users:', [u.username for u in User.objects.all()])
+2025-07-06 03:01:53,878 - INFO - Django imports successful
+2025-07-06 03:01:54,475 - INFO - Django command completed successfully
+2025-07-06 03:02:04,895 - INFO - Django management command started: manage.py shell -c from django.contrib.auth.models import User; admin = User.objects.filter(username='admin').first(); print('Admin exists:', admin is not None, 'Is superuser:', admin.is_superuser if admin else 'N/A')
+2025-07-06 03:02:05,048 - INFO - Django imports successful
+2025-07-06 03:02:05,103 - INFO - Django command completed successfully
+2025-07-06 03:02:12,593 - INFO - Django management command started: manage.py shell -c from django.contrib.auth.models import User; user = User.objects.get(username='testuser'); user.set_password('testpass123'); user.save(); print('Password set for testuser')
+2025-07-06 03:02:12,777 - INFO - Django imports successful
+2025-07-06 03:02:12,935 - INFO - Django command completed successfully
+2025-07-06 03:02:41,913 - WARNING - Forbidden: /api/drafts/
+2025-07-06 03:06:51,770 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:06:51,775 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:07:13,851 - WARNING - Method Not Allowed: /api/post/by-id/19
+2025-07-06 03:07:20,231 - WARNING - Method Not Allowed: /api/post/by-id/19
+2025-07-06 03:07:26,145 - WARNING - Method Not Allowed: /api/post/by-id/19
+2025-07-06 03:08:11,212 - WARNING - Method Not Allowed: /api/post/by-id/20
+2025-07-06 03:08:16,460 - WARNING - Method Not Allowed: /api/post/by-id/20
+2025-07-06 03:08:22,067 - WARNING - Method Not Allowed: /api/post/by-id/20
+2025-07-06 03:09:21,609 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:09:21,612 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:10:01,149 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 03:12:01,309 - ERROR - Internal Server Error: /api/post/by-id/27
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/post.py", line 97, in put
+    post.image = validated_data["image"] # type: ignore
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/db/models/fields/related_descriptors.py", line 266, in __set__
+    raise ValueError(
+ValueError: Cannot assign "1": "Post.image" must be a "Image" instance.
+2025-07-06 03:13:12,978 - ERROR - Internal Server Error: /api/post/by-id/21
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/post.py", line 97, in put
+    post.image = validated_data["image"] # type: ignore
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/django/db/models/fields/related_descriptors.py", line 266, in __set__
+    raise ValueError(
+ValueError: Cannot assign "1": "Post.image" must be a "Image" instance.
+2025-07-06 03:14:05,901 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/serializers.py changed, reloading.
+2025-07-06 03:14:06,098 - INFO - Django management command started: manage.py runserver 0.0.0.0:8000
+2025-07-06 03:14:07,239 - INFO - Django imports successful
+2025-07-06 03:14:07,239 - INFO - Starting Django development server
+2025-07-06 03:14:07,564 - INFO - Watching for file changes with StatReloader
+2025-07-06 03:14:14,608 - WARNING - Forbidden: /api/post/by-id/6
+2025-07-06 03:14:28,830 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/serializers.py changed, reloading.
+2025-07-06 03:14:28,904 - INFO - Django management command started: manage.py runserver 0.0.0.0:8000
+2025-07-06 03:14:29,146 - INFO - Django imports successful
+2025-07-06 03:14:29,146 - INFO - Starting Django development server
+2025-07-06 03:14:29,228 - INFO - Watching for file changes with StatReloader

@@ -1,8 +1,9 @@
 import Card from "react-bootstrap/Card";
+import type { Post } from "~/types/api";
 
 const cardVariants = [
   "primary",
-  "secondary",
+  "secondary", 
   "success",
   "danger",
   "warning",
@@ -12,17 +13,26 @@ const cardVariants = [
 ];
 
 function getRandomVariant(idx: number) {
-  return cardVariants[idx];
+  return cardVariants[idx % cardVariants.length];
 }
 
-export function RandomCard({ post, idx }: any) {
+interface RandomCardProps {
+  post: Post;
+  idx: number;
+}
+
+export function RandomCard({ post, idx }: RandomCardProps) {
   return (
     <Card className="blog-card h-100" key={post.id}>
-      {post.image !== null && (
-        <Card.Img variant="top" src={post.image.data} className="card-img-top" />
+      {post.image && (
+        <Card.Img variant="top" src={post.image} className="card-img-top" />
       )}
       <Card.Body className="d-flex flex-column">
-        <Card.Title className="card-title">{post.title}</Card.Title>
+        <Card.Title className="card-title">
+          <a href={`/post/${post.id}`} className="text-decoration-none">
+            {post.title}
+          </a>
+        </Card.Title>
         <Card.Text className="card-text flex-grow-1">
           {post.content ?
             (post.content.length > 150 ?
@@ -34,18 +44,18 @@ export function RandomCard({ post, idx }: any) {
         </Card.Text>
         <div className="tags mb-2">
           {post.tags && post.tags.length > 0 ? (
-            post.tags.map((tag: any) => (
-              <span className="tag" key={tag.id}>#{tag.value}</span>
+            post.tags.map((tag: string, index: number) => (
+              <span className="tag" key={index}>#{tag}</span>
             ))
           ) : (
             <span className="tag">No tags</span>
           )}
         </div>
         <div className="author-section mt-auto">
-          {post.profile?.profile_picture?.data ? (
+          {post.profile?.profile_picture ? (
             <img
               className="author-avatar"
-              src={post.profile.profile_picture.data}
+              src={post.profile.profile_picture}
               alt={post.profile?.user?.username || "author"}
             />
           ) : (
@@ -55,6 +65,11 @@ export function RandomCard({ post, idx }: any) {
             />
           )}
           <span className="author-name">{post.profile?.user?.username || "Unknown Author"}</span>
+        </div>
+        <div className="post-stats mt-2">
+          <small className="text-muted">
+            {post.like_count} likes • {post.comment_count} comments • {post.bookmark_count} bookmarks
+          </small>
         </div>
       </Card.Body>
     </Card>
