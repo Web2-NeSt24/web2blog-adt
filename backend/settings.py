@@ -206,16 +206,6 @@ SPECTACULAR_SETTINGS = {
         'name': 'MIT License',
         'url': 'https://opensource.org/licenses/MIT'
     },
-    'SERVERS': [
-        {
-            'url': 'http://localhost:8000',
-            'description': 'Development server'
-        },
-        {
-            'url': 'https://api.web2blog.com',
-            'description': 'Production server'
-        }
-    ],
     'TAGS': [
         {
             'name': 'Authentication', 
@@ -319,9 +309,6 @@ SPECTACULAR_SETTINGS = {
     'ENUM_NAME_OVERRIDES': {
         'PostSortingMethodEnum': 'blog_api.serializers.PostSortingMethod',
     },
-    'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
-    'SCHEMA_PATH_PREFIX': '/api/',
-    'SCHEMA_PATH_PREFIX_TRIM': True,
     'COMPONENT_SPLIT_REQUEST': True,
     'SORT_OPERATION_PARAMETERS': True,
 }
