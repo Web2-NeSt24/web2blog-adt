@@ -4,5 +4,6 @@ export default [
   index("routes/home.tsx"),
   route("/auth", "routes/auth.tsx"),
   route("/post/:id", "routes/post.$id.tsx"),
-  route("/create", "routes/PostCreate.tsx")
+  route("/create", "routes/PostCreate.tsx"),
+  route("/profile", "routes/profile.tsx")
 ] satisfies RouteConfig;

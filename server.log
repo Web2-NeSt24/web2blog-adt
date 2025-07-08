@@ -155,3 +155,42 @@ ValueError: Cannot assign "1": "Post.image" must be a "Image" instance.
 2025-07-06 03:14:29,146 - INFO - Django imports successful
 2025-07-06 03:14:29,146 - INFO - Starting Django development server
 2025-07-06 03:14:29,228 - INFO - Watching for file changes with StatReloader
+2025-07-07 15:11:36,231 - INFO - Django management command started: manage.py runserver
+2025-07-07 15:11:38,010 - INFO - Django imports successful
+2025-07-07 15:11:38,010 - INFO - Starting Django development server
+2025-07-07 15:11:38,724 - INFO - Django management command started: manage.py runserver
+2025-07-07 15:11:39,134 - INFO - Django imports successful
+2025-07-07 15:11:39,134 - INFO - Starting Django development server
+2025-07-07 15:11:39,248 - INFO - Watching for file changes with StatReloader
+2025-07-08 10:27:55,129 - INFO - Django management command started: manage.py runserver
+2025-07-08 10:27:56,600 - INFO - Django imports successful
+2025-07-08 10:27:56,600 - INFO - Starting Django development server
+2025-07-08 10:27:57,289 - INFO - Django management command started: manage.py runserver
+2025-07-08 10:27:57,586 - INFO - Django imports successful
+2025-07-08 10:27:57,587 - INFO - Starting Django development server
+2025-07-08 10:27:57,684 - INFO - Watching for file changes with StatReloader
+2025-07-08 10:28:26,807 - WARNING - Not Found: /
+2025-07-08 10:28:27,176 - WARNING - Not Found: /favicon.ico
+2025-07-08 10:28:46,220 - WARNING - Not Found: /
+2025-07-08 10:28:55,885 - WARNING - Not Found: /api
+2025-07-08 10:43:24,810 - INFO - Django management command started: manage.py runserver
+2025-07-08 10:43:25,248 - INFO - Django imports successful
+2025-07-08 10:43:25,248 - INFO - Starting Django development server
+2025-07-08 10:43:25,471 - INFO - Django management command started: manage.py runserver
+2025-07-08 10:43:25,767 - INFO - Django imports successful
+2025-07-08 10:43:25,767 - INFO - Starting Django development server
+2025-07-08 10:43:25,867 - INFO - Watching for file changes with StatReloader
+2025-07-08 10:58:55,679 - INFO - Django management command started: manage.py runserver
+2025-07-08 10:58:55,982 - INFO - Django imports successful
+2025-07-08 10:58:55,982 - INFO - Starting Django development server
+2025-07-08 10:58:56,286 - INFO - Django management command started: manage.py runserver
+2025-07-08 10:58:56,584 - INFO - Django imports successful
+2025-07-08 10:58:56,584 - INFO - Starting Django development server
+2025-07-08 10:58:56,685 - INFO - Watching for file changes with StatReloader
+2025-07-08 11:45:35,834 - INFO - Django management command started: manage.py runserver
+2025-07-08 11:45:36,137 - INFO - Django imports successful
+2025-07-08 11:45:36,138 - INFO - Starting Django development server
+2025-07-08 11:45:36,329 - INFO - Django management command started: manage.py runserver
+2025-07-08 11:45:36,624 - INFO - Django imports successful
+2025-07-08 11:45:36,625 - INFO - Starting Django development server
+2025-07-08 11:45:36,725 - INFO - Watching for file changes with StatReloader

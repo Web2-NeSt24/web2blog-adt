@@ -65,6 +65,8 @@ const makeAuthenticatedRequest = async (url: string, options: RequestInit = {}):
   });
 };
 
+export { makeAuthenticatedRequest };
+
 /**
  * Get the current authenticated user
  */

@@ -592,3 +592,4 @@ frontend/public/tinymce/skins/ui/tinymce-5-dark/skin.shadowdom.min.css
 frontend/public/tinymce/themes/silver/index.js
 frontend/public/tinymce/themes/silver/theme.js
 frontend/public/tinymce/themes/silver/theme.min.js
+server.log
