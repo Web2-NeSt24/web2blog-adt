@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.middleware.csrf import get_token
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework import status, views, permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -115,3 +116,17 @@ def password(request: views.Request):
 def logout(request: views.Request):
     auth.logout(request._request)
     return views.Response(status=status.HTTP_200_OK)
+
+
+@extend_schema(
+    summary="Get CSRF token",
+    description="Retrieve the CSRF token required for session-based authentication. This token must be included in the X-CSRFToken header for POST requests when using session authentication.",
+    responses={
+        200: OpenApiResponse(description="CSRF token retrieved successfully")
+    },
+    tags=['Authentication']
+)
+@api_view(["GET"])
+def csrf_token(request):
+    """Endpoint to retrieve CSRF token."""
+    return views.Response({"csrfToken": get_token(request)})

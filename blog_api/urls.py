@@ -3,6 +3,7 @@ from django.urls import path
 from blog_api import views
 
 urlpatterns = [
+    path("auth/csrf-token", views.auth.csrf_token),
     path("image/<int:id>", views.image.image),
     path("image/", views.image.upload_image),
     path("auth/register", views.auth.register),
@@ -18,7 +19,6 @@ urlpatterns = [
     path("bookmarks/", views.bookmark.BookmarkListView.as_view()),  # GET (list all bookmarks)
     path("bookmarks/<int:bookmark_id>/", views.bookmark.BookmarkInstanceView.as_view()),  # PATCH (edit), DELETE (delete)
     path("post/<int:post_id>/like/", views.like.LikeView.as_view()),  # POST (like), GET (check like status)
-    path("drafts/", views.draft.DraftsView.as_view()),
     path("drafts/<int:draft_id>/publish/", views.draft.DraftPublishView.as_view()),  # POST (publish draft)
     path("posts/", views.posts.PostsView.as_view()),  # GET (list all posts), POST (filter posts)
 ]

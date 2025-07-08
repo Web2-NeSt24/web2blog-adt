@@ -11,21 +11,29 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Environment detection
+ENVIRONMENT = os.environ.get('DJANGO_ENV', 'development')
+IS_PRODUCTION = ENVIRONMENT == 'production'
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v7isobfx#!0%_+75jy#2g)(l2p_r&$#gg@%&w^@*r*h7w9z=@i'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-v7isobfx#!0%_+75jy#2g)(l2p_r&$#gg@%&w^@*r*h7w9z=@i')
+
+if IS_PRODUCTION and SECRET_KEY.startswith('django-insecure-'):
+    raise ValueError("You must set a secure SECRET_KEY environment variable in production!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = not IS_PRODUCTION
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] if not IS_PRODUCTION else []
 
 
 # Application definition
@@ -159,8 +167,8 @@ SPECTACULAR_SETTINGS = {
     Django Rest Framework API, backend of our Blog project for Web Engineering II
     ''',
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': True,
-    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SERVE_INCLUDE_SCHEMA': not IS_PRODUCTION,  # Disable schema serving in production
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'] if not IS_PRODUCTION else ['rest_framework.permissions.IsAdminUser'],
     'SWAGGER_UI_SETTINGS': {
         'tagsSorter': 'alpha',
         'operationsSorter': 'alpha',
@@ -175,7 +183,7 @@ SPECTACULAR_SETTINGS = {
         'showExtensions': True,
         'showCommonExtensions': True,
         'persistAuthorization': True,
-        'withCredentials': True,  # Important for session auth
+        'withCredentials': True,  # Important for session auth in swagger
     },
     'REDOC_UI_SETTINGS': {
         'hideDownloadButton': False,
@@ -291,15 +299,6 @@ SPECTACULAR_SETTINGS = {
             'description': 'Session-based authentication using Django sessions'
         },
     },
-    'APPEND_COMPONENTS': {
-        'securitySchemes': {
-            'bearerAuth': {
-                'type': 'http',
-                'scheme': 'bearer',
-                'description': 'Bearer token authentication (if implemented in future)'
-            }
-        }
-    },
     'ENUM_NAME_OVERRIDES': {
         'PostSortingMethodEnum': 'blog_api.serializers.PostSortingMethod',
     },
@@ -307,10 +306,43 @@ SPECTACULAR_SETTINGS = {
     'SORT_OPERATION_PARAMETERS': True,
 }
 
-# Enable CORS for all origins during development
-CORS_ALLOW_ALL_ORIGINS = True
+# Add bearer auth only in development for Swagger testing
+if not IS_PRODUCTION:
+    SPECTACULAR_SETTINGS['APPEND_COMPONENTS'] = {
+        'securitySchemes': {
+            'bearerAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'description': 'Bearer token authentication (development only - for Swagger UI testing)'
+            }
+        }
+    }
 
-# Allow frontend dev server for CSRF
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
-]
+# CORS settings - restrictive in production
+if IS_PRODUCTION:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOW_CREDENTIALS = False
+    CORS_ALLOWED_ORIGINS = [
+        # Add your production frontend domains here
+        # "https://yourdomain.com",
+        # "https://www.yourdomain.com",
+    ]
+    CORS_ALLOWED_ORIGIN_REGEXES = []
+else:
+    # Development settings - more permissive
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
+
+# CSRF settings
+if IS_PRODUCTION:
+    CSRF_TRUSTED_ORIGINS = [
+        # Add your production domains here
+        # "https://yourdomain.com",
+        # "https://www.yourdomain.com",
+    ]
+else:
+    # Development settings
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:3000',
+        'http://localhost:8000',
+    ]
