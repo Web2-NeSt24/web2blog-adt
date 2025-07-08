@@ -175,6 +175,7 @@ SPECTACULAR_SETTINGS = {
         'showExtensions': True,
         'showCommonExtensions': True,
         'persistAuthorization': True,
+        'withCredentials': True,  # Important for session auth
     },
     'REDOC_UI_SETTINGS': {
         'hideDownloadButton': False,
