@@ -9,22 +9,34 @@ class CommentView(views.APIView):
 
     @extend_schema(
         summary="List comments for a post",
-        description="Retrieve all comments for a specific post. Comments are returned with author information and timestamps.",
-        parameters=[OpenApiParameter("post_id", int, OpenApiParameter.PATH, description="Unique identifier of the post")],
+        description="Retrieve all comments for a specific post. Comments are returned with author information and timestamps. Supports pagination with page and page_size parameters.",
+        parameters=[
+            OpenApiParameter("post_id", int, OpenApiParameter.PATH, description="Unique identifier of the post"),
+            OpenApiParameter("page", int, OpenApiParameter.QUERY, description="Page number (default: 1)"),
+            OpenApiParameter("page_size", int, OpenApiParameter.QUERY, description="Number of items per page (default: 20, max: 100)")
+        ],
         responses={
             200: serializers.CommentSerializer(many=True),
             404: OpenApiResponse(description="Post not found")
         }, 
         tags=['Comments']
     )
-    def get(self, _request: views.Request, post_id: int):
+    def get(self, request: views.Request, post_id: int):
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
             return views.Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-        comments = models.Comment.objects.filter(post=post)
-        serializer = serializers.CommentSerializer(comments, many=True)
-        return views.Response(serializer.data)
+        
+        comments = models.Comment.objects.filter(post=post).order_by('-id')
+        
+        # Apply pagination
+        from rest_framework.pagination import PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = min(int(request.query_params.get('page_size', 20)), 100)
+        paginated_comments = paginator.paginate_queryset(comments, request)
+        
+        serializer = serializers.CommentSerializer(paginated_comments, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     @extend_schema(
         summary="Create a comment",

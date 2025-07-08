@@ -182,6 +182,34 @@ class DraftSerializer(serializers.ModelSerializer):
         fields = ["draft_post_id"]
 
 
+class DraftUpdateSerializer(serializers.ModelSerializer):
+    tags = serializers.ListField(
+        child=serializers.CharField(),
+        help_text="List of hashtags for the draft (without # symbol). Example: ['django', 'api']",
+        required=False,
+        allow_empty=True
+    )
+    title = serializers.CharField(
+        help_text="Draft title. Example: 'My First Blog Post'",
+        required=False,
+        allow_blank=True
+    )
+    content = serializers.CharField(
+        help_text="Draft content in markdown or plain text. Example: 'This is the content of my blog post.'",
+        required=False,
+        allow_blank=True
+    )
+    image = serializers.IntegerField(
+        help_text="ID of uploaded image to attach to the draft. Example: 42",
+        required=False,
+        allow_null=True
+    )
+
+    class Meta:
+        model = models.Post
+        fields = ["title", "content", "image", "tags"]
+
+
 class ProfileDraftsSerializer(serializers.ModelSerializer):
     draft_post_ids = serializers.SerializerMethodField()
 

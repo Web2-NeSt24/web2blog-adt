@@ -10,66 +10,67 @@ class PostsView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @extend_schema(
-        summary="List all published posts",
-        description="Retrieve a list of all published blog posts. Draft posts are excluded from this list. Posts include engagement metrics like likes, comments, and bookmarks.",
+        summary="List and filter published posts",
+        description="""
+        Retrieve a list of all published blog posts with optional filtering and searching.
+        
+        **Query Parameters:**
+        - `author`: Filter by author user ID (e.g., `?author=1`)
+        - `author_name`: Filter by username (case-insensitive, e.g., `?author_name=john`)
+        - `tags`: Filter by hashtags (comma-separated, all must be present, e.g., `?tags=api,backend`)
+        - `keywords`: Search in title and content (comma-separated, any match, e.g., `?keywords=django,tutorial`)
+        - `sort_by`: Sort by `DATE` (newest first) or `LIKES` (most popular first)
+        - `page`: Page number for pagination (default: 1)
+        - `page_size`: Number of items per page (default: 20, max: 100)
+        """,
         responses={
             200: serializers.PostSerializer(many=True)
         }, 
         tags=['Posts']
     )
     def get(self, request):
-        posts = models.Post.objects.filter(draft=False)
-        serializer = serializers.PostSerializer(posts, many=True, context={'request': request})
-        return Response(serializer.data)
-
-    @extend_schema(
-        summary="Filter and search posts",
-        description="""
-        Advanced post filtering and search functionality. Filter posts by multiple criteria:
-        
-        - **author_id**: Filter by specific user ID
-        - **author_name**: Filter by username (case-insensitive)
-        - **tags**: Filter by hashtags (all specified tags must be present)
-        - **keywords**: Search in title and content (any keyword match)
-        - **sort_by**: Sort results by date (newest first) or popularity (most liked first)
-        
-        All filters are combined with AND logic, except keywords which use OR logic.
-        Only published posts are included in results.
-        """,
-        request=serializers.PostFilterSerializer, 
-        responses={
-            200: serializers.PostListSerializer
-        }, 
-        tags=['Posts']
-    )
-    def post(self, request: views.Request):
-        serializer = serializers.PostFilterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
         queryset = models.Post.objects.filter(draft=False)
-
-        if serializer.validated_data.get("author_id") is not None:
-            queryset = queryset.filter(profile__user__id=serializer.validated_data["author_id"])
-
-        if serializer.validated_data.get("author_name") is not None:
-            queryset = queryset.filter(profile__user__username__iexact=serializer.validated_data["author_name"])
-
-        for tag in serializer.validated_data["tags"]:
-            queryset = queryset.filter(tags__value__iexact=tag)
-
-        for keyword in serializer.validated_data["keywords"]:
-            queryset = queryset.filter(Q(title__icontains=keyword) | Q(content__icontains=keyword))
+        
+        # Apply filters based on query parameters
+        author_id = request.query_params.get('author')
+        if author_id:
+            try:
+                author_id = int(author_id)
+                queryset = queryset.filter(profile__user__id=author_id)
+            except ValueError:
+                return Response({"error": "Invalid author ID"}, status=400)
+        
+        author_name = request.query_params.get('author_name')
+        if author_name:
+            queryset = queryset.filter(profile__user__username__iexact=author_name)
+        
+        tags = request.query_params.get('tags')
+        if tags:
+            tag_list = [tag.strip() for tag in tags.split(',') if tag.strip()]
+            for tag in tag_list:
+                queryset = queryset.filter(tags__value__iexact=tag)
+        
+        keywords = request.query_params.get('keywords')
+        if keywords:
+            keyword_list = [kw.strip() for kw in keywords.split(',') if kw.strip()]
+            for keyword in keyword_list:
+                queryset = queryset.filter(Q(title__icontains=keyword) | Q(content__icontains=keyword))
         
         queryset = queryset.distinct()
+        
+        # Apply sorting
+        sort_by = request.query_params.get('sort_by', 'DATE')
+        if sort_by.upper() == 'LIKES':
+            queryset = queryset.annotate(like_count=Count("like")).order_by("-like_count")
+        else:
+            queryset = queryset.order_by("-id")
+        
+        # Apply pagination
+        from rest_framework.pagination import PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = min(int(request.query_params.get('page_size', 20)), 100)
+        paginated_posts = paginator.paginate_queryset(queryset, request)
+        
+        serializer = serializers.PostSerializer(paginated_posts, many=True, context={'request': request})
+        return paginator.get_paginated_response(serializer.data)
 
-        match serializer.validated_data["sort_by"]:
-            case serializers.PostSortingMethod.DATE.value:
-                queryset = queryset.order_by("-id")
-            case serializers.PostSortingMethod.LIKES.value:
-                queryset = queryset.annotate(like_count=Count("like")).order_by("-like_count")
-
-        queryset = queryset.values_list("id", flat=True)
-
-        list_serializer = serializers.PostListSerializer({ "post_ids": queryset })
-
-        return views.Response(list_serializer.data)

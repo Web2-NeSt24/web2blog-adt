@@ -101,15 +101,26 @@ class BookmarkListView(views.APIView):
 
     @extend_schema(
         summary="List all bookmarks for the authenticated user",
-        description="Returns all bookmarks for the authenticated user.",
+        description="Returns all bookmarks for the authenticated user. Supports pagination with page and page_size parameters.",
+        parameters=[
+            OpenApiParameter("page", int, OpenApiParameter.QUERY, description="Page number (default: 1)"),
+            OpenApiParameter("page_size", int, OpenApiParameter.QUERY, description="Number of items per page (default: 20, max: 100)")
+        ],
         responses={200: serializers.BookmarkSerializer(many=True)},
         tags=['Bookmarks'],
     )
     def get(self, request: views.Request):
         # Using the related manager (bookmark_set) from the profile
-        bookmarks = request.user.profile.bookmark_set.all()
-        serializer = serializers.BookmarkSerializer(bookmarks, many=True)
-        return views.Response(serializer.data)
+        bookmarks = request.user.profile.bookmark_set.all().order_by('-id')
+        
+        # Apply pagination
+        from rest_framework.pagination import PageNumberPagination
+        paginator = PageNumberPagination()
+        paginator.page_size = min(int(request.query_params.get('page_size', 20)), 100)
+        paginated_bookmarks = paginator.paginate_queryset(bookmarks, request)
+        
+        serializer = serializers.BookmarkSerializer(paginated_bookmarks, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class BookmarkInstanceView(views.APIView):

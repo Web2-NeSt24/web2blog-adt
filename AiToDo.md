@@ -1,16 +1,16 @@
 # RESTful API To-Do List
 
 ## 🟥 High Priority
-- [ ] Replace POST-based filtering in `posts.py` with GET + query params  
+- [x] Replace POST-based filtering in `posts.py` with GET + query params  
   - author_id, tags, keywords as `?author=…&tags=a,b&keywords=c`
-- [ ] Split like/unlike toggle into idempotent endpoints  
+- [x] Split like/unlike toggle into idempotent endpoints  
   - PUT `/posts/{id}/like/` → create like  
   - DELETE `/posts/{id}/like/` → remove like
-- [ ] Add pagination to every list endpoint  
+- [x] Add pagination to every list endpoint  
   - Use `PageNumberPagination` (`page_size=20`, `page_size_query_param`)
-- [ ] Complete full CRUD for drafts  
+- [x] Complete full CRUD for drafts  
   - GET /drafts/{id}/, PUT /drafts/{id}/, DELETE /drafts/{id}/
-- [ ] Introduce API versioning prefix (`/v1/…`)
+- [x] Introduce API versioning prefix (`/v1/…`)
 
 ## 🟧 Medium Priority
 - [ ] Standardise on class-based views (replace remaining function views in `auth.py`)
