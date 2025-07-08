@@ -94,29 +94,19 @@ class ProfileView(views.APIView):
 def me_profile_view(request: views.Request):
     return ProfileView.as_view()(request._request, user_id=request.user.id)
 
+
+    
 @extend_schema(
+    methods=['GET'],
     summary="Get profile by username",
     description="Retrieve profile information for a user by their username. Username lookup is case-insensitive.",
     parameters=[OpenApiParameter("username", str, OpenApiParameter.PATH, description="Username of the user")],
     responses={
-        200: serializers.ProfileSerializer, 
+        200: serializers.ProfileSerializer,
         404: OpenApiResponse(description="User not found")
     },
     tags=['Profiles']
 )
-@api_view(["GET"])
-@permission_classes([permissions.IsAuthenticatedOrReadOnly])
-def get_profile_by_username(request: views.Request, username: str):
-    try:
-        user = models.User.objects.get(username__iexact=username)
-        profile = models.Profile.objects.get(user=user)
-        serializer = serializers.ProfileSerializer(profile)
-        return views.Response(serializer.data)
-    except models.User.DoesNotExist:
-        return views.Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    except models.Profile.DoesNotExist:
-        return views.Response({"error": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
-    
 @extend_schema(
     methods=['PUT'],
     summary="Update profile by username",
@@ -143,15 +133,3 @@ def username_profile_view(request: views.Request, username: str):
     if user_id is None:
         return views.Response({"error": "User ID not found"}, status=status.HTTP_404_NOT_FOUND)
     return ProfileView.as_view()(request._request, user_id=user_id)
-
-# @extend_schema(
-#         methods=['GET'],
-#         summary="Get profile by username",
-#         description="Retrieve profile information for a user by their username. Username lookup is case-insensitive.",
-#         parameters=[OpenApiParameter("username", str, OpenApiParameter.PATH, description="Username of the user")],
-#         responses={
-#             200: serializers.ProfileSerializer,
-#             404: OpenApiResponse(description="User not found")
-#         },
-#         tags=['Profiles']
-#     )
