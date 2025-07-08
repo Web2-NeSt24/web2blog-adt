@@ -130,7 +130,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
         'backend.SessionAuthentication401',
     ],
     'DEFAULT_RENDERER_CLASSES': [
@@ -281,15 +280,9 @@ SPECTACULAR_SETTINGS = {
         },
     ],
     'SECURITY': [
-        {'basicAuth': []},
         {'sessionAuth': []},
     ],
     'SECURITY_SCHEMES': {
-        'basicAuth': {
-            'type': 'http',
-            'scheme': 'basic',
-            'description': 'Basic HTTP authentication using username and password'
-        },
         'sessionAuth': {
             'type': 'apiKey',
             'in': 'cookie',
