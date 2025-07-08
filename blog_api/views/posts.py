@@ -1,13 +1,27 @@
 from django.db.models import Q, Count
-from drf_spectacular.utils import extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema
 from rest_framework import views, permissions
+from rest_framework.response import Response
 
 from blog_api import models, serializers
 
 
-class PostFilterView(views.APIView):
-    permission_classes = [permissions.AllowAny]  # Public filtering functionality
-    
+class PostsView(views.APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @extend_schema(
+        summary="List all published posts",
+        description="Retrieve a list of all published blog posts. Draft posts are excluded from this list. Posts include engagement metrics like likes, comments, and bookmarks.",
+        responses={
+            200: serializers.PostSerializer(many=True)
+        }, 
+        tags=['Posts']
+    )
+    def get(self, request):
+        posts = models.Post.objects.filter(draft=False)
+        serializer = serializers.PostSerializer(posts, many=True, context={'request': request})
+        return Response(serializer.data)
+
     @extend_schema(
         summary="Filter and search posts",
         description="""
@@ -26,7 +40,7 @@ class PostFilterView(views.APIView):
         responses={
             200: serializers.PostListSerializer
         }, 
-        tags=['Filters']
+        tags=['Posts']
     )
     def post(self, request: views.Request):
         serializer = serializers.PostFilterSerializer(data=request.data)

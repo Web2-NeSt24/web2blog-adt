@@ -8,7 +8,6 @@ urlpatterns = [
     path("auth/register", views.auth.register),
     path("auth/login", views.auth.login),
     path("auth/password", views.auth.password),
-    path("filter/", views.post_filter.PostFilterView.as_view()),
     path("user/by-id/<int:user_id>/profile", views.profile.ProfileView.as_view()),
     path("user/by-name/<str:username>/profile", views.profile.username_profile_view),
     path("user/me/profile", views.profile.me_profile_view),
@@ -21,5 +20,5 @@ urlpatterns = [
     path("post/<int:post_id>/like/", views.like.LikeView.as_view()),  # POST (like), GET (check like status)
     path("drafts/", views.draft.DraftsView.as_view()),
     path("drafts/<int:draft_id>/publish/", views.draft.DraftPublishView.as_view()),  # POST (publish draft)
-    path("posts/", views.post.PostListView.as_view()),  # List all posts
+    path("posts/", views.posts.PostsView.as_view()),  # GET (list all posts), POST (filter posts)
 ]
