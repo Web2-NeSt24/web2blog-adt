@@ -62,7 +62,7 @@ class ProfileView(views.APIView):
         if validated and "biography" in validated and isinstance(validated["biography"], str):
             profile.biography = validated["biography"]
         if validated and "profile_picture" in validated:
-            profile.profile_picture = validated["profile_picture"]
+            profile.profile_picture_id = validated["profile_picture"]
         profile.save()
 
         return views.Response()

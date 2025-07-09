@@ -61,7 +61,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     biography = serializers.CharField(required=False, allow_blank=True)
-    profile_picture = serializers.ImageField(required=False, allow_null=True)
+    profile_picture = serializers.IntegerField(required=False, allow_null=True)
 
     class Meta:
         model = models.Profile
