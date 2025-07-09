@@ -194,3 +194,759 @@ ValueError: Cannot assign "1": "Post.image" must be a "Image" instance.
 2025-07-08 11:45:36,624 - INFO - Django imports successful
 2025-07-08 11:45:36,625 - INFO - Starting Django development server
 2025-07-08 11:45:36,725 - INFO - Watching for file changes with StatReloader
+2025-07-08 12:12:16,402 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 55, in put
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 444, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 501, in to_internal_value
+    validated_value = field.run_validation(primitive_value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 538, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 1574, in to_internal_value
+    return django_field.clean(file_object)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 700, in clean
+    return super().clean(data)
+           ~~~~~~~~~~~~~^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 208, in clean
+    value = self.to_python(value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 731, in to_python
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+2025-07-08 12:23:56,425 - INFO - Django command completed successfully
+2025-07-08 12:23:56,485 - INFO - Django command completed successfully
+2025-07-08 12:24:44,120 - INFO - Django management command started: manage.py migrate
+2025-07-08 12:24:44,425 - INFO - Django imports successful
+2025-07-08 12:24:44,707 - INFO - Django command completed successfully
+2025-07-08 12:25:01,044 - INFO - Django management command started: manage.py runserver
+2025-07-08 12:25:01,346 - INFO - Django imports successful
+2025-07-08 12:25:01,347 - INFO - Starting Django development server
+2025-07-08 12:25:01,534 - INFO - Django management command started: manage.py runserver
+2025-07-08 12:25:01,834 - INFO - Django imports successful
+2025-07-08 12:25:01,834 - INFO - Starting Django development server
+2025-07-08 12:25:01,937 - INFO - Watching for file changes with StatReloader
+2025-07-09 18:25:04,584 - INFO - Django management command started: manage.py runserver
+2025-07-09 18:25:07,762 - INFO - Django imports successful
+2025-07-09 18:25:07,762 - INFO - Starting Django development server
+2025-07-09 18:25:08,964 - INFO - Django management command started: manage.py runserver
+2025-07-09 18:25:09,262 - INFO - Django imports successful
+2025-07-09 18:25:09,262 - INFO - Starting Django development server
+2025-07-09 18:25:09,363 - INFO - Watching for file changes with StatReloader
+2025-07-09 19:11:28,894 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 55, in put
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 444, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 501, in to_internal_value
+    validated_value = field.run_validation(primitive_value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 538, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 1574, in to_internal_value
+    return django_field.clean(file_object)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 700, in clean
+    return super().clean(data)
+           ~~~~~~~~~~~~~^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 208, in clean
+    value = self.to_python(value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 731, in to_python
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+2025-07-09 19:15:42,403 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 55, in put
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 444, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 501, in to_internal_value
+    validated_value = field.run_validation(primitive_value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 538, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 1574, in to_internal_value
+    return django_field.clean(file_object)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 700, in clean
+    return super().clean(data)
+           ~~~~~~~~~~~~~^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 208, in clean
+    value = self.to_python(value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 731, in to_python
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+2025-07-09 19:16:23,235 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 55, in put
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 444, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 501, in to_internal_value
+    validated_value = field.run_validation(primitive_value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 538, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 1574, in to_internal_value
+    return django_field.clean(file_object)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 700, in clean
+    return super().clean(data)
+           ~~~~~~~~~~~~~^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 208, in clean
+    value = self.to_python(value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 731, in to_python
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+2025-07-09 19:16:26,932 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 55, in put
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 444, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\serializers.py", line 501, in to_internal_value
+    validated_value = field.run_validation(primitive_value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 538, in run_validation
+    value = self.to_internal_value(data)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\fields.py", line 1574, in to_internal_value
+    return django_field.clean(file_object)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 700, in clean
+    return super().clean(data)
+           ~~~~~~~~~~~~~^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 208, in clean
+    value = self.to_python(value)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\forms\fields.py", line 731, in to_python
+    from PIL import Image
+ModuleNotFoundError: No module named 'PIL'
+2025-07-09 19:17:34,160 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:17:42,244 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:19:32,726 - INFO - Django management command started: manage.py runserver
+2025-07-09 19:19:33,132 - INFO - Django imports successful
+2025-07-09 19:19:33,132 - INFO - Starting Django development server
+2025-07-09 19:19:33,358 - INFO - Django management command started: manage.py runserver
+2025-07-09 19:19:33,656 - INFO - Django imports successful
+2025-07-09 19:19:33,656 - INFO - Starting Django development server
+2025-07-09 19:19:33,756 - INFO - Watching for file changes with StatReloader
+2025-07-09 19:19:59,979 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:20:39,191 - INFO - Django management command started: manage.py runserver
+2025-07-09 19:20:39,481 - INFO - Django imports successful
+2025-07-09 19:20:39,481 - INFO - Starting Django development server
+2025-07-09 19:20:39,664 - INFO - Django management command started: manage.py runserver
+2025-07-09 19:20:39,951 - INFO - Django imports successful
+2025-07-09 19:20:39,951 - INFO - Starting Django development server
+2025-07-09 19:20:40,048 - INFO - Watching for file changes with StatReloader
+2025-07-09 19:21:10,678 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:22:46,112 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:26:16,906 - WARNING - Not Found: /api/image/upload
+2025-07-09 19:27:47,335 - WARNING - Bad Request: /api/user/me/profile
+2025-07-09 19:27:57,422 - WARNING - Bad Request: /api/user/me/profile
+2025-07-09 19:28:00,879 - WARNING - Bad Request: /api/user/me/profile
+2025-07-09 19:28:10,235 - WARNING - Bad Request: /api/user/me/profile
+2025-07-09 19:29:20,308 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:29:44,559 - INFO - Django management command started: manage.py runserver
+2025-07-09 19:29:44,860 - INFO - Django imports successful
+2025-07-09 19:29:44,861 - INFO - Starting Django development server
+2025-07-09 19:29:45,046 - INFO - Django management command started: manage.py runserver
+2025-07-09 19:29:45,329 - INFO - Django imports successful
+2025-07-09 19:29:45,329 - INFO - Starting Django development server
+2025-07-09 19:29:45,429 - INFO - Watching for file changes with StatReloader
+2025-07-09 19:30:09,899 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 19:31:02,557 - ERROR - Internal Server Error: /api/user/me/profile
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 95, in me_profile_view
+    return ProfileView.as_view()(request._request, user_id=request.user.id)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\blog_api\views\profile.py", line 65, in put
+    profile.profile_picture = validated["profile_picture"]
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<InMemoryUploadedFile: Sung Jin-Woo.jpg (image/jpeg)>": "Profile.profile_picture" must be a "Image" instance.
+2025-07-09 20:07:11,247 - WARNING - Not Found: /
+2025-07-09 20:07:11,409 - WARNING - Not Found: /favicon.ico
+2025-07-09 20:07:42,909 - WARNING - Not Found: /docs/images/
+2025-07-09 20:52:17,897 - INFO - D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\backend\settings.py changed, reloading.
+2025-07-09 20:52:18,142 - INFO - Django management command started: manage.py runserver
+2025-07-09 20:52:18,736 - INFO - Django imports successful
+2025-07-09 20:52:18,736 - INFO - Starting Django development server
+2025-07-09 20:52:18,897 - INFO - Watching for file changes with StatReloader
+2025-07-09 20:57:18,145 - ERROR - Internal Server Error: /api/image
+Traceback (most recent call last):
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\utils\deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\middleware\common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "D:\Eigenes Programmieren\DHBW Mosbach\Web Engineering\Semester 2\web2blog-adt\.venv\Lib\site-packages\django\middleware\common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+    ...<9 lines>...
+    )
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/image/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+2025-07-09 20:58:12,450 - WARNING - Bad Request: /api/image/
+2025-07-09 20:58:41,310 - WARNING - Bad Request: /api/image/
+2025-07-09 21:01:18,515 - WARNING - Not Found: /favicon.ico

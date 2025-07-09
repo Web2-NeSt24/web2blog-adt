@@ -7,7 +7,7 @@ export interface User {
 export interface Profile {
   user: User;
   biography: string;
-  profile_picture: string | null;
+  profile_picture: number | null;
   post_ids: number[];
 }
 
