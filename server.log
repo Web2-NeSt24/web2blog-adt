@@ -230,3 +230,66 @@
 2025-07-08 21:54:11,401 - INFO - Django management command started: manage.py check
 2025-07-08 21:54:12,019 - INFO - Django imports successful
 2025-07-08 21:54:12,910 - INFO - Django command completed successfully
+2025-07-08 22:10:41,502 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\auth.py changed, reloading.
+2025-07-08 22:10:41,809 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:10:43,013 - INFO - Django imports successful
+2025-07-08 22:10:43,014 - INFO - Starting Django development server
+2025-07-08 22:10:43,316 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:11:02,611 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\urls.py changed, reloading.
+2025-07-08 22:11:03,001 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:11:04,495 - INFO - Django imports successful
+2025-07-08 22:11:04,495 - INFO - Starting Django development server
+2025-07-08 22:11:04,842 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:11:12,778 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\backend\settings.py changed, reloading.
+2025-07-08 22:11:13,404 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:11:14,378 - INFO - Django imports successful
+2025-07-08 22:11:14,379 - INFO - Starting Django development server
+2025-07-08 22:11:14,658 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:11:26,279 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\auth.py changed, reloading.
+2025-07-08 22:11:26,548 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:11:27,323 - INFO - Django imports successful
+2025-07-08 22:11:27,324 - INFO - Starting Django development server
+2025-07-08 22:11:27,589 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:12:02,697 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\auth.py changed, reloading.
+2025-07-08 22:12:03,001 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:12:03,668 - INFO - Django imports successful
+2025-07-08 22:12:03,669 - INFO - Starting Django development server
+2025-07-08 22:12:03,918 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:12:17,583 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\image.py changed, reloading.
+2025-07-08 22:12:17,812 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:12:18,471 - INFO - Django imports successful
+2025-07-08 22:12:18,471 - INFO - Starting Django development server
+2025-07-08 22:12:18,703 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:12:24,400 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\image.py changed, reloading.
+2025-07-08 22:12:24,668 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:12:25,443 - INFO - Django imports successful
+2025-07-08 22:12:25,444 - INFO - Starting Django development server
+2025-07-08 22:12:25,855 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:12:41,015 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\image.py changed, reloading.
+2025-07-08 22:12:41,201 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:12:41,722 - INFO - Django imports successful
+2025-07-08 22:12:41,723 - INFO - Starting Django development server
+2025-07-08 22:12:41,909 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:13:31,649 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\image.py changed, reloading.
+2025-07-08 22:13:31,934 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:13:32,594 - INFO - Django imports successful
+2025-07-08 22:13:32,594 - INFO - Starting Django development server
+2025-07-08 22:13:32,844 - INFO - Watching for file changes with StatReloader
+2025-07-08 22:13:43,185 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\urls.py changed, reloading.
+2025-07-08 22:13:43,409 - INFO - Django management command started: manage.py runserver
+2025-07-08 22:13:44,206 - INFO - Django imports successful
+2025-07-08 22:13:44,206 - INFO - Starting Django development server
+2025-07-08 22:13:44,460 - INFO - Watching for file changes with StatReloader
+2025-07-09 00:36:33,733 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\auth.py changed, reloading.
+2025-07-09 00:36:34,314 - INFO - Django management command started: manage.py runserver
+2025-07-09 00:36:35,119 - INFO - Django imports successful
+2025-07-09 00:36:35,120 - INFO - Starting Django development server
+2025-07-09 00:36:35,448 - INFO - Watching for file changes with StatReloader
+2025-07-09 00:36:38,052 - INFO - C:\Users\raine\OneDrive\Dokumente\Uni\2025-SS\Web\GroupProject\web2blog-adt\blog_api\views\bookmark.py changed, reloading.
+2025-07-09 00:36:38,349 - INFO - Django management command started: manage.py runserver
+2025-07-09 00:36:39,059 - INFO - Django imports successful
+2025-07-09 00:36:39,059 - INFO - Starting Django development server
+2025-07-09 00:36:39,295 - INFO - Watching for file changes with StatReloader
+2025-07-09 02:12:20,795 - INFO - Django management command started: manage.py check
+2025-07-09 02:12:22,408 - INFO - Django imports successful
+2025-07-09 02:12:24,920 - INFO - Django command completed successfully

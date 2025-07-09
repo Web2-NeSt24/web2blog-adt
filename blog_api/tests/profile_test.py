@@ -114,7 +114,7 @@ class ProfileViewTests(TestCase):
         self.client.force_authenticate(user=self.user)
         
         # Missing required fields
-        response = self.client.put(self.profile_url, {}, format='json')
+        response = self.client.put(self.profile_url, {''}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
         self.client.login(username="testuser", password="testpass123")

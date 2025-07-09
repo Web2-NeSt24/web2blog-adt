@@ -4,10 +4,10 @@
 
 ### 1. Replace POST-based filtering with GET + query params
 **Location:** `blog_api/views/posts.py`
-- ✅ Replaced POST filtering endpoint with GET parameters
-- ✅ Added support for `author`, `author_name`, `tags`, `keywords`, `sort_by` query parameters
-- ✅ Maintained all existing filtering logic but through URL parameters
-- ✅ Added comprehensive API documentation with parameter descriptions
+- ✅ POST filtering → GET params
+- ✅ Added `author`, `author_name`, `tags`, `keywords`, `sort_by` params
+- ✅ same filtering logic, different method
+- ✅ docs updated
 
 **New API Usage:**
 ```
@@ -16,70 +16,105 @@ GET /v1/posts/?author=1&tags=api,backend&keywords=django,tutorial&sort_by=LIKES&
 
 ### 2. Split like/unlike into idempotent endpoints
 **Location:** `blog_api/views/like.py`
-- ✅ Replaced toggle POST endpoint with separate PUT and DELETE methods
-- ✅ PUT `/v1/post/{id}/like/` - idempotent like creation (201 if new, 200 if exists)
-- ✅ DELETE `/v1/post/{id}/like/` - idempotent unlike (204 always)
-- ✅ Maintained existing GET endpoint for checking like status
+- ✅ toggle → separate PUT/DELETE (for idempotency)
+- ✅ PUT `/v1/posts/{id}/likes/` - like (201 if new, 200 if exists)
+- ✅ DELETE `/v1/posts/{id}/likes/` - unlike (204 always)
+- ✅ kept GET endpoint
 
 ### 3. Add pagination to all list endpoints
 **Locations:** `blog_api/views/posts.py`, `blog_api/views/comment.py`, `blog_api/views/bookmark.py`, `blog_api/views/draft.py`
-- ✅ Added `PageNumberPagination` to all list endpoints:
-  - Posts list with filtering
-  - Comments list for posts
-  - Bookmarks list for users
-  - Drafts list for users
-- ✅ Configurable `page_size` parameter (default: 20, max: 100)
-- ✅ Standard paginated response format with `count`, `next`, `previous`, `results`
+- ✅ `PageNumberPagination` on all lists (performance)
+- ✅ `page_size` param (default: 20, max: 100)
+- ✅ standard response format
 
 ### 4. Complete full CRUD for drafts
 **Locations:** `blog_api/views/draft.py`, `blog_api/serializers.py`, `blog_api/urls.py`
-- ✅ Added `DraftInstanceView` with GET, PUT, DELETE methods
-- ✅ Added `DraftUpdateSerializer` for draft modifications
-- ✅ Added URL patterns for draft CRUD operations:
-  - `GET /v1/drafts/{id}/` - retrieve draft
-  - `PUT /v1/drafts/{id}/` - update draft
-  - `DELETE /v1/drafts/{id}/` - delete draft
-- ✅ Maintained existing create and publish functionality
+- ✅ added `DraftInstanceView` with GET, PUT, DELETE
+- ✅ added `DraftUpdateSerializer`
+- ✅ added URL patterns for draft CRUD
+- ✅ kept existing create/publish
 
 ### 5. Introduce API versioning prefix
 **Location:** `blog_api/urls.py`
-- ✅ Added `/v1/` prefix to all API endpoints
-- ✅ Updated all URL patterns to use versioned paths
-- ✅ Ready for future API versions (v2, v3, etc.)
+- ✅ added `/v1/` prefix (future-proofing)
+- ✅ updated all URL patterns
+- ✅ ready for v2, v3, etc.
+
+## ✅ Medium Priority Tasks Completed
+
+### 6. Standardise on class-based views
+**Location:** `blog_api/views/auth.py`
+- ✅ function-based → class-based (consistency)
+- ✅ added `RegisterView`, `LoginView`, `LogoutView`, `PasswordView`, `CSRFTokenView`
+- ✅ kept backward compatibility
+
+### 7. Implement rate limiting
+**Locations:** `backend/settings.py`, `blog_api/views/auth.py`, `blog_api/views/image.py`
+- ✅ global rate limiting (anti-spam)
+- ✅ applied `AuthRateThrottle` to auth endpoints
+- ✅ applied `UploadRateThrottle` to image uploads
+
+### 8. Use plural nouns consistently in routes
+**Location:** `blog_api/urls.py`
+- ✅ singular → plural (naming best practice)
+- ✅ `/users/` not `/user/`, `/posts/` not `/post/`, etc.
+
+### 9. Add logout endpoint
+**Location:** `blog_api/views/auth.py`, `blog_api/urls.py`
+- ✅ added `LogoutView` 
+- ✅ added `POST /v1/auth/logout`
+- ✅ session invalidation
+
+### 10. Replace base64 image uploads with multipart file uploads
+**Location:** `blog_api/views/image.py`, `blog_api/urls.py`
+- ✅ added multipart upload endpoint (efficiency)
+- ✅ auto content type detection
+- ✅ moved base64 to `/v1/images/base64/` (deprecated)
+- ✅ main endpoint now uses multipart
 
 ## 📋 Changes Made
 
 ### Files Modified:
-1. **blog_api/views/posts.py** - RESTful filtering with GET parameters and pagination
-2. **blog_api/views/like.py** - Idempotent PUT/DELETE endpoints
-3. **blog_api/views/comment.py** - Added pagination to comment listing
-4. **blog_api/views/bookmark.py** - Added pagination to bookmark listing
-5. **blog_api/views/draft.py** - Complete CRUD operations for drafts
-6. **blog_api/serializers.py** - Added `DraftUpdateSerializer`
-7. **blog_api/urls.py** - API versioning and new draft endpoints
-8. **backend/settings.py** - Global pagination configuration
-9. **AiToDo.md** - Updated task status
+1. **blog_api/views/posts.py** - GET params + pagination
+2. **blog_api/views/like.py** - idempotent endpoints
+3. **blog_api/views/comment.py** - pagination
+4. **blog_api/views/bookmark.py** - pagination
+5. **blog_api/views/draft.py** - full CRUD
+6. **blog_api/views/auth.py** - class-based views + rate limiting
+7. **blog_api/views/image.py** - multipart uploads + rate limiting
+8. **blog_api/serializers.py** - draft serializer
+9. **blog_api/urls.py** - versioning + plural nouns
+10. **backend/settings.py** - pagination + rate limiting config
+11. **AiToDo.md** - status updates
 
 ### New API Endpoints:
-- `GET /v1/posts/` - List posts with filtering (replaces POST filtering)
-- `PUT /v1/post/{id}/like/` - Like a post (idempotent)
-- `DELETE /v1/post/{id}/like/` - Unlike a post (idempotent)
-- `GET /v1/drafts/{id}/` - Get specific draft
-- `PUT /v1/drafts/{id}/` - Update draft
-- `DELETE /v1/drafts/{id}/` - Delete draft
+- `GET /v1/posts/` - list posts with filtering (replaces POST)
+- `PUT /v1/posts/{id}/likes/` - like post (idempotent)
+- `DELETE /v1/posts/{id}/likes/` - unlike post (idempotent)
+- `GET /v1/drafts/{id}/` - get draft
+- `PUT /v1/drafts/{id}/` - update draft
+- `DELETE /v1/drafts/{id}/` - delete draft
+- `POST /v1/auth/logout` - logout
+- `POST /v1/images/` - upload image (multipart)
+- `POST /v1/images/base64/` - upload image (base64, deprecated)
 
 ### Breaking Changes:
-1. **POST filtering removed**: `POST /posts/` no longer accepts filtering data
-2. **Like toggle removed**: `POST /post/{id}/like/` no longer toggles; use PUT/DELETE instead
-3. **API versioning**: All endpoints now require `/v1/` prefix
+1. **POST filtering removed**: no more `POST /posts/` filtering
+2. **Like toggle removed**: no more toggle; use PUT/DELETE
+3. **API versioning**: all endpoints need `/v1/` prefix
+4. **Plural routes**: `/posts/` not `/post/` (naming best practice)
+5. **Image upload**: main endpoint expects multipart now
 
 ## 🔄 Migration Guide
 
 ### For Frontend Integration:
-1. **Post Filtering**: Change from POST requests to GET with query parameters
-2. **Like/Unlike**: Replace toggle logic with separate PUT (like) and DELETE (unlike) calls
-3. **API Versioning**: Add `/v1/` prefix to all API calls
-4. **Pagination**: Handle paginated responses in all list endpoints
+1. **Post Filtering**: POST → GET with query params
+2. **Like/Unlike**: toggle → separate PUT/DELETE calls
+3. **API Versioning**: add `/v1/` prefix to all calls
+4. **Plural Routes**: update to plural nouns
+5. **Pagination**: handle paginated responses
+6. **Image Upload**: multipart/form-data instead of base64
+7. **Rate Limiting**: handle 429 responses + retry logic
 
 ### Example API Changes:
 ```javascript
@@ -100,25 +135,45 @@ GET /v1/posts/?author=1&tags=api,backend&keywords=django&page=1&page_size=20
 POST /post/123/like/  // Toggle
 
 // NEW
-PUT /v1/post/123/like/    // Like
-DELETE /v1/post/123/like/ // Unlike
+PUT /v1/posts/123/likes/    // Like
+DELETE /v1/posts/123/likes/ // Unlike
 ```
 
-## 🎯 Next Steps (Medium Priority)
+```javascript
+// OLD
+POST /image/
+{
+  "type": "PNG",
+  "data": "base64encodeddata..."
+}
 
-The following medium-priority tasks from the original To-Do list can be tackled next:
-- [ ] Standardise on class-based views (replace remaining function views in `auth.py`)
-- [ ] Replace base64 image uploads with multipart file uploads
-- [ ] Implement rate limiting (`AnonRateThrottle`, `UserRateThrottle`)
-- [ ] Use plural nouns consistently in routes (`/comments/`, not `/comment/`)
-- [ ] Provide logout endpoint (`DELETE /sessions/{id}/` or `/auth/v1/logout/`)
-- [ ] Add generic ViewSets where suitable (e.g. `PostViewSet`)
-- [ ] Implement soft-delete if records must be recoverable
+// NEW
+POST /v1/images/
+Content-Type: multipart/form-data
+[image file]
+```
+
+## 🎯 Next Steps (Remaining Medium/Low Priority)
+
+The following tasks from the original To-Do list can be tackled next:
+- [ ] generic ViewSets (e.g. `PostViewSet`)
+- [ ] soft-delete (if recovery needed)
+- [ ] conditional requests (ETag / If-None-Match)
+- [ ] standard error envelope
+- [ ] caching headers for anon GET requests
+- [ ] X-Request-ID for correlation
+- [ ] OpenTelemetry / logging middleware
+- [ ] background jobs (image resizing, emails)
 
 ## 🔧 Technical Benefits
 
-1. **RESTful Compliance**: Proper HTTP methods and idempotent operations
-2. **Performance**: Pagination reduces payload sizes and improves response times
-3. **Scalability**: Versioned APIs allow for future updates without breaking existing clients
-4. **Developer Experience**: Clear, predictable endpoints following REST conventions
-5. **Maintainability**: Consistent patterns across all endpoints
+1. **RESTful Compliance**: proper HTTP methods + idempotency
+2. **Performance**: pagination reduces payload sizes
+3. **Security**: rate limiting prevents abuse
+4. **Scalability**: versioned APIs for future updates
+5. **Developer Experience**: clear, predictable endpoints
+6. **File Upload Efficiency**: multipart > base64 encoding
+7. **Code Quality**: class-based views for organization
+8. **Maintainability**: consistent patterns
+9. **Resource Protection**: rate limiting against brute force
+10. **Standards Compliance**: plural nouns (naming best practice)
