@@ -62,12 +62,22 @@ const ProfileView: React.FC = () => {
   const handlePicChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+
+      async function bufferToBase64(buffer: any) {
+        const base64url: any = await new Promise(r => {
+          const reader = new FileReader()
+          reader.onload = () => r(reader.result)
+          reader.readAsDataURL(new Blob([buffer]))
+        });
+        return base64url.slice(base64url.indexOf(',') + 1);
+      }
+
       const response = await makeAuthenticatedRequest("/api/image/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ type: file.type.split("/")[1].toUpperCase(), data: btoa(await file.text()) }),
+        body: JSON.stringify({ type: file.type.split("/")[1].toUpperCase(), data: await bufferToBase64(await file.arrayBuffer()) }),
       });
       setEditPic((await response.json()).id)
     }
