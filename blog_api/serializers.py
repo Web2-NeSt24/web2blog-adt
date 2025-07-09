@@ -61,12 +61,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     biography = serializers.CharField(required=False, allow_blank=True)
-    profile_picture = serializers.ImageField(required=False, allow_null=True)
-
-    def validate(self, attrs):
-        if not attrs.get("biography") and not attrs.get("profile_picture"):
-            raise serializers.ValidationError("At least one field (biography or profile_picture) must be provided.")
-        return attrs
+    profile_picture = serializers.IntegerField(required=False, allow_null=True)
 
     class Meta:
         model = models.Profile
@@ -148,13 +143,6 @@ class PostUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Post
         fields = ["title", "content", "image", "tags"]
-
-    def validate(self, attrs):
-        if not attrs:
-            raise serializers.ValidationError(
-                "At least one field (title, content, image, or tags) must be provided for an update."
-            )
-        return attrs
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
