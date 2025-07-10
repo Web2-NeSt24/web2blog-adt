@@ -12,8 +12,29 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ProfilePicture from "../components/ProfilePicture";
 import { useNavigate } from "react-router";
 
+// Helper functions
+const fileToBase64 = async (file: File): Promise<string> => {
+  const buffer = await file.arrayBuffer();
+  const base64url: string = await new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.readAsDataURL(new Blob([buffer]));
+  });
+  return base64url.slice(base64url.indexOf(',') + 1);
+};
+
+const formatErrorMessage = (error: any): string => {
+  if (error.message?.includes("No module named 'PIL'") || error.message?.includes("ModuleNotFoundError")) {
+    return "Image upload is currently unavailable. The server needs to install image processing libraries. Please try updating your biography only, or contact support.";
+  }
+  if (error.message?.includes("Network")) {
+    return "Network error. Please check your connection and try again.";
+  }
+  return error.message || "An error occurred. Please try again.";
+};
+
 const ProfileView: React.FC = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,20 +46,25 @@ const ProfileView: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  // Fetch profile data and posts
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchProfile = async () => {
       setError(null);
       setLoading(true);
       try {
         const response = await makeAuthenticatedRequest("/api/user/me/profile");
         if (!response.ok) throw new Error("Failed to fetch profile");
+        
         const data = await response.json();
-        const prof = data.profile ? data.profile : data;
+        const prof = data.profile || data;
         setProfile(prof);
         setEditBio(prof.biography || "");
-        setEditPic(prof.profile_picture);
-        // Fetch posts if post_ids exist
-        if (prof.post_ids && prof.post_ids.length > 0) {
+        // Don't set editPic to existing profile picture - only set when new image is selected
+        
+        // Fetch posts if available
+        if (prof.post_ids?.length > 0) {
           const postsData: Post[] = await Promise.all(
             prof.post_ids.map(async (id: number) => {
               const res = await makeAuthenticatedRequest(`/api/post/by-id/${id}`);
@@ -50,51 +76,55 @@ const ProfileView: React.FC = () => {
           setPosts([]);
         }
       } catch (err: any) {
-        setError(err.message || "Unknown error");
+        setError(formatErrorMessage(err));
       } finally {
         setLoading(false);
       }
     };
+
     fetchProfile();
-  }, []);
+  }, [isAuthenticated]);
 
-  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setEditBio(e.target.value);
+  // Handle profile picture upload
   const handlePicChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      async function bufferToBase64(buffer: any) {
-        const base64url: any = await new Promise(r => {
-          const reader = new FileReader()
-          reader.onload = () => r(reader.result)
-          reader.readAsDataURL(new Blob([buffer]))
-        });
-        return base64url.slice(base64url.indexOf(',') + 1);
-      }
-
+    try {
+      const base64Data = await fileToBase64(file);
+      const fileType = file.type.split("/")[1].toUpperCase();
+      
       const response = await makeAuthenticatedRequest("/api/image/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ type: file.type.split("/")[1].toUpperCase(), data: await bufferToBase64(await file.arrayBuffer()) }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: fileType, data: base64Data }),
       });
-      setEditPic((await response.json()).id)
+
+      if (response.ok) {
+        const result = await response.json();
+        setEditPic(result.id);
+      }
+    } catch (err) {
+      setError("Failed to upload image. Please try again.");
     }
   };
-  const handlePicClick = () => fileInputRef.current?.click();
 
-  const handleSaveBio = async () => {
+  // Save profile updates
+  const saveProfile = async (bioOnly = false) => {
     setSaving(true);
     setError(null);
+    
     try {
+      const body = bioOnly 
+        ? { biography: editBio }
+        : { biography: editBio, profile_picture: editPic };
+
       const response = await makeAuthenticatedRequest("/api/user/me/profile", {
         method: "PUT",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ biography: editBio }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       });
+
       if (!response.ok) {
         const errorText = await response.text();
         if (response.status === 500) {
@@ -102,100 +132,85 @@ const ProfileView: React.FC = () => {
         }
         throw new Error(`Failed to update profile: ${response.status} ${errorText}`);
       }
+
       const responseText = await response.text();
       if (responseText) {
         const data = JSON.parse(responseText);
-        const updatedProfile = data.profile ? data.profile : data;
+        const updatedProfile = data.profile || data;
         setProfile(updatedProfile);
       } else {
         setProfile(prev => prev ? { ...prev, biography: editBio } : prev);
       }
-      setIsEditingBio(false);
+
+      if (bioOnly) {
+        setIsEditingBio(false);
+      } else {
+        // Update profile state with new picture before clearing editPic
+        setProfile(prev => prev ? { ...prev, profile_picture: editPic } : prev);
+        // Clear editPic after successful save so buttons disappear
+        setEditPic(null);
+      }
     } catch (err: any) {
-      console.error("Biography save error:", err);
-      setError(err.message || "An error occurred while saving your biography. Please try again.");
+      setError(formatErrorMessage(err));
     } finally {
       setSaving(false);
     }
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    setError(null);
-    try {
-      if (editBio !== (profile?.biography || "") || editPic != null) {
-        // Only update biography if it has changed
-        const response = await makeAuthenticatedRequest("/api/user/me/profile", {
-          method: "PUT",
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ biography: editBio, profile_picture: editPic }),
-        });
-        if (!response.ok) {
-          const errorText = await response.text();
-          // Check if this is a server error
-          if (response.status === 500) {
-            throw new Error("Server error occurred while updating profile. Please try again later.");
-          }
-          throw new Error(`Failed to update profile: ${response.status} ${errorText}`);
-        }
-        const responseText = await response.text();
-        if (responseText) {
-          const data = JSON.parse(responseText);
-          const updatedProfile = data.profile ? data.profile : data;
-          setProfile(updatedProfile);
-          setEditBio(""); // Clear the bio field after successful save
-        } else {
-          // If no response body, just update the local state
-          setProfile(prev => prev ? { ...prev, biography: editBio } : prev);
-          setEditBio(""); // Clear the bio field after successful save
-        }
-      }
-    } catch (err: any) {
-      console.error("Profile save error:", err);
-      // Provide user-friendly error messages
-      if (err.message.includes("No module named 'PIL'") || err.message.includes("ModuleNotFoundError")) {
-        setError("Image upload is currently unavailable. The server needs to install image processing libraries. Please try updating your biography only, or contact support.");
-      } else if (err.message.includes("Network")) {
-        setError("Network error. Please check your connection and try again.");
-      } else {
-        setError(err.message || "An error occurred while saving your profile. Please try again.");
-      }
-    } finally {
-      setSaving(false);
-    }
-  };
+  const totalLikes = posts.reduce((total, post) => total + post.like_count, 0);
+  const totalComments = posts.reduce((total, post) => total + post.comment_count, 0);
 
   if (!isAuthenticated) {
-    return <div>Please log in to view your profile.</div>;
+    return (
+      <Container className="text-center py-5">
+        <p>Please log in to view your profile.</p>
+      </Container>
+    );
   }
 
   return (
-    <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', paddingTop: '2rem' }}>
+    <main style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', paddingTop: '2rem' }}>
       <Container>
         <Row className="justify-content-center">
-          <Col md={9} lg={7} xl={6}>
+          <Col md={11} lg={10} xl={9}>
             <Card style={{ borderRadius: '15px' }} className="mb-4">
               <Card.Body className="p-4">
                 {loading && <LoadingSpinner />}
                 {error && <div className="alert alert-danger">{error}</div>}
+                
                 {!loading && !error && profile && (
                   <div className="d-flex text-dark">
-                    {/* Profile Image Section */}
-                    <div className="flex-shrink-0">
+                    {/* Profile Image */}
+                    <section className="flex-shrink-0 position-relative" style={{ display: 'inline-block' }}>
                       <ProfilePicture
-                        id={editPic != null ? editPic : profile.profile_picture}
+                        id={editPic ?? profile.profile_picture}
                         alt="Profile"
                         width={180}
                         height={180}
-                        className="cursor-pointer"
-                        onClick={handlePicClick}
-                        style={{ 
+                        style={{ borderRadius: '10px', cursor: 'pointer' }}
+                      />
+                      {/* Edit overlay with pencil icon */}
+                      <div
+                        className="position-absolute d-flex align-items-center justify-content-center"
+                        style={{
+                          top: 0,
+                          left: 0,
+                          width: '180px',
+                          height: '180px',
                           borderRadius: '10px',
+                          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                          opacity: 0,
+                          transition: 'opacity 0.2s ease-in-out',
                           cursor: 'pointer'
                         }}
-                      />
+                        onClick={() => fileInputRef.current?.click()}
+                        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                        onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
+                      >
+                        <svg width="24" height="24" fill="white" viewBox="0 0 16 16">
+                          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708L8.5 11.207l-3 1a.5.5 0 0 1-.64-.64l1-3L12.146.146ZM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5Zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5Z"/>
+                        </svg>
+                      </div>
                       <input
                         type="file"
                         accept="image/*"
@@ -203,13 +218,12 @@ const ProfileView: React.FC = () => {
                         style={{ display: "none" }}
                         onChange={handlePicChange}
                       />
-                      {/* Save Picture Button - appears when new image is selected */}
                       {editPic && (
                         <div className="mt-2 d-flex gap-2">
                           <Button 
                             variant="success" 
                             size="sm" 
-                            onClick={handleSave} 
+                            onClick={() => saveProfile(false)} 
                             disabled={saving}
                             className="flex-grow-1"
                           >
@@ -225,24 +239,20 @@ const ProfileView: React.FC = () => {
                           </Button>
                         </div>
                       )}
-                    </div>
+                    </section>
                     
-                    {/* Profile Info Section */}
-                    <div className="flex-grow-1 ms-3">
+                    {/* Profile Info */}
+                    <section className="flex-grow-1 ms-3">
                       <Card.Title className="mb-3">{profile.user.username}</Card.Title>
                       
-                      {/* Biography Section with Inline Editing */}
-                      <div className="mb-4">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
+                      {/* Biography */}
+                      <section className="mb-4">
+                        <header className="d-flex justify-content-between align-items-center mb-2">
                           <h6 className="mb-0 text-muted">Biography</h6>
-                          <Button 
-                            variant="outline-secondary" 
-                            size="sm"
-                            onClick={() => setIsEditingBio(!isEditingBio)}
-                          >
+                          <Button variant="outline-secondary" size="sm" onClick={() => setIsEditingBio(!isEditingBio)}>
                             {isEditingBio ? 'Cancel' : 'Edit'}
                           </Button>
-                        </div>
+                        </header>
                         
                         {!isEditingBio ? (
                           <div 
@@ -250,21 +260,17 @@ const ProfileView: React.FC = () => {
                             style={{ minHeight: '80px', cursor: 'pointer' }}
                             onClick={() => setIsEditingBio(true)}
                           >
-                            {profile.biography ? (
-                              <p className="mb-0">{profile.biography}</p>
-                            ) : (
-                              <p className="mb-0 text-muted fst-italic">
-                                Click here to add your biography...
-                              </p>
-                            )}
+                            <p className="mb-0 text-muted fst-italic">
+                              {profile.biography || "Click here to add your biography..."}
+                            </p>
                           </div>
                         ) : (
-                          <div>
+                          <>
                             <Form.Control
                               as="textarea"
                               rows={4}
                               value={editBio}
-                              onChange={handleBioChange}
+                              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditBio(e.target.value)}
                               disabled={saving}
                               placeholder="Tell us about yourself..."
                               className="mb-2"
@@ -274,7 +280,7 @@ const ProfileView: React.FC = () => {
                               <Button 
                                 variant="primary" 
                                 size="sm"
-                                onClick={handleSaveBio}
+                                onClick={() => saveProfile(true)}
                                 disabled={saving || editBio === (profile?.biography || "")}
                               >
                                 {saving ? "Saving..." : "Save Biography"}
@@ -291,36 +297,43 @@ const ProfileView: React.FC = () => {
                                 Cancel
                               </Button>
                             </div>
-                          </div>
+                          </>
                         )}
-                      </div>
+                      </section>
 
-                      {/* Stats Section */}
-                      <div className="d-flex justify-content-start rounded-3 p-2 mb-3" style={{ backgroundColor: '#efefef' }}>
+                      {/* Stats */}
+                      <section className="d-flex justify-content-start rounded-3 p-2 mb-3" style={{ backgroundColor: '#efefef' }}>
                         <div>
                           <p className="small text-muted mb-1">Posts</p>
                           <p className="mb-0 fw-bold">{posts.length}</p>
                         </div>
                         <div className="px-3">
                           <p className="small text-muted mb-1">Total Likes</p>
-                          <p className="mb-0 fw-bold">{posts.reduce((total, post) => total + post.like_count, 0)}</p>
+                          <p className="mb-0 fw-bold">{totalLikes}</p>
                         </div>
                         <div>
                           <p className="small text-muted mb-1">Comments</p>
-                          <p className="mb-0 fw-bold">{posts.reduce((total, post) => total + post.comment_count, 0)}</p>
+                          <p className="mb-0 fw-bold">{totalComments}</p>
                         </div>
-                      </div>
+                      </section>
 
-                      {/* Action Buttons */}
+                      {/* Action Button */}
                       <div className="d-flex pt-1">
-                        <Button variant="primary" className="w-100" onClick={() => navigate("/create")}>
+                        <Button 
+                          variant="primary" 
+                          className="w-100" 
+                          onClick={() => navigate("/create")}
+                        >
                           Create New Post
                         </Button>
                       </div>
-                    </div>
+                    </section>
                   </div>
                 )}
-                {!loading && !error && !profile && <div>No profile data found.</div>}
+                
+                {!loading && !error && !profile && (
+                  <div>No profile data found.</div>
+                )}
               </Card.Body>
             </Card>
           </Col>
@@ -328,7 +341,7 @@ const ProfileView: React.FC = () => {
 
         {/* Posts Section */}
         <Row className="justify-content-center mt-4">
-          <Col md={9} lg={7} xl={6}>
+          <Col md={11} lg={10} xl={9}>
             <Card style={{ borderRadius: '15px' }}>
               <Card.Header>
                 <h5 className="mb-0">My Posts</h5>
@@ -337,7 +350,9 @@ const ProfileView: React.FC = () => {
                 {posts.length === 0 ? (
                   <div className="text-center py-4">
                     <p className="text-muted">No posts found.</p>
-                    <Button variant="primary" onClick={() => navigate("/create")}>Create Your First Post</Button>
+                    <Button variant="primary" onClick={() => navigate("/create")}>
+                      Create Your First Post
+                    </Button>
                   </div>
                 ) : (
                   <Row className="g-3">
@@ -348,7 +363,7 @@ const ProfileView: React.FC = () => {
                           <Card.Body>
                             <Card.Title className="h6">{post.title}</Card.Title>
                             <Card.Text className="small text-muted">
-                              {post.content ? (post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content) : "No content"}
+                              {post.content?.length > 100 ? post.content.substring(0, 100) + "..." : post.content || "No content"}
                             </Card.Text>
                             <div className="d-flex justify-content-between small text-muted">
                               <span>{post.like_count} likes</span>
@@ -365,7 +380,7 @@ const ProfileView: React.FC = () => {
           </Col>
         </Row>
       </Container>
-    </div>
+    </main>
   );
 };
 

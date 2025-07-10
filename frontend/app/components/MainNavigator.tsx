@@ -4,13 +4,14 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Dropdown from "react-bootstrap/Dropdown";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { logoutUser } from "../utils/auth";
 
 function MainNavigator() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     const result = await logoutUser();
@@ -60,8 +61,26 @@ function MainNavigator() {
 
           {/* Jobb oldali linkek/gombok */}
           <Nav className="ms-auto mt-3 mt-lg-0 d-flex align-items-center">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link href="#topics">Topics</Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/"
+              className={location.pathname === "/" ? "active" : ""}
+            >
+              Home
+            </Nav.Link>
+            <Nav.Link 
+              href="#topics"
+              className={location.hash === "#topics" ? "active" : ""}
+            >
+              Topics
+            </Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/about"
+              className={location.pathname === "/about" ? "active" : ""}
+            >
+              About
+            </Nav.Link>
             
             {isAuthenticated ? (
               <Dropdown align="end" className="ms-lg-3">
