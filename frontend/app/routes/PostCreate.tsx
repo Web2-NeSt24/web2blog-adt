@@ -97,77 +97,71 @@ const PostCreate: React.FC = () => {
     checkAuth();
   }, []);
 
-  // Load or create draft on mount
-  useEffect(() => {
-    // Wait for auth to load and ensure user is authenticated
-    if (isLoading) return;
+  // Create draft when user starts writing (not on mount)
+  const createDraftIfNeeded = async () => {
+    if (draft) return draft; // Already have a draft
     
-    if (!isAuthenticated) {
-      setAuthError(true);
-      return;
-    }
-
-    const loadOrCreateDraft = async () => {
-      try {
-        console.log("Creating new draft...");
-        // Always create a new draft when the page loads
-        const createResponse = await makeAuthenticatedRequest(`${API_BASE}/drafts/`, { 
-          method: "POST", 
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-        
-        console.log("Draft creation response status:", createResponse.status);
-        
-        if (!createResponse.ok) {
-          const errorText = await createResponse.text();
-          console.error("Failed to create draft:", createResponse.status, errorText);
-          
-          if (createResponse.status === 401 || createResponse.status === 403) {
-            setAuthError(true);
-            return;
-          }
-          setSaving(false);
-          return;
+    try {
+      console.log("Creating new draft...");
+      setSaving(true);
+      
+      const createResponse = await makeAuthenticatedRequest(`${API_BASE}/drafts/`, { 
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json"
         }
+      });
+      
+      console.log("Draft creation response status:", createResponse.status);
+      
+      if (!createResponse.ok) {
+        const errorText = await createResponse.text();
+        console.error("Failed to create draft:", createResponse.status, errorText);
         
-        const newDraftResponse = await createResponse.json();
-        console.log("Draft creation response:", newDraftResponse);
-        
-        // Handle different response formats from the API
-        let draftId;
-        if (newDraftResponse.id) {
-          draftId = newDraftResponse.id;
-          setDraft(newDraftResponse); // Use the draft data directly
-          console.log("Draft created with ID:", draftId);
-        } else if (newDraftResponse.draft_post_id) {
-          draftId = newDraftResponse.draft_post_id;
-          
-          // Fetch the actual draft details
-          const draftResponse = await makeAuthenticatedRequest(`${API_BASE}/post/by-id/${draftId}`);
-          
-          if (draftResponse.ok) {
-            const draftData = await draftResponse.json();
-            setDraft(draftData);
-            console.log("Draft loaded:", draftData);
-          } else {
-            console.error("Failed to load draft details:", draftResponse.status);
-          }
-        } else {
-          console.error("Unknown draft response format:", newDraftResponse);
-          return;
+        if (createResponse.status === 401 || createResponse.status === 403) {
+          setAuthError(true);
+          return null;
         }
-        
         setSaving(false);
-      } catch (error) {
-        console.error("Error creating draft:", error);
-        setSaving(false);
+        return null;
       }
-    };
-    
-    loadOrCreateDraft();
-  }, [isLoading, isAuthenticated]);
+      
+      const newDraftResponse = await createResponse.json();
+      console.log("Draft creation response:", newDraftResponse);
+      
+      // Handle different response formats from the API
+      let newDraft = null;
+      if (newDraftResponse.id) {
+        newDraft = newDraftResponse;
+        setDraft(newDraftResponse); // Use the draft data directly
+        console.log("Draft created with ID:", newDraftResponse.id);
+      } else if (newDraftResponse.draft_post_id) {
+        const draftId = newDraftResponse.draft_post_id;
+        
+        // Fetch the actual draft details
+        const draftResponse = await makeAuthenticatedRequest(`${API_BASE}/post/by-id/${draftId}`);
+        
+        if (draftResponse.ok) {
+          const draftData = await draftResponse.json();
+          newDraft = draftData;
+          setDraft(draftData);
+          console.log("Draft loaded:", draftData);
+        } else {
+          console.error("Failed to load draft details:", draftResponse.status);
+        }
+      } else {
+        console.error("Unknown draft response format:", newDraftResponse);
+        return null;
+      }
+      
+      setSaving(false);
+      return newDraft;
+    } catch (error) {
+      console.error("Error creating draft:", error);
+      setSaving(false);
+      return null;
+    }
+  };
 
   // Sync local state with draft
   useEffect(() => {
@@ -178,17 +172,23 @@ const PostCreate: React.FC = () => {
     }
   }, [draft]);
 
-  // Auto-save draft on change (every 2 seconds after user stops typing)
+  // Auto-save draft on change (create draft if needed, then save)
   useEffect(() => {
-    if (!draft || !draft.id) return;
-    
     // Don't save if both title and content are empty
     if (!title.trim() && !content.trim()) return;
     
-    const timeout = setTimeout(() => {
-      console.log("Auto-saving draft:", { draftId: draft.id, title, content: content.substring(0, 50) + "..." });
+    const timeout = setTimeout(async () => {
+      console.log("Auto-saving draft:", { title, content: content.substring(0, 50) + "..." });
+      
+      // Create draft if we don't have one yet
+      let currentDraft = draft;
+      if (!currentDraft) {
+        currentDraft = await createDraftIfNeeded();
+        if (!currentDraft) return; // Failed to create draft
+      }
+      
       setSaving(true);
-      makeAuthenticatedRequest(`${API_BASE}/post/by-id/${draft.id}`, {
+      makeAuthenticatedRequest(`${API_BASE}/post/by-id/${currentDraft.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -225,49 +225,45 @@ const PostCreate: React.FC = () => {
     }
   };
 
-  const handleImageUpload = async (file: File) => {
-    // Convert file to base64 for the API
-    const reader = new FileReader();
-    return new Promise<number>((resolve, reject) => {
-      reader.onload = async () => {
-        try {
-          const base64 = reader.result as string;
-          const base64Data = base64.split(',')[1]; // Remove data:image/...;base64, prefix
-          
-          const response = await makeAuthenticatedRequest(`${API_BASE}/image/`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              data: base64Data,
-              type: file.type.includes('png') ? 'PNG' : 'JPEG'
-            })
-          });
-          
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          const data = await response.json();
-          resolve(data.id);
-        } catch (error) {
-          reject(error);
-        }
+  // Helper function to convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        const base64Data = base64.split(',')[1]; // Remove data:image/...;base64, prefix
+        resolve(base64Data);
       };
       reader.onerror = () => reject(new Error('Failed to read file'));
       reader.readAsDataURL(file);
     });
   };
 
+  const handleImageUpload = async (file: File) => {
+    try {
+      const base64Data = await fileToBase64(file);
+      const fileType = file.type.split("/")[1].toUpperCase();
+      
+      const response = await makeAuthenticatedRequest(`${API_BASE}/image/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: fileType, data: base64Data }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result.id;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+
   const handlePublish = async () => {
     console.log("handlePublish called", { draft, title: title.trim(), content: content.trim() });
-    
-    if (!draft || !draft.id) {
-      console.error("No draft available:", draft);
-      alert("No draft to publish. Please wait for the draft to be created.");
-      return;
-    }
     
     if (!title.trim()) {
       alert("Please add a title before publishing.");
@@ -281,46 +277,52 @@ const PostCreate: React.FC = () => {
     
     try {
       setSaving(true);
-      console.log("Publishing draft ID:", draft.id);
       
-      // First, make sure the latest changes are saved to the draft
-      const updateResponse = await makeAuthenticatedRequest(`${API_BASE}/post/by-id/${draft.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          title: title || "Untitled", 
-          content, 
-          tags 
-        })
-      });
-
-      if (!updateResponse.ok) {
-        console.error("Failed to update draft:", updateResponse.status, await updateResponse.text());
-        throw new Error(`Failed to update draft: ${updateResponse.status}`);
+      // Create draft if we don't have one yet
+      let currentDraft = draft;
+      if (!currentDraft) {
+        currentDraft = await createDraftIfNeeded();
+        if (!currentDraft) {
+          alert("Failed to create draft. Please try again.");
+          return;
+        }
       }
       
-      // Upload image if present
+      console.log("Publishing draft ID:", currentDraft.id);
+      
+      // Handle image upload if there's a new image
       let imageId = null;
       if (image) {
         console.log("Uploading image...");
         imageId = await handleImageUpload(image);
         console.log("Image uploaded with ID:", imageId);
-        
-        // Update draft with image
-        const imageUpdateResponse = await makeAuthenticatedRequest(`${API_BASE}/post/by-id/${draft.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: imageId })
-        });
+      }
+      
+      // Update the draft with all content but NOT the image (due to backend bug)
+      const updateData: any = { 
+        title: title || "Untitled", 
+        content, 
+        tags 
+      };
+      
+      // Note: We don't include the image here due to a backend bug
+      // The image will need to be associated separately or the backend needs to be fixed
+      
+      const updateResponse = await makeAuthenticatedRequest(`${API_BASE}/post/by-id/${currentDraft.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData)
+      });
 
-        if (!imageUpdateResponse.ok) {
-          console.error("Failed to update draft with image:", imageUpdateResponse.status);
-        }
+      if (!updateResponse.ok) {
+        const errorText = await updateResponse.text();
+        console.error("Failed to update draft:", updateResponse.status, errorText);
+        throw new Error(`Failed to update draft: ${updateResponse.status} - ${errorText}`);
       }
       
       // Publish the draft
-      console.log("Publishing to:", `${API_BASE}/drafts/${draft.id}/publish/`);
-      const response = await makeAuthenticatedRequest(`${API_BASE}/drafts/${draft.id}/publish/`, {
+      console.log("Publishing to:", `${API_BASE}/drafts/${currentDraft.id}/publish/`);
+      const response = await makeAuthenticatedRequest(`${API_BASE}/drafts/${currentDraft.id}/publish/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -411,86 +413,145 @@ const PostCreate: React.FC = () => {
           {!saving && !lastSaved && draft && (
             <span className="draft-created">📝 Draft created</span>
           )}
+          {!saving && !lastSaved && !draft && (
+            <span className="ready">📝 Ready to write</span>
+          )}
         </div>
       </div>
       
-      <input
-        type="text"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        placeholder="Enter your post title..."
-        className="post-title-input"
-      />
-      
-      {isClient ? (
-        <Editor
-          tinymceScriptSrc="/tinymce/tinymce.min.js"
-          onInit={(_evt: any, editor: any) => (editorRef.current = editor)}
-          value={content}
-          init={{
-            height: 400,
-            menubar: false,
-            license_key: 'gpl', // Add GPL license key
-            plugins: [
-              'lists', 'link', 'charmap', 'preview', 'anchor',
-              'searchreplace', 'visualblocks', 'code', 'fullscreen',
-              'insertdatetime', 'media', 'table', 'help', 'wordcount'
-            ],
-            // Explicitly disable problematic plugins
-            plugins_loaded: function() {
-              console.log('TinyMCE plugins loaded successfully');
-            },
-            toolbar:
-              'undo redo | formatselect | bold italic | ' +
-              'alignleft aligncenter alignright alignjustify | ' +
-              'bullist numlist | link | help',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-            setup: (editor: any) => {
-              // Disable hydration issues by not setting initial content during SSR
-              if (typeof window !== 'undefined') {
-                editor.on('init', () => {
-                  editor.setContent(content);
-                });
-              }
-            }
-          }}
-          onEditorChange={setContent}
-        />
-      ) : (
-        <div style={{ height: 400, border: '1px solid #ccc', padding: '10px' }}>
-          <p>Loading editor...</p>
-        </div>
-      )}
-      <form onSubmit={handleTagAdd} className="tag-form">
+      {/* Modern Title Input */}
+      <div className="form-field">
+        <label className="form-label">Post Title</label>
         <input
           type="text"
-          value={tagInput}
-          onChange={e => setTagInput(e.target.value)}
-          placeholder="Add tag"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          placeholder="Enter your post title..."
+          className="modern-input title-input"
         />
-        <button type="submit">Add Tag</button>
-      </form>
-      <div className="tag-list">
-        {tags.map(tag => (
-          <span key={tag} className="tag">#{tag}</span>
-        ))}
       </div>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={e => setImage(e.target.files?.[0] || null)}
-      />
-      <button 
-        onClick={handlePublish} 
-        disabled={saving || !title.trim() || !content.trim() || !draft}
-        className="publish-button"
-      >
-        {saving ? "Publishing..." : "Publish Post"}
-      </button>
+      
+      {/* TinyMCE Editor */}
+      <div className="form-field">
+        <label className="form-label">Content</label>
+        {isClient ? (
+          <div className="editor-wrapper">
+            <Editor
+              tinymceScriptSrc="/tinymce/tinymce.min.js"
+              onInit={(_evt: any, editor: any) => (editorRef.current = editor)}
+              value={content}
+              init={{
+                height: 400,
+                menubar: false,
+                license_key: 'gpl',
+                plugins: [
+                  'lists', 'link', 'charmap', 'preview', 'anchor',
+                  'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                  'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                ],
+                plugins_loaded: function() {
+                  console.log('TinyMCE plugins loaded successfully');
+                },
+                toolbar:
+                  'undo redo | formatselect | bold italic | ' +
+                  'alignleft aligncenter alignright alignjustify | ' +
+                  'bullist numlist | link | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                setup: (editor: any) => {
+                  if (typeof window !== 'undefined') {
+                    editor.on('init', () => {
+                      editor.setContent(content);
+                    });
+                  }
+                }
+              }}
+              onEditorChange={setContent}
+            />
+          </div>
+        ) : (
+          <div className="editor-loading">
+            <p>Loading editor...</p>
+          </div>
+        )}
+      </div>
+
+      {/* Modern Tag Input */}
+      <div className="form-field">
+        <label className="form-label">Tags</label>
+        <form onSubmit={handleTagAdd} className="tag-input-form">
+          <div className="tag-input-wrapper">
+            <input
+              type="text"
+              value={tagInput}
+              onChange={e => setTagInput(e.target.value)}
+              placeholder="Add a tag and press Enter"
+              className="modern-input tag-input"
+            />
+            <button type="submit" className="tag-add-button">
+              <span>+</span>
+            </button>
+          </div>
+        </form>
+        
+        {tags.length > 0 && (
+          <div className="tag-list">
+            {tags.map((tag, index) => (
+              <span key={tag} className="tag-chip">
+                #{tag}
+                <button 
+                  type="button"
+                  onClick={() => setTags(tags.filter((_, i) => i !== index))}
+                  className="tag-remove"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Modern File Upload */}
+      <div className="form-field">
+        <label className="form-label">Featured Image</label>
+        <div className="file-upload-wrapper">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={e => setImage(e.target.files?.[0] || null)}
+            className="file-input"
+            id="image-upload"
+          />
+          <label htmlFor="image-upload" className="file-upload-button">
+            <div className="file-upload-content">
+              <div className="file-upload-icon">📸</div>
+              <div className="file-upload-text">
+                <span className="file-upload-main">
+                  {image ? image.name : "Choose an image"}
+                </span>
+                <span className="file-upload-sub">
+                  Click to browse or drag and drop
+                </span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      {/* Publish Button */}
+      <div className="form-actions">
+        <button 
+          onClick={handlePublish} 
+          disabled={saving || !title.trim() || !content.trim()}
+          className="publish-button"
+        >
+          {saving ? "Publishing..." : "Publish Post"}
+        </button>
+      </div>
       
       <div className="help-text">
         <small>
-          💡 Your post is automatically saved as a draft while you write. 
+          💡 Your post will be automatically saved as a draft when you start writing.
           {draft && ` Draft ID: ${draft.id}`}
         </small>
       </div>

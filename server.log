@@ -195,3 +195,100 @@ ValueError: Cannot assign "1": "Post.image" must be a "Image" instance.
 2025-07-11 03:28:28,935 - WARNING - Unauthorized: /api/post/4/comments/
 2025-07-11 03:28:55,660 - WARNING - Unauthorized: /api/post/4/like/
 2025-07-11 03:29:04,499 - WARNING - Unauthorized: /api/post/4/bookmark/
+2025-07-11 03:41:29,349 - WARNING - Unauthorized: /api/drafts/
+2025-07-11 03:48:02,388 - WARNING - Unauthorized: /api/post/by-id/31
+2025-07-11 03:48:56,019 - WARNING - Unauthorized: /api/image/
+2025-07-11 03:48:56,263 - ERROR - Internal Server Error: /api/post/by-id/31
+Traceback (most recent call last):
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/post.py", line 97, in put
+    post.image = validated_data["image"] # type: ignore
+    ^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/fields/related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "2": "Post.image" must be a "Image" instance.
+2025-07-11 03:50:45,758 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/serializers.py changed, reloading.
+2025-07-11 03:50:46,278 - INFO - Django management command started: manage.py runserver
+2025-07-11 03:50:47,451 - INFO - Django imports successful
+2025-07-11 03:50:47,451 - INFO - Starting Django development server
+2025-07-11 03:50:47,540 - INFO - Watching for file changes with StatReloader
+2025-07-11 03:51:35,268 - INFO - /Users/I750420/Desktop/Web2/web2blog-adt/blog_api/serializers.py changed, reloading.
+2025-07-11 03:51:35,357 - INFO - Django management command started: manage.py runserver
+2025-07-11 03:51:35,502 - INFO - Django imports successful
+2025-07-11 03:51:35,502 - INFO - Starting Django development server
+2025-07-11 03:51:35,550 - INFO - Watching for file changes with StatReloader
+2025-07-11 03:54:01,981 - ERROR - Internal Server Error: /api/post/by-id/34
+Traceback (most recent call last):
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/post.py", line 97, in put
+    post.image = validated_data["image"] # type: ignore
+    ^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/fields/related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "3": "Post.image" must be a "Image" instance.
+2025-07-11 04:00:25,804 - ERROR - Internal Server Error: /api/post/by-id/36
+Traceback (most recent call last):
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/blog_api/views/post.py", line 97, in put
+    post.image = validated_data["image"] # type: ignore
+    ^^^^^^^^^^
+  File "/Users/I750420/Desktop/Web2/web2blog-adt/.venv/lib/python3.13/site-packages/django/db/models/fields/related_descriptors.py", line 291, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "4": "Post.image" must be a "Image" instance.
