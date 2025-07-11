@@ -29,6 +29,9 @@
 .blog-card .card-text {
   color: #444;
   font-size: 1rem;
+  max-height: 15em;
+  text-overflow: ellipsis;
+  overflow: hidden
 }
 
 .blog-card .tags {
