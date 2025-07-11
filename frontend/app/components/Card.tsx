@@ -6,7 +6,7 @@ import { getImageSrc } from "./ApiImage";
 
 interface PostCardProps {
   post: Post;
-  redirect: string;
+  redirect?: string;
 }
 
 export function PostCard({ post, redirect }: PostCardProps) {
