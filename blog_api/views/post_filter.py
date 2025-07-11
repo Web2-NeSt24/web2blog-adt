@@ -1,22 +1,43 @@
 from django.db.models import Q, Count
-from drf_spectacular.utils import extend_schema
-from rest_framework import views
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+from rest_framework import views, permissions
 
 from blog_api import models, serializers
 
 
 class PostFilterView(views.APIView):
-    @extend_schema(request=serializers.PostFilterSerializer, responses={ 200: serializers.PostListSerializer })
+    permission_classes = [permissions.AllowAny]  # Public filtering functionality
+    
+    @extend_schema(
+        summary="Filter and search posts",
+        description="""
+        Advanced post filtering and search functionality. Filter posts by multiple criteria:
+        
+        - **author_id**: Filter by specific user ID
+        - **author_name**: Filter by username (case-insensitive)
+        - **tags**: Filter by hashtags (all specified tags must be present)
+        - **keywords**: Search in title and content (any keyword match)
+        - **sort_by**: Sort results by date (newest first) or popularity (most liked first)
+        
+        All filters are combined with AND logic, except keywords which use OR logic.
+        Only published posts are included in results.
+        """,
+        request=serializers.PostFilterSerializer, 
+        responses={
+            200: serializers.PostListSerializer
+        }, 
+        tags=['Filters']
+    )
     def post(self, request: views.Request):
         serializer = serializers.PostFilterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         queryset = models.Post.objects.filter(draft=False)
 
-        if "author_id" in serializer.validated_data:
+        if serializer.validated_data.get("author_id") is not None:
             queryset = queryset.filter(profile__user__id=serializer.validated_data["author_id"])
 
-        if "author_name" in serializer.validated_data:
+        if serializer.validated_data.get("author_name") is not None:
             queryset = queryset.filter(profile__user__username__iexact=serializer.validated_data["author_name"])
 
         for tag in serializer.validated_data["tags"]:

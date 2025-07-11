@@ -17,6 +17,7 @@ class BookmarkPostView(views.APIView):
             404: OpenApiResponse(description="Post not found"),
             409: OpenApiResponse(description="Post already bookmarked"),
         },
+        tags=['Bookmarks'],
     )
     def post(self, request: views.Request, post_id: int):
         serializer = serializers.BookmarkCreateUpdateSerializer(data=request.data)
@@ -52,8 +53,9 @@ class BookmarkPostView(views.APIView):
             200: serializers.BookmarkStatusSerializer,
             404: OpenApiResponse(description="Post not found"),
         },
+        tags=['Bookmarks'],
     )
-    def get(self, request: views.Request, post_id: int):
+    def get(self, request: views.Request, post_id: int):        
         try:
             post = models.Post.objects.get(pk=post_id)
         except models.Post.DoesNotExist:
@@ -64,7 +66,6 @@ class BookmarkPostView(views.APIView):
             post=post, creator_profile=request.user.profile
         ).exists()
         data = {"bookmarked": exists}
-
         serializer = serializers.BookmarkStatusSerializer(data)
         return views.Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -76,6 +77,7 @@ class BookmarkPostView(views.APIView):
             204: OpenApiResponse(description="Bookmark deleted"),
             404: OpenApiResponse(description="Bookmark not found"),
         },
+        tags=['Bookmarks'],
     )
     def delete(self, request: views.Request, post_id: int):
         try:
@@ -101,6 +103,7 @@ class BookmarkListView(views.APIView):
         summary="List all bookmarks for the authenticated user",
         description="Returns all bookmarks for the authenticated user.",
         responses={200: serializers.BookmarkSerializer(many=True)},
+        tags=['Bookmarks'],
     )
     def get(self, request: views.Request):
         # Using the related manager (bookmark_set) from the profile
@@ -121,6 +124,7 @@ class BookmarkInstanceView(views.APIView):
             403: OpenApiResponse(description="Forbidden"),
             404: OpenApiResponse(description="Bookmark not found"),
         },
+        tags=['Bookmarks'],
     )
     def patch(self, request: views.Request, bookmark_id: int):
         try:
@@ -153,6 +157,7 @@ class BookmarkInstanceView(views.APIView):
             403: OpenApiResponse(description="Forbidden"),
             404: OpenApiResponse(description="Bookmark not found"),
         },
+        tags=['Bookmarks'],
     )
     def delete(self, request: views.Request, bookmark_id: int):
         try:
