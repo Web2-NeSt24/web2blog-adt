@@ -21,7 +21,9 @@
               pytest-cov
               coverage
               django-cors-headers
+
             ]))
+              nodejs
           ];
         };
       };

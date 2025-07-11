@@ -207,3 +207,48 @@ class PostViewTests(TestCase):
         
         # Should have 2 more tags than before
         self.assertEqual(models.Hashtag.objects.count(), initial_tag_count + 2)
+    
+    def test_post_creation_no_duplicates(self):
+        """Test that creating a post through the API creates exactly one post (no accidental duplicates)"""
+        self.client.force_authenticate(user=self.user)
+        
+        # Check initial post count (should be 1 from setUp)
+        initial_post_count = models.Post.objects.count()
+        self.assertEqual(initial_post_count, 1)
+        
+        # Create a new draft
+        drafts_url = "/api/drafts/"
+        response = self.client.post(drafts_url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        draft_id = response.data["draft_post_id"]
+        
+        # Update the draft with content
+        draft_url = f"/api/post/by-id/{draft_id}"
+        update_data = {
+            "title": "New Post Title",
+            "content": "New post content",
+            "image": None,
+            "tags": ["test", "api"]
+        }
+        response = self.client.put(draft_url, update_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # Publish the draft
+        response = self.client.post(draft_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # Verify exactly one new post was created (total should be 2)
+        final_post_count = models.Post.objects.count()
+        self.assertEqual(final_post_count, initial_post_count + 1)
+        
+        # Verify the new post exists and has correct properties
+        new_post = models.Post.objects.get(id=draft_id)
+        self.assertEqual(new_post.title, "New Post Title")
+        self.assertEqual(new_post.content, "New post content")
+        self.assertEqual(new_post.profile, self.user.profile)
+        self.assertFalse(new_post.draft)  # Should be published now
+        
+        # Verify no duplicate posts with same content were created
+        posts_with_title = models.Post.objects.filter(title="New Post Title")
+        self.assertEqual(posts_with_title.count(), 1)

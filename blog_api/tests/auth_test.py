@@ -13,6 +13,7 @@ class AuthenticationTests(APITestCase):
             "username": "testuser",
             "password": "testpass123",
             "email": "testuser@example.com"
+
         }
         self.invalid_credentials = {
             "username": "testuser",
