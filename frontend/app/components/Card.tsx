@@ -3,29 +3,15 @@ import type { Post } from "~/types/api";
 import ProfilePicture from "./ProfilePicture";
 import { getImageSrc } from "./ApiImage";
 
-const cardVariants = [
-  "primary",
-  "secondary",
-  "success",
-  "danger",
-  "warning",
-  "info",
-  "dark",
-  "light",
-];
 
-function getRandomVariant(idx: number) {
-  return cardVariants[idx % cardVariants.length];
-}
-
-interface RandomCardProps {
+interface PostCardProps {
   post: Post;
-  idx: number;
+  redirect: string;
 }
 
-export function RandomCard({ post, idx }: RandomCardProps) {
+export function PostCard({ post, redirect }: PostCardProps) {
   return (
-    <a href={`/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`} className="text-decoration-none">
+    <a href={redirect || `/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`} className="text-decoration-none">
       <Card className="blog-card h-100" key={post.id}>
         {post.image && (
           <Card.Img variant="top" src={getImageSrc(post.image)} className="card-img-top" />

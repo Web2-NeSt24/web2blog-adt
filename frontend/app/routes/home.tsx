@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import { useState, useEffect } from "react";
-import { RandomCard } from "~/components/Card";
+import { PostCard } from "~/components/Card";
 import { Container, Row, Col } from "react-bootstrap";
 import type { Post } from "~/types/api";
 
@@ -70,7 +70,7 @@ export default function Home() {
         ) : (
           posts.map((post, idx) => (
             <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
-              <RandomCard post={post} idx={idx}/>
+              <PostCard post={post}/>
             </Col>
           ))
         )}
