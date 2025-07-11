@@ -53,14 +53,7 @@ export function PostCard({ post }: PostCardProps) {
             )}
           </div>
           <div className="author-section mt-auto">
-            {post.profile?.profile_picture ? (
-              <ProfilePicture id={post.profile.profile_picture} className="author-avatar" />
-            ) : (
-              <div
-                className="author-avatar"
-                style={{ background: "#eee" }}
-              />
-            )}
+            <ProfilePicture id={post.profile.profile_picture} className="author-avatar" />
             <span className="author-name">{post.profile?.user?.username || "Unknown Author"}</span>
           </div>
           <div className="post-stats mt-2">
