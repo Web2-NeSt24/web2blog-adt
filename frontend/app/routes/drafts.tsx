@@ -68,54 +68,6 @@ const DraftsPage: React.FC = () => {
     fetchDrafts();
   }, [isAuthenticated]);
 
-  const handleEditDraft = (draftId: number) => {
-    // Navigate to create page with the draft ID as a query parameter
-    navigate(`/create?draft=${draftId}`);
-  };
-
-  const handleDeleteDraft = async (draftId: number) => {
-    if (!confirm("Are you sure you want to delete this draft? This action cannot be undone.")) {
-      return;
-    }
-
-    try {
-      const response = await makeAuthenticatedRequest(`/api/post/by-id/${draftId}`, {
-        method: "DELETE"
-      });
-
-      if (response.ok) {
-        // Remove the deleted draft from the list
-        setDrafts(prevDrafts => prevDrafts.filter(draft => draft.id !== draftId));
-      } else {
-        throw new Error("Failed to delete draft");
-      }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete draft");
-    }
-  };
-
-  const handlePublishDraft = async (draftId: number) => {
-    if (!confirm("Are you sure you want to publish this draft? It will become visible to all users.")) {
-      return;
-    }
-
-    try {
-      const response = await makeAuthenticatedRequest(`/api/drafts/${draftId}/publish/`, {
-        method: "POST"
-      });
-
-      if (response.ok) {
-        // Remove the published draft from the list and show success
-        setDrafts(prevDrafts => prevDrafts.filter(draft => draft.id !== draftId));
-        alert("Draft published successfully!");
-      } else {
-        throw new Error("Failed to publish draft");
-      }
-    } catch (err: any) {
-      alert(err.message || "Failed to publish draft");
-    }
-  };
-
   // Show loading spinner while checking authentication
   if (isLoading) {
     return (
@@ -160,7 +112,7 @@ const DraftsPage: React.FC = () => {
                       <div className="d-flex gap-2">
                         <Button 
                           variant="success" 
-                          onClick={() => navigate("/create")}
+                          onClick={() => navigate("/post/edit/new")}
                         >
                           Create New Post
                         </Button>
@@ -191,7 +143,7 @@ const DraftsPage: React.FC = () => {
                         <p className="text-muted mb-4">
                           Start writing your next post. Your drafts are automatically saved as you write.
                         </p>
-                        <Button variant="primary" onClick={() => navigate("/create")}>
+                        <Button variant="primary" onClick={() => navigate("/post/edit/new")}>
                           Create Your First Draft
                         </Button>
                       </div>
