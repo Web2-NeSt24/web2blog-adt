@@ -8,6 +8,7 @@ import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { logoutUser } from "../utils/auth";
 import { useState } from "react";
+import ProfilePicture from "./ProfilePicture";
 
 function MainNavigator() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -82,6 +83,8 @@ function MainNavigator() {
             {isAuthenticated ? (
               <Dropdown align="end" className="ms-lg-3">
                 <Dropdown.Toggle variant="outline-info" id="user-dropdown">
+                  <ProfilePicture id={user?.id} style={{ width: "2em", height: "2em", borderRadius: "5pt" }} />
+                  &nbsp;&nbsp;
                   {user?.username}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -95,7 +98,7 @@ function MainNavigator() {
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Link to="/auth" className="ms-lg-5 mt-1 mt-lg-2">
+              <Link to="/auth" className="ms-lg-5">
                 <Button variant="outline-info">
                   Login
                 </Button>
