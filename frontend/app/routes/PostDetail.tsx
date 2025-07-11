@@ -69,7 +69,13 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
   const handleBookmark = async () => {
     if (!post) return;
     setBookmarkLoading(true);
-    await makeAuthenticatedRequest(`${API_BASE}/post/${id}/bookmark/`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+
+    if (!post.is_bookmarked) {
+      await makeAuthenticatedRequest(`${API_BASE}/post/${id}/bookmark/`, { method: 'POST' });
+    } else {
+      await makeAuthenticatedRequest(`${API_BASE}/post/${id}/bookmark/`, { method: 'DELETE' });
+    }
+
     fetch(`${API_BASE}/post/by-id/${id}`)
       .then(res => res.json())
       .then(setPost)
