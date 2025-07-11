@@ -155,3 +155,43 @@ ValueError: Cannot assign "1": "Post.image" must be a "Image" instance.
 2025-07-06 03:14:29,146 - INFO - Django imports successful
 2025-07-06 03:14:29,146 - INFO - Starting Django development server
 2025-07-06 03:14:29,228 - INFO - Watching for file changes with StatReloader
+2025-07-06 03:56:35,153 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-06 15:06:23,090 - INFO - Django management command started: manage.py runserver
+2025-07-06 15:06:24,740 - INFO - Django imports successful
+2025-07-06 15:06:24,741 - INFO - Starting Django development server
+2025-07-06 15:06:25,509 - INFO - Django management command started: manage.py runserver
+2025-07-06 15:06:25,729 - INFO - Django imports successful
+2025-07-06 15:06:25,729 - INFO - Starting Django development server
+2025-07-06 15:06:25,800 - INFO - Watching for file changes with StatReloader
+2025-07-06 15:06:44,955 - WARNING - Not Found: /
+2025-07-06 15:06:45,076 - WARNING - Not Found: /favicon.ico
+2025-07-06 15:06:58,354 - WARNING - Not Found: /docs/images/
+2025-07-06 15:08:57,242 - WARNING - Not Found: /user/me/profile
+2025-07-06 16:23:49,633 - INFO - Django command completed successfully
+2025-07-06 16:23:49,707 - INFO - Django command completed successfully
+2025-07-06 16:27:07,455 - INFO - Django management command started: manage.py runserver
+2025-07-06 16:27:09,339 - INFO - Django imports successful
+2025-07-06 16:27:09,340 - INFO - Starting Django development server
+2025-07-06 16:27:10,062 - INFO - Django management command started: manage.py runserver
+2025-07-06 16:27:10,234 - INFO - Django imports successful
+2025-07-06 16:27:10,235 - INFO - Starting Django development server
+2025-07-06 16:27:10,292 - INFO - Watching for file changes with StatReloader
+2025-07-06 16:27:15,054 - WARNING - Not Found: /
+2025-07-06 16:35:13,592 - INFO - Django command completed successfully
+2025-07-06 16:35:13,718 - INFO - Django command completed successfully
+2025-07-11 03:22:54,957 - INFO - Django management command started: manage.py runserver
+2025-07-11 03:22:58,416 - INFO - Django imports successful
+2025-07-11 03:22:58,417 - INFO - Starting Django development server
+2025-07-11 03:22:59,567 - INFO - Django management command started: manage.py runserver
+2025-07-11 03:22:59,868 - INFO - Django imports successful
+2025-07-11 03:22:59,868 - INFO - Starting Django development server
+2025-07-11 03:22:59,962 - INFO - Watching for file changes with StatReloader
+2025-07-11 03:27:09,111 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-11 03:27:11,451 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-11 03:27:24,750 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-11 03:27:27,157 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-11 03:27:35,190 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-11 03:27:55,199 - WARNING - Unauthorized: /api/user/me/profile
+2025-07-11 03:28:28,935 - WARNING - Unauthorized: /api/post/4/comments/
+2025-07-11 03:28:55,660 - WARNING - Unauthorized: /api/post/4/like/
+2025-07-11 03:29:04,499 - WARNING - Unauthorized: /api/post/4/bookmark/

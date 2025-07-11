@@ -125,7 +125,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         <ul className="comments-list">
           {comments.map(comment => (
             <li key={comment.id} className="comment-item">
-              <strong>{comment.author_profile.user.username}</strong>: {comment.content}
+             ^ <strong>{comment.author_profile.user.username}</strong>: {comment.content}
             </li>
           ))}
         </ul>
