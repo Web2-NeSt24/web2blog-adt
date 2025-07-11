@@ -1,5 +1,6 @@
 import Card from "react-bootstrap/Card";
 import type { Post } from "~/types/api";
+import ProfilePicture from "./ProfilePicture";
 
 const cardVariants = [
   "primary",
@@ -45,18 +46,7 @@ export function RandomCard({ post, idx }: RandomCardProps) {
           )}
         </div>
         <div className="author-section mt-auto">
-          {post.profile?.profile_picture ? (
-            <img
-              className="author-avatar"
-              src={post.profile.profile_picture}
-              alt={post.profile?.user?.username || "author"}
-            />
-          ) : (
-            <div
-              className="author-avatar"
-              style={{ background: "#eee" }}
-            />
-          )}
+          <ProfilePicture id={post.profile?.profile_picture} width="50" height="50" />
           <span className="author-name">{post.profile?.user?.username || "Unknown Author"}</span>
         </div>
         <div className="post-stats mt-2">
