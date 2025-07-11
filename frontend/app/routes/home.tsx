@@ -1,8 +1,10 @@
 import type { Route } from "./+types/home";
 import { useState, useEffect } from "react";
 import { PostCard } from "~/components/Card";
-import { Container, Row, Col } from "react-bootstrap";
-import type { Post } from "~/types/api";
+import { TagInput } from "~/components/TagInput";
+import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
+import type { Post, PostFilter } from "~/types/api";
+import { PostSortingMethod } from "~/types/api";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -15,15 +17,42 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [authorFilter, setAuthorFilter] = useState("");
+  const [tagsFilter, setTagsFilter] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<PostSortingMethod>(PostSortingMethod.DATE);
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (useFilters = false) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/posts/');
+      
+      let url = '/api/posts/';
+      let options: RequestInit = {};
+      
+      if (useFilters) {
+        url = '/api/filter/';
+        const keywords: string[] = [];
+        const tags = tagsFilter;
+        const author_name = authorFilter.trim() || undefined;
+        
+        const filterData: PostFilter = {
+          keywords,
+          tags,
+          sort_by: sortBy,
+          ...(author_name && { author_name })
+        };
+        
+        options = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(filterData)
+        };
+      }
+      
+      const response = await fetch(url, options);
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
@@ -34,6 +63,17 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    fetchPosts(true);
+  };
+
+  const handleReset = () => {
+    setAuthorFilter("");
+    setTagsFilter([]);
+    setSortBy(PostSortingMethod.DATE);
+    fetchPosts(false);
   };
 
   if (loading) {
@@ -60,6 +100,62 @@ export default function Home() {
 
   return (
     <Container className="py-4 main-centered-container" style={{ maxWidth: '1400px' }}>
+      {/* Compact Filter Section */}
+      <Row className="mb-4">
+        <Col xs={12}>
+          <div className="bg-light p-3 rounded">
+            <Row className="g-3 align-items-end">
+              <Col md={4}>
+                <Form.Group>
+                  <Form.Label className="small">Author</Form.Label>
+                  <Form.Control
+                    size="sm"
+                    type="text"
+                    placeholder="Username"
+                    value={authorFilter}
+                    onChange={(e) => setAuthorFilter(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group>
+                  <Form.Label className="small">Tags</Form.Label>
+                  <TagInput
+                    tags={tagsFilter}
+                    onTagsChange={setTagsFilter}
+                    size="sm"
+                    placeholder="Type tags and press space..."
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={2}>
+                <Form.Group>
+                  <Form.Label className="small">Sort</Form.Label>
+                  <Form.Select
+                    size="sm"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
+                  >
+                    <option value={PostSortingMethod.DATE}>Newest</option>
+                    <option value={PostSortingMethod.LIKES}>Popular</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={2}>
+                <div className="d-flex gap-2">
+                  <Button size="sm" variant="primary" onClick={handleSearch}>
+                    Filter
+                  </Button>
+                  <Button size="sm" variant="outline-secondary" onClick={handleReset}>
+                    Clear
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
+      
       <Row className="g-4">
         {posts.length === 0 ? (
           <Col xs={12}>

@@ -1,4 +1,3 @@
-// API types based on backend serializers
 export interface User {
   id: number;
   username: string;
@@ -38,4 +37,23 @@ export interface Bookmark {
   post: Post;
   creator_profile: Profile;
   title: string;
+}
+
+
+// Filter and search 
+export enum PostSortingMethod {
+  DATE = "DATE",
+  LIKES = "LIKES"
+}
+
+export interface PostFilter {
+  author_id?: number;
+  author_name?: string;
+  keywords: string[];
+  tags: string[];
+  sort_by: PostSortingMethod;
+}
+
+export interface PostFilterResponse {
+  post_ids: number[];
 }
