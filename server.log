@@ -292,3 +292,10 @@ Traceback (most recent call last):
     ...<7 lines>...
     )
 ValueError: Cannot assign "4": "Post.image" must be a "Image" instance.
+2025-07-11 04:56:17,998 - WARNING - Unauthorized: /api/post/5/like/
+2025-07-11 04:57:32,264 - WARNING - Unauthorized: /api/post/5/bookmark/
+2025-07-11 04:57:39,183 - WARNING - Conflict: /api/post/5/bookmark/
+2025-07-11 04:57:52,776 - WARNING - Conflict: /api/post/5/bookmark/
+2025-07-11 05:02:02,752 - WARNING - Unauthorized: /api/post/31/like/
+2025-07-11 05:02:03,973 - WARNING - Unauthorized: /api/post/31/comments/
+2025-07-11 05:02:05,437 - WARNING - Unauthorized: /api/post/31/bookmark/

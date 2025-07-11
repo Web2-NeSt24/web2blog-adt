@@ -22,6 +22,25 @@ interface RandomCardProps {
 }
 
 export function RandomCard({ post, idx }: RandomCardProps) {
+  // Helper function to strip HTML tags and decode HTML entities
+  const stripHtmlAndDecode = (html: string): string => {
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Get text content and clean it up
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Clean up extra whitespace
+    return textContent.replace(/\s+/g, ' ').trim();
+  };
+
+  // Get clean text content for display
+  const cleanContent = post.content ? stripHtmlAndDecode(post.content) : '';
+  const displayContent = cleanContent.length > 200 ? 
+    cleanContent.substring(0, 200) + "..." : 
+    cleanContent;
+
   return (
     <Card className="blog-card h-100" key={post.id}>
       {post.image && (
@@ -34,13 +53,7 @@ export function RandomCard({ post, idx }: RandomCardProps) {
           </a>
         </Card.Title>
         <Card.Text className="card-text flex-grow-1">
-          {post.content ?
-            (post.content.length > 150 ?
-              post.content.substring(0, 150) + "..." :
-              post.content
-            ) :
-            "No content"
-          }
+          {displayContent || "No content"}
         </Card.Text>
         <div className="tags mb-2">
           {post.tags && post.tags.length > 0 ? (
