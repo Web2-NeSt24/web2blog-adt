@@ -916,6 +916,14 @@
   background: #5a67d8;
 }
 
+.edit-btn {
+  background: #FEB686;
+}
+
+.delete-btn {
+  background: #FF7D87;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .post-create-container {

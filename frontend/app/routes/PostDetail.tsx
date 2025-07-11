@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegBookmark, FaBookmark, FaRegThumbsUp, FaThumbsUp, FaFacebook, FaTwitter } from 'react-icons/fa';
+import { FaRegBookmark, FaBookmark, FaRegThumbsUp, FaThumbsUp, FaFacebook, FaTwitter, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { ApiImage } from '~/components/ApiImage';
 import ProfilePicture from '~/components/ProfilePicture';
@@ -118,6 +118,14 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
     fetch(`${API_BASE}/post/by-id/${id}`).then(res => res.json()).then(setPost);
   };
 
+  const handleDelete = async () => {
+    await makeAuthenticatedRequest(`${API_BASE}/post/by-id/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    navigate("/")
+  }
+
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const shareText = post ? encodeURIComponent(post.title) : '';
 
@@ -197,7 +205,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
             </span>
             <span className="stat-item">
               <svg className="stat-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/>
+                <path d="M21.99 4c0-1.1-.89-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z" />
               </svg>
               {post.comment_count} {post.comment_count === 1 ? 'Comment' : 'Comments'}
             </span>
@@ -233,39 +241,56 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         {/* Post Actions */}
         <div className="post-actions">
           <div className="action-buttons">
-            <button 
-              onClick={handleLike} 
-              disabled={likeLoading} 
+            <button
+              onClick={handleLike}
+              disabled={likeLoading}
               className={`action-btn like-btn ${post.is_liked ? 'active' : ''}`}
             >
               {post.is_liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
               <span>{post.is_liked ? 'Liked' : 'Like'}</span>
             </button>
-            
-            <button 
-              onClick={handleBookmark} 
-              disabled={bookmarkLoading} 
+
+            <button
+              onClick={handleBookmark}
+              disabled={bookmarkLoading}
               className={`action-btn bookmark-btn ${post.is_bookmarked ? 'active' : ''}`}
             >
               {post.is_bookmarked ? <FaBookmark /> : <FaRegBookmark />}
               <span>{post.is_bookmarked ? 'Bookmarked' : 'Bookmark'}</span>
             </button>
+            {isOwnPost && <>
+              <button
+                onClick={() => navigate(`/post/edit/${post.id}`)}
+                className={`action-btn edit-btn`}
+              >
+                <FaEdit />
+                <span>Edit</span>
+              </button>
+
+              <button
+                onClick={handleDelete}
+                className={`action-btn delete-btn`}
+              >
+                <FaTrash />
+                <span>Delete</span>
+              </button>
+            </>}
           </div>
-          
+
           <div className="share-buttons">
             <span className="share-label">Share:</span>
-            <a 
-              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${shareText}`} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${shareText}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="share-btn twitter"
             >
               <FaTwitter />
             </a>
-            <a 
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="share-btn facebook"
             >
               <FaFacebook />
@@ -279,12 +304,12 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         <h2 className="comments-title">
           Comments ({post.comment_count})
         </h2>
-        
+
         <form onSubmit={handleComment} className="comment-form">
-          <textarea 
-            value={commentText} 
-            onChange={e => setCommentText(e.target.value)} 
-            placeholder="Share your thoughts..." 
+          <textarea
+            value={commentText}
+            onChange={e => setCommentText(e.target.value)}
+            placeholder="Share your thoughts..."
             className="comment-input"
             rows={4}
           />
