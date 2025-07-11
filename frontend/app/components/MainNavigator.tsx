@@ -7,11 +7,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import { logoutUser } from "../utils/auth";
+import { useState } from "react";
 
 function MainNavigator() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchTerms, setSearchTerms] = useState("")
 
   const handleLogout = async () => {
     const result = await logoutUser();
@@ -54,8 +56,9 @@ function MainNavigator() {
                 placeholder="Search"
                 className="me-2"
                 aria-label="Search"
+                onChange={(e) => setSearchTerms(e.target.value)}
               />
-              <Button variant="outline-light">Search</Button>
+              <Button variant="outline-light" onClick={() => navigate(`/?search=${encodeURIComponent(searchTerms)}`, { replace: true })}>Search</Button>
             </Form>
           </div>
 

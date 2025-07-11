@@ -6,6 +6,7 @@ import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import type { Post, PostFilter } from "~/types/api";
 import { PostSortingMethod } from "~/types/api";
 import { makeAuthenticatedRequest } from "~/utils/auth";
+import { useSearchParams } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -15,59 +16,53 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const [queryParams, _setQueryParams] = useSearchParams()
+  const querySearch = queryParams.get("search")
+
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  let [keywordFilter, setKeywordFilter] = useState<string[]>([])
   const [authorFilter, setAuthorFilter] = useState("");
   const [tagsFilter, setTagsFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<PostSortingMethod>(PostSortingMethod.DATE);
 
   useEffect(() => {
+    keywordFilter = querySearch && querySearch.split(" ") || []
+    setKeywordFilter(keywordFilter)
     fetchPosts();
-  }, []);
+  }, [queryParams]);
 
-  const fetchPosts = async (useFilters = false) => {
+  useEffect(() => {
+
+  }, [keywordFilter])
+
+  const fetchPosts = async () => {
     try {
       setLoading(true);
 
-      let url = '/api/posts/';
-      let options: RequestInit = {};
-
-      if (useFilters) {
-        url = '/api/filter/';
-        const keywords: string[] = [];
-        const tags = tagsFilter;
-        const author_name = authorFilter.trim() || undefined;
-
-        const filterData: PostFilter = {
-          keywords,
-          tags,
+      const response = await makeAuthenticatedRequest("/api/filter/", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           sort_by: sortBy,
-          ...(author_name && { author_name })
-        };
-
-        options = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filterData)
-        };
-      }
-
-      const response = await makeAuthenticatedRequest(url, options);
+          ...( keywordFilter.length !== 0 ? { keywords: keywordFilter } : {} ),
+          ...( tagsFilter.length !== 0 ? { tags: tagsFilter } : {} ),
+          ...( authorFilter ? { author_name: authorFilter } : {} ),
+        })
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
       let data = await response.json();
 
-      if (useFilters) {
-        data = await Promise.all(data.post_ids.map(async (id: number) => {
-          const response = await fetch(`/api/post/by-id/${id}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch posts');
-          }
-          return await response.json();
-        }))
-      }
+      data = await Promise.all(data.post_ids.map(async (id: number) => {
+        const response = await fetch(`/api/post/by-id/${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+        return await response.json();
+      }))
 
       setPosts(data);
     } catch (err) {
@@ -78,14 +73,14 @@ export default function Home() {
   };
 
   const handleSearch = () => {
-    fetchPosts(true);
+    fetchPosts();
   };
 
   const handleReset = () => {
     setAuthorFilter("");
     setTagsFilter([]);
     setSortBy(PostSortingMethod.DATE);
-    fetchPosts(false);
+    fetchPosts();
   };
 
   if (loading) {
