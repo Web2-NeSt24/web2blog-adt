@@ -4,24 +4,6 @@ from rest_framework.response import Response
 
 from blog_api import models, serializers
 
-
-class PostListView(views.APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    @extend_schema(
-        summary="List all published posts",
-        description="Retrieve a list of all published blog posts. Draft posts are excluded from this list. Posts include engagement metrics like likes, comments, and bookmarks.",
-        responses={
-            200: serializers.PostSerializer(many=True)
-        }, 
-        tags=['Posts']
-    )
-    def get(self, request):
-        posts = models.Post.objects.filter(draft=False)
-        serializer = serializers.PostSerializer(posts, many=True, context={'request': request})
-        return Response(serializer.data)
-
-
 class PostView(views.APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
