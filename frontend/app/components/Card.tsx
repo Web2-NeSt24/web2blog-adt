@@ -29,7 +29,7 @@ export function RandomCard({ post, idx }: RandomCardProps) {
       )}
       <Card.Body className="d-flex flex-column">
         <Card.Title className="card-title">
-          <a href={`/post/${post.id}`} className="text-decoration-none">
+          <a href={`/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`} className="text-decoration-none">
             {post.title}
           </a>
         </Card.Title>
