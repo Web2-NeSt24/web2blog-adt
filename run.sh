@@ -2,6 +2,16 @@
 
 echo "Starting web2blog application..."
 
+# Install backend dependencies
+echo "Installing backend dependencies..."
+pip install -r requirements.txt
+
+# Install frontend dependencies
+echo "Installing frontend dependencies..."
+cd frontend
+npm install
+cd ..
+
 # Start backend in background
 echo "Starting backend..."
 python manage.py runserver &
