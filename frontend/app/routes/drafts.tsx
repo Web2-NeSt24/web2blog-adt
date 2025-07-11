@@ -151,7 +151,7 @@ const DraftsPage: React.FC = () => {
                       <Row className="g-4">
                         {drafts.map((draft) => (
                           <Col md={6} lg={4} key={draft.id}>
-                              <PostCard post={draft} redirect={`/post/edit/${draft.id}`} />
+                              <PostCard post={draft} />
                           </Col>
                         ))}
                       </Row>

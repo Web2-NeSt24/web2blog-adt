@@ -12,7 +12,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ProfilePicture from "../components/ProfilePicture";
 import { useNavigate } from "react-router";
 import { handleImageUpload } from "~/utils/image";
-import { getImageSrc } from "~/components/ApiImage";
+import { PostCard } from "~/components/Card";
 
 
 const formatErrorMessage = (error: any): string => {
@@ -332,19 +332,7 @@ const ProfileView: React.FC = () => {
                   <Row className="g-3">
                     {posts.map((post) => (
                       <Col md={6} key={post.id}>
-                        <Card className="h-100" onClick={() => navigate(`/post/${post.id}`)} style={{ cursor: 'pointer' }}>
-                          {post.image && <Card.Img variant="top" src={getImageSrc(post.image)} style={{ height: '150px', objectFit: 'cover' }} />}
-                          <Card.Body>
-                            <Card.Title className="h6">{post.title}</Card.Title>
-                            <Card.Text className="small text-muted">
-                              {post.content?.length > 100 ? post.content.substring(0, 100) + "..." : post.content || "No content"}
-                            </Card.Text>
-                            <div className="d-flex justify-content-between small text-muted">
-                              <span>{post.like_count} likes</span>
-                              <span>{post.comment_count} comments</span>
-                            </div>
-                          </Card.Body>
-                        </Card>
+                          <PostCard post={post} />
                       </Col>
                     ))}
                   </Row>

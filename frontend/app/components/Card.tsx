@@ -6,18 +6,19 @@ import { getImageSrc } from "./ApiImage";
 
 interface PostCardProps {
   post: Post;
-  redirect?: string;
 }
 
-export function PostCard({ post, redirect }: PostCardProps) {
+export function PostCard({ post }: PostCardProps) {
+  const redirect = post.draft ? `/post/edit/${post.id}` : `/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`
+
   return (
-    <a href={redirect || `/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`} className="text-decoration-none">
+    <a href={redirect} className="text-decoration-none">
       <Card className="blog-card h-100" key={post.id}>
         {post.image && (
           <Card.Img variant="top" src={getImageSrc(post.image)} className="card-img-top" />
         )}
         <Card.Body className="d-flex flex-column">
-          <Card.Title className="card-title">
+          <Card.Title className="card-title" style={{ color: post.draft ? "#FF0000" : "" }}>
             {post.title}
           </Card.Title>
           <Card.Text className="card-text flex-grow-1" dangerouslySetInnerHTML={{ __html: post.content || "No content" }}>
