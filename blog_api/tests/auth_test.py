@@ -11,6 +11,7 @@ class AuthenticationTests(TestCase):
         self.login_url = "/api/auth/login"
         self.valid_credentials = {
             "username": "testuser",
+            "email": "test@example.com",
             "password": "testpass123"
         }
         self.invalid_credentials = {
@@ -19,10 +20,10 @@ class AuthenticationTests(TestCase):
         }
     
     def test_successful_registration(self):
-        """Test that a valid username/password creates a user and returns 200"""
+        """Test that a valid username/password creates a user and returns 201"""
         response = self.client.post(self.register_url, self.valid_credentials)
         
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(User.objects.filter(username="testuser").exists())
         # Verify user is authenticated after registration
         self.assertTrue(response.wsgi_request.user.is_authenticated)
@@ -31,6 +32,7 @@ class AuthenticationTests(TestCase):
         """Test that non-alphanumeric usernames are rejected with 400"""
         invalid_data = {
             "username": "test@user",
+            "email": "test@example.com",
             "password": "testpass123"
         }
         response = self.client.post(self.register_url, invalid_data)
@@ -53,11 +55,12 @@ class AuthenticationTests(TestCase):
         """Test that usernames are properly converted to lowercase"""
         uppercase_data = {
             "username": "TESTUSER",
+            "email": "test@example.com",
             "password": "testpass123"
         }
         response = self.client.post(self.register_url, uppercase_data)
         
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # User should be stored with lowercase username
         self.assertTrue(User.objects.filter(username="testuser").exists())
         self.assertFalse(User.objects.filter(username="TESTUSER").exists())
