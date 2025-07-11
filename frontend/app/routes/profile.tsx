@@ -11,17 +11,9 @@ import Col from "react-bootstrap/Col";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ProfilePicture from "../components/ProfilePicture";
 import { useNavigate } from "react-router";
+import { handleImageUpload } from "~/utils/image";
+import { getImageSrc } from "~/components/ApiImage";
 
-// Helper functions
-const fileToBase64 = async (file: File): Promise<string> => {
-  const buffer = await file.arrayBuffer();
-  const base64url: string = await new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(new Blob([buffer]));
-  });
-  return base64url.slice(base64url.indexOf(',') + 1);
-};
 
 const formatErrorMessage = (error: any): string => {
   if (error.message?.includes("No module named 'PIL'") || error.message?.includes("ModuleNotFoundError")) {
@@ -87,26 +79,8 @@ const ProfileView: React.FC = () => {
 
   // Handle profile picture upload
   const handlePicChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const base64Data = await fileToBase64(file);
-      const fileType = file.type.split("/")[1].toUpperCase();
-      
-      const response = await makeAuthenticatedRequest("/api/image/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: fileType, data: base64Data }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setEditPic(result.id);
-      }
-    } catch (err) {
-      setError("Failed to upload image. Please try again.");
-    }
+    const image_id = await handleImageUpload(e)
+    setEditPic(image_id)
   };
 
   // Save profile updates
@@ -213,7 +187,7 @@ const ProfileView: React.FC = () => {
                       </div>
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/png,image/jpeg,image/svg"
                         ref={fileInputRef}
                         style={{ display: "none" }}
                         onChange={handlePicChange}
@@ -322,7 +296,7 @@ const ProfileView: React.FC = () => {
                         <Button 
                           variant="primary" 
                           className="w-100" 
-                          onClick={() => navigate("/create")}
+                          onClick={() => navigate("/post/edit/new", { replace: true })}
                         >
                           Create New Post
                         </Button>
@@ -350,7 +324,7 @@ const ProfileView: React.FC = () => {
                 {posts.length === 0 ? (
                   <div className="text-center py-4">
                     <p className="text-muted">No posts found.</p>
-                    <Button variant="primary" onClick={() => navigate("/create")}>
+                    <Button variant="primary" onClick={() => navigate("/post/edit/new")}>
                       Create Your First Post
                     </Button>
                   </div>
@@ -359,7 +333,7 @@ const ProfileView: React.FC = () => {
                     {posts.map((post) => (
                       <Col md={6} key={post.id}>
                         <Card className="h-100" onClick={() => navigate(`/post/${post.id}`)} style={{ cursor: 'pointer' }}>
-                          {post.image && <Card.Img variant="top" src={post.image} style={{ height: '150px', objectFit: 'cover' }} />}
+                          {post.image && <Card.Img variant="top" src={getImageSrc(post.image)} style={{ height: '150px', objectFit: 'cover' }} />}
                           <Card.Body>
                             <Card.Title className="h6">{post.title}</Card.Title>
                             <Card.Text className="small text-muted">

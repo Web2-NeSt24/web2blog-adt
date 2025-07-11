@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaRegBookmark, FaBookmark, FaRegThumbsUp, FaThumbsUp, FaFacebook, FaTwitter } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
+import { useAuth } from '~/contexts/AuthContext';
+import { makeAuthenticatedRequest } from '~/utils/auth';
 
 interface Profile {
   user: { id: number; username: string };
@@ -31,12 +34,16 @@ const API_BASE = '/api';
 
 // Accept id as a prop injected by @react-router/dev
 const PostDetail: React.FC<{ id: string }> = ({ id }) => {
+  const navigate = useNavigate()
+  const auth = useAuth();
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentText, setCommentText] = useState('');
   const [loading, setLoading] = useState(true);
   const [likeLoading, setLikeLoading] = useState(false);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
+
+  const isOwnPost = auth.user?.id === post?.profile?.user?.id;
 
   useEffect(() => {
     fetch(`${API_BASE}/post/by-id/${id}`)
@@ -51,7 +58,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
   const handleLike = async () => {
     if (!post) return;
     setLikeLoading(true);
-    await fetch(`${API_BASE}/post/${id}/like/`, { method: 'POST', credentials: 'include' });
+    await makeAuthenticatedRequest(`${API_BASE}/post/${id}/like/`, { method: 'POST' });
     // Refetch post
     fetch(`${API_BASE}/post/by-id/${id}`)
       .then(res => res.json())
@@ -62,7 +69,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
   const handleBookmark = async () => {
     if (!post) return;
     setBookmarkLoading(true);
-    await fetch(`${API_BASE}/post/${id}/bookmark/`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+    await makeAuthenticatedRequest(`${API_BASE}/post/${id}/bookmark/`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
     fetch(`${API_BASE}/post/by-id/${id}`)
       .then(res => res.json())
       .then(setPost)
@@ -72,7 +79,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
   const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
-    await fetch(`${API_BASE}/post/${id}/comments/`, {
+    await makeAuthenticatedRequest(`${API_BASE}/post/${id}/comments/`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -109,6 +116,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         <button onClick={handleBookmark} disabled={bookmarkLoading} className="bookmark-btn">
           {post.is_bookmarked ? <FaBookmark /> : <FaRegBookmark />} Bookmark
         </button>
+        {isOwnPost && <button onClick={() => navigate(`/post/edit/${post?.id}`)}>Edit</button>}
         <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${shareText}`} target="_blank" rel="noopener noreferrer" className="share-btn">
           <FaTwitter /> Share
         </a>
@@ -125,7 +133,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         <ul className="comments-list">
           {comments.map(comment => (
             <li key={comment.id} className="comment-item">
-             ^ <strong>{comment.author_profile.user.username}</strong>: {comment.content}
+             <strong>{comment.author_profile.user.username}</strong>: {comment.content}
             </li>
           ))}
         </ul>

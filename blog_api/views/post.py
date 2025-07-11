@@ -94,7 +94,7 @@ class PostView(views.APIView):
         if "content" in validated_data: # type: ignore
             post.content = validated_data["content"] # type: ignore
         if "image" in validated_data: # type: ignore
-            post.image = validated_data["image"] # type: ignore
+            post.image_id = validated_data["image"] # type: ignore
         
         post.save()
     

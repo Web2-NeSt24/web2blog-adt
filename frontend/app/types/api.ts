@@ -16,13 +16,14 @@ export interface Post {
   profile: Profile;
   title: string;
   content: string;
-  image: string | null;
+  image: number | null;
   tags: string[];
   like_count: number;
   comment_count: number;
   bookmark_count: number;
   is_liked: boolean;
   is_bookmarked: boolean;
+  draft: boolean;
 }
 
 export interface Comment {

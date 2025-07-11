@@ -1,43 +1,18 @@
 import React from 'react';
+import { ApiImage, type ApiImageProps } from './ApiImage';
 
-interface ProfilePictureProps {
-  id?: number | null;
-  alt?: string;
-  width?: number | string;
-  height?: number | string;
-  className?: string;
-  style?: React.CSSProperties;
-  onClick?: () => void;
-}
-
-const ProfilePicture: React.FC<ProfilePictureProps> = ({
-  id,
-  alt = "Profile Picture",
-  width = 180,
-  height = 180,
-  className = "",
-  style = {},
-  onClick,
-}) => {
-  let src = "/ProfilePicturePlaceholder.png";
-  if (id != null) {
-    src = `/api/image/${id}`;
+const ProfilePicture: React.FC<ApiImageProps> = (props) => {
+  props = {
+    ...{
+      fallback: "/ProfilePicturePlaceholder.png",
+      alt: "Profile Picture",
+      width: 180,
+      height: 180,
+    },
+    ...props
   }
 
-  return (
-    <img
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-      style={{
-        objectFit: 'cover',
-        ...style
-      }}
-      onClick={onClick}
-    />
-  );
+  return <ApiImage {...props} />;
 };
 
 export default ProfilePicture;

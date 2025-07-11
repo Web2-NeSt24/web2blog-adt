@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
 import type { Post } from "~/types/api";
 import ProfilePicture from "./ProfilePicture";
+import { getImageSrc } from "./ApiImage";
 
 const cardVariants = [
   "primary",
@@ -26,7 +27,7 @@ export function RandomCard({ post, idx }: RandomCardProps) {
   return (
     <Card className="blog-card h-100" key={post.id}>
       {post.image && (
-        <Card.Img variant="top" src={post.image} className="card-img-top" />
+        <Card.Img variant="top" src={getImageSrc(post.image)} className="card-img-top" />
       )}
       <Card.Body className="d-flex flex-column">
         <Card.Title className="card-title">
