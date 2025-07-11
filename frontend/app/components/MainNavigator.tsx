@@ -89,6 +89,9 @@ function MainNavigator() {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/likes">Likes</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/bookmarks">Bookmarks</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/drafts">Drafts</Dropdown.Item>
                   <Dropdown.Item as={Link} to="/settings">Settings</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
