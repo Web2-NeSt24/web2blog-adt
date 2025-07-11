@@ -5,6 +5,7 @@ import { TagInput } from "~/components/TagInput";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import type { Post, PostFilter } from "~/types/api";
 import { PostSortingMethod } from "~/types/api";
+import { makeAuthenticatedRequest } from "~/utils/auth";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -28,35 +29,46 @@ export default function Home() {
   const fetchPosts = async (useFilters = false) => {
     try {
       setLoading(true);
-      
+
       let url = '/api/posts/';
       let options: RequestInit = {};
-      
+
       if (useFilters) {
         url = '/api/filter/';
         const keywords: string[] = [];
         const tags = tagsFilter;
         const author_name = authorFilter.trim() || undefined;
-        
+
         const filterData: PostFilter = {
           keywords,
           tags,
           sort_by: sortBy,
           ...(author_name && { author_name })
         };
-        
+
         options = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(filterData)
         };
       }
-      
-      const response = await fetch(url, options);
+
+      const response = await makeAuthenticatedRequest(url, options);
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
-      const data = await response.json();
+      let data = await response.json();
+
+      if (useFilters) {
+        data = await Promise.all(data.post_ids.map(async (id: number) => {
+          const response = await fetch(`/api/post/by-id/${id}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch posts');
+          }
+          return await response.json();
+        }))
+      }
+
       setPosts(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -155,7 +167,7 @@ export default function Home() {
           </div>
         </Col>
       </Row>
-      
+
       <Row className="g-4">
         {posts.length === 0 ? (
           <Col xs={12}>
@@ -166,7 +178,7 @@ export default function Home() {
         ) : (
           posts.map((post, idx) => (
             <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
-              <PostCard post={post}/>
+              <PostCard post={post} />
             </Col>
           ))
         )}
