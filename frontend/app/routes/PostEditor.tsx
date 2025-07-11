@@ -66,6 +66,11 @@ export default function PostEditor({ loaderData, params }: Route.ComponentProps)
     navigate("/")
   }
 
+  async function deletePost() {
+    await makeAuthenticatedRequest(`/api/post/by-id/${post.id}`, { method: "DELETE" })
+    navigate("/")
+  }
+
   return <div>
     <div className="post-create-container">
       <div className="header-section">
@@ -135,6 +140,8 @@ export default function PostEditor({ loaderData, params }: Route.ComponentProps)
       {post.draft && (
         <button onClick={publishDraft}>Publish</button>
       )}
+      
+      <button onClick={deletePost}>{post.draft ? "Delete draft" : "Delete post"}</button>
     </div>
   </div>
 }
