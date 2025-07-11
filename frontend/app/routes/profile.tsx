@@ -63,7 +63,8 @@ const ProfileView: React.FC = () => {
               return res.ok ? await res.json() : null;
             })
           );
-          setPosts(postsData.filter(Boolean));
+          // Filter out drafts - only show published posts in profile
+          setPosts(postsData.filter(post => post && !post.draft));
         } else {
           setPosts([]);
         }

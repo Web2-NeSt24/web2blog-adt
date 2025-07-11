@@ -187,7 +187,17 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
               )}
             </div>
             <div className="author-info">
-              <h3 className="author-name">{post.profile.user.username}</h3>
+              <h3 
+                className="author-name" 
+                onClick={() => navigate(`/user/${post.profile.user.id}`)}
+                style={{ 
+                  cursor: 'pointer', 
+                  textDecoration: 'underline',
+                  color: '#0d6efd'
+                }}
+              >
+                {post.profile.user.username}
+              </h3>
               <p className="author-bio">{post.profile.biography}</p>
             </div>
           </div>
@@ -334,7 +344,17 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
                     )}
                   </div>
                   <div className="comment-details">
-                    <strong className="comment-username">{comment.author_profile.user.username}</strong>
+                    <strong 
+                      className="comment-username"
+                      onClick={() => navigate(`/user/${comment.author_profile.user.id}`)}
+                      style={{ 
+                        cursor: 'pointer', 
+                        textDecoration: 'underline',
+                        color: '#0d6efd'
+                      }}
+                    >
+                      {comment.author_profile.user.username}
+                    </strong>
                     <p className="comment-content">{comment.content}</p>
                   </div>
                 </div>

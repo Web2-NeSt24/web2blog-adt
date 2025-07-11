@@ -69,12 +69,6 @@ function MainNavigator() {
               Home
             </Nav.Link>
             <Nav.Link 
-              href="#topics"
-              className={location.hash === "#topics" ? "active" : ""}
-            >
-              Topics
-            </Nav.Link>
-            <Nav.Link 
               as={Link} 
               to="/about"
               className={location.pathname === "/about" ? "active" : ""}

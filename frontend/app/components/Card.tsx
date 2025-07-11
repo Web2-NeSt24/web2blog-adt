@@ -2,6 +2,7 @@ import Card from "react-bootstrap/Card";
 import type { Post } from "~/types/api";
 import ProfilePicture from "./ProfilePicture";
 import { getImageSrc } from "./ApiImage";
+import { useNavigate } from "react-router";
 
 
 interface PostCardProps {
@@ -9,6 +10,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const navigate = useNavigate();
   const redirect = post.draft ? `/post/edit/${post.id}` : `/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`
 
   // Helper function to strip HTML tags and decode HTML entities
@@ -30,11 +32,23 @@ export function PostCard({ post }: PostCardProps) {
     cleanContent.substring(0, 200) + "..." :
     cleanContent;
 
+  const handleCardClick = () => {
+    navigate(redirect);
+  };
+
+  const handleAuthorClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (post.profile?.user?.id) {
+      navigate(`/user/${post.profile.user.id}`);
+    }
+  };
+
   return (
-    <a href={redirect} className="text-decoration-none">
+    <div onClick={handleCardClick} style={{ cursor: 'pointer' }} className="text-decoration-none">
       <Card className="blog-card h-100" key={post.id}>
         {post.image && (
-          <Card.Img variant="top" src={getImageSrc(post.image)} className="card-img-top" />
+          <Card.Img variant="top" src={getImageSrc(post.image) || ''} className="card-img-top" />
         )}
         <Card.Body className="d-flex flex-column">
           <Card.Title className="card-title" style={{ color: post.draft ? "#FF0000" : "" }}>
@@ -54,7 +68,17 @@ export function PostCard({ post }: PostCardProps) {
           </div>
           <div className="author-section mt-auto">
             <ProfilePicture id={post.profile.profile_picture} className="author-avatar" />
-            <span className="author-name">{post.profile?.user?.username || "Unknown Author"}</span>
+            <span 
+              className="author-name" 
+              onClick={handleAuthorClick}
+              style={{ 
+                cursor: 'pointer', 
+                textDecoration: 'underline',
+                color: '#0d6efd'
+              }}
+            >
+              {post.profile?.user?.username || "Unknown Author"}
+            </span>
           </div>
           <div className="post-stats mt-2">
             <small className="text-muted">
@@ -63,6 +87,6 @@ export function PostCard({ post }: PostCardProps) {
           </div>
         </Card.Body>
       </Card>
-    </a>
+    </div>
   );
 }
