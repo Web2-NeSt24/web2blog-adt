@@ -32,3 +32,10 @@ export interface Comment {
   author_profile: Profile;
   content: string;
 }
+
+export interface Bookmark {
+  id: number;
+  post: Post;
+  creator_profile: Profile;
+  title: string;
+}

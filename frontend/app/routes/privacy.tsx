@@ -10,7 +10,7 @@ const PrivacyPolicy: React.FC = () => {
       <header className="text-center mb-5 mx-auto" style={{ maxWidth: '800px' }}>
         <h1 className="display-4 fw-bold mb-3" style={{ color: '#2c3e50' }}>Privacy Policy</h1>
         <p className="lead text-muted">
-          Your privacy is important to us. This policy explains how we collect, use, and protect your information.
+          This is a group project for the Web Engineering course at DHBW Mosbach. This privacy policy is completely made up and has no effect.
         </p>
         <p className="text-muted">
           <small>Last updated: {new Date().toLocaleDateString()}</small>
