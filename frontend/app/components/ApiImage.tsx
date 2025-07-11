@@ -9,11 +9,12 @@ export interface ApiImageProps {
   onClick?: () => void;
 }
 
-export function getImageSrc(image_id?: number | null) {
+export function getImageSrc(image_id?: number | null): string | null {
   if (image_id) {
-
+    return `/api/image/${image_id}`
+  } else {
+    return null
   }
-  return image_id && `/api/image/${image_id}`
 }
 
 export const ApiImage: React.FC<ApiImageProps> = ({
