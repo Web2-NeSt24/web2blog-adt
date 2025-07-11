@@ -98,7 +98,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         <span> | {post.bookmark_count} Bookmarks</span>
       </div>
       {post.image && <img src={post.image} alt="Post" className="post-image" />}
-      <div className="post-content">{post.content}</div>
+      <div className="post-content" dangerouslySetInnerHTML={{__html: post.content}}></div>
       <div className="post-tags">
         {post.tags.map(tag => <span key={tag} className="tag">#{tag}</span>)}
       </div>

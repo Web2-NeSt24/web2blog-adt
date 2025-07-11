@@ -424,7 +424,7 @@ const PostCreate: React.FC = () => {
       
       {isClient ? (
         <Editor
-          tinymceScriptSrc="/tinymce/tinymce.min.js"
+          tinymceScriptSrc="https://cdn.jsdelivr.net/npm/tinymce@7.9.1/tinymce.min.js"
           onInit={(_evt: any, editor: any) => (editorRef.current = editor)}
           value={content}
           init={{

@@ -33,14 +33,7 @@ export function RandomCard({ post, idx }: RandomCardProps) {
             {post.title}
           </a>
         </Card.Title>
-        <Card.Text className="card-text flex-grow-1">
-          {post.content ?
-            (post.content.length > 150 ?
-              post.content.substring(0, 150) + "..." :
-              post.content
-            ) :
-            "No content"
-          }
+        <Card.Text className="card-text flex-grow-1" dangerouslySetInnerHTML={{__html: post.content || "No content"}}>
         </Card.Text>
         <div className="tags mb-2">
           {post.tags && post.tags.length > 0 ? (
