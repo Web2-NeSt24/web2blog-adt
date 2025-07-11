@@ -8,6 +8,7 @@ export default [
   route("/profile", "routes/profile.tsx"),
   route("/likes", "routes/likes.tsx"),
   route("/bookmarks", "routes/bookmarks.tsx"),
+  route("/drafts", "routes/drafts.tsx"),
   route("/settings", "routes/settings.tsx"),
   route("/about", "routes/about.tsx"),
   route("/privacy", "routes/privacy.tsx")
