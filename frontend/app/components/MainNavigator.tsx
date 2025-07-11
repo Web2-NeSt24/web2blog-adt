@@ -3,13 +3,29 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import Dropdown from "react-bootstrap/Dropdown";
+import { Link, useNavigate, useLocation } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
+import { logoutUser } from "../utils/auth";
 
 function MainNavigator() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogout = async () => {
+    const result = await logoutUser();
+    if (result.success) {
+      logout();
+      navigate('/');
+    }
+  };
+
   return (
     <Navbar expand="lg" bg="dark" variant="dark" className="position-relative">
       <Container fluid>
         {/* Bal oldal - logó */}
-        <Navbar.Brand href="#">RustyPython</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">RustyPython</Navbar.Brand>
 
         {/* Hamburger menü gomb */}
         <Navbar.Toggle aria-controls="main-navbar" />
@@ -45,11 +61,46 @@ function MainNavigator() {
 
           {/* Jobb oldali linkek/gombok */}
           <Nav className="ms-auto mt-3 mt-lg-0 d-flex align-items-center">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#topics">Topics</Nav.Link>
-            <Button variant="outline-info" className="ms-lg-5 mt-1 mt-lg-2">
-              Login
-            </Button>
+            <Nav.Link 
+              as={Link} 
+              to="/"
+              className={location.pathname === "/" ? "active" : ""}
+            >
+              Home
+            </Nav.Link>
+            <Nav.Link 
+              href="#topics"
+              className={location.hash === "#topics" ? "active" : ""}
+            >
+              Topics
+            </Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/about"
+              className={location.pathname === "/about" ? "active" : ""}
+            >
+              About
+            </Nav.Link>
+            
+            {isAuthenticated ? (
+              <Dropdown align="end" className="ms-lg-3">
+                <Dropdown.Toggle variant="outline-info" id="user-dropdown">
+                  {user?.username}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/settings">Settings</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <Link to="/auth" className="ms-lg-5 mt-1 mt-lg-2">
+                <Button variant="outline-info">
+                  Login
+                </Button>
+              </Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

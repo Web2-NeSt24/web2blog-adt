@@ -1,0 +1,84 @@
+/* Modern card styles for blog cards */
+.blog-card {
+  border-radius: 18px !important;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(4px);
+  transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s;
+  overflow: hidden;
+  border: none !important;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px) scale(1.025);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.16), 0 3px 8px 0 rgba(0,0,0,0.12);
+}
+
+.blog-card .card-img-top {
+  height: 180px;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.blog-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.blog-card .card-text {
+  color: #444;
+  font-size: 1rem;
+}
+
+.blog-card .tags {
+  margin-bottom: 0.5rem;
+}
+
+.blog-card .tag {
+  background: #f1f3f6;
+  color: #555;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  padding: 2px 10px;
+  margin-right: 6px;
+  margin-bottom: 2px;
+  display: inline-block;
+}
+
+.blog-card .author-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.blog-card .author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.blog-card .author-name {
+  font-size: 0.98rem;
+  color: #222;
+  font-weight: 500;
+}
+
+/* Add margin to the sides of the main content area */
+.main-centered-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (max-width: 600px) {
+  .main-centered-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

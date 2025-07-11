@@ -48,11 +48,11 @@ class PostFilterView(views.APIView):
         
         queryset = queryset.distinct()
 
-        match serializer.validated_data["sort_by"]:
-            case serializers.PostSortingMethod.DATE.value:
-                queryset = queryset.order_by("-id")
-            case serializers.PostSortingMethod.LIKES.value:
-                queryset = queryset.annotate(like_count=Count("like")).order_by("-like_count")
+        sort_by = serializer.validated_data["sort_by"]
+        if sort_by == serializers.PostSortingMethod.DATE.value:
+            queryset = queryset.order_by("-id")
+        elif sort_by == serializers.PostSortingMethod.LIKES.value:
+            queryset = queryset.annotate(like_count=Count("like")).order_by("-like_count")
 
         queryset = queryset.values_list("id", flat=True)
 

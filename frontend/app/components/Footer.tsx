@@ -1,4 +1,5 @@
 import { Container, Row, Col } from "react-bootstrap";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
@@ -12,14 +13,15 @@ const Footer = () => {
             </p>
           </Col>
           <Col md={4} className="mb-3 mb-md-0">
-            <h6>Linkek</h6>
+            <h6>Links</h6>
             <ul className="list-unstyled">
-              <li><a href="#about" className="text-light text-decoration-none">About Us</a></li>
-              <li><a href="#contact" className="text-light text-decoration-none">Contact</a></li>
+              <li><Link to="/about" className="text-light text-decoration-none">About Us</Link></li>
+              <li><a href="mailto:team@web2blog.com" className="text-light text-decoration-none">Contact</a></li>
+              <li><Link to="/privacy" className="text-light text-decoration-none">Privacy policy</Link></li>
             </ul>
           </Col>
           <Col md={4}>
-            <h6>Kapcsolat</h6>
+            <h6>Contact</h6>
             <p className="mb-1">📧 support@rustypython.dev</p>
             <p>📍 Your basement</p>
           </Col>
