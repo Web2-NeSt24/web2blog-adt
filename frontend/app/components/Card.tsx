@@ -11,6 +11,25 @@ interface PostCardProps {
 export function PostCard({ post }: PostCardProps) {
   const redirect = post.draft ? `/post/edit/${post.id}` : `/post/${post.id}?title=${post.title.replace(/\s+/, "-")}`
 
+  // Helper function to strip HTML tags and decode HTML entities
+  const stripHtmlAndDecode = (html: string): string => {
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // Get text content and clean it up
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+    // Clean up extra whitespace
+    return textContent.replace(/\s+/g, ' ').trim();
+  };
+
+  // Get clean text content for display
+  const cleanContent = post.content ? stripHtmlAndDecode(post.content) : '';
+  const displayContent = cleanContent.length > 200 ?
+    cleanContent.substring(0, 200) + "..." :
+    cleanContent;
+
   return (
     <a href={redirect} className="text-decoration-none">
       <Card className="blog-card h-100" key={post.id}>
@@ -21,7 +40,8 @@ export function PostCard({ post }: PostCardProps) {
           <Card.Title className="card-title" style={{ color: post.draft ? "#FF0000" : "" }}>
             {post.title}
           </Card.Title>
-          <Card.Text className="card-text flex-grow-1" dangerouslySetInnerHTML={{ __html: post.content || "No content" }}>
+          <Card.Text className="card-text flex-grow-1">
+            {displayContent || "No content"}
           </Card.Text>
           <div className="tags mb-2">
             {post.tags && post.tags.length > 0 ? (
@@ -33,7 +53,14 @@ export function PostCard({ post }: PostCardProps) {
             )}
           </div>
           <div className="author-section mt-auto">
-            <ProfilePicture id={post.profile?.profile_picture} width="50" height="50" />
+            {post.profile?.profile_picture ? (
+              <ProfilePicture id={post.profile.profile_picture} className="author-avatar" />
+            ) : (
+              <div
+                className="author-avatar"
+                style={{ background: "#eee" }}
+              />
+            )}
             <span className="author-name">{post.profile?.user?.username || "Unknown Author"}</span>
           </div>
           <div className="post-stats mt-2">
