@@ -16,14 +16,18 @@ export const TagInput: React.FC<TagInputProps> = ({
   size 
 }) => {
   const [inputValue, setInputValue] = useState('');
+  const [shouldRefocus, setShouldRefocus] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Keep focus whenever the tag list updates
+  // Only refocus when we explicitly set shouldRefocus to true
   useEffect(() => {
-    inputRef.current?.focus();
-  }, [tags]);
+    if (shouldRefocus) {
+      inputRef.current?.focus();
+      setShouldRefocus(false);
+    }
+  }, [shouldRefocus]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -63,13 +67,16 @@ export const TagInput: React.FC<TagInputProps> = ({
           scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
         }
       });
+      // Only refocus after adding a tag
+      setShouldRefocus(true);
     }
     setInputValue('');
-    // Focus is now handled by useEffect when tags change
   };
 
   const removeTag = (indexToRemove: number) => {
     onTagsChange(tags.filter((_, index) => index !== indexToRemove));
+    // Refocus after removing a tag too
+    setShouldRefocus(true);
   };
 
   return (

@@ -60,7 +60,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [sortBy, keywordFilter, tagsFilter, authorFilter]);
+  }, []); // Remove all dependencies to prevent auto-fetching
 
   useEffect(() => {
     const keywords = querySearch ? querySearch.split(" ").filter(Boolean) : [];
@@ -68,11 +68,48 @@ export default function Home() {
   }, [querySearch]);
 
   useEffect(() => {
+    // Only fetch posts on initial load
     fetchPosts();
-  }, [fetchPosts]);
+  }, []); // Only run once on mount
 
   const handleSearch = () => {
-    fetchPosts();
+    // Create a fresh fetchPosts call with current filter values
+    const searchPosts = async () => {
+      try {
+        setLoading(true);
+
+        const response = await makeAuthenticatedRequest("/api/filter/", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sort_by: sortBy,
+            ...( keywordFilter.length !== 0 ? { keywords: keywordFilter } : {} ),
+            ...( tagsFilter.length !== 0 ? { tags: tagsFilter } : {} ),
+            ...( authorFilter ? { author_name: authorFilter } : {} ),
+          })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+        let data = await response.json();
+
+        data = await Promise.all(data.post_ids.map(async (id: number) => {
+          const response = await fetch(`/api/post/by-id/${id}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch posts');
+          }
+          return await response.json();
+        }))
+
+        setPosts(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    searchPosts();
   };
 
   const handleReset = () => {
@@ -80,7 +117,10 @@ export default function Home() {
     setAuthorFilter("");
     setTagsFilter([]);
     setSortBy(PostSortingMethod.DATE);
-    fetchPosts();
+    // Fetch posts with cleared filters
+    setTimeout(() => {
+      fetchPosts();
+    }, 0);
   };
 
   if (loading) {
