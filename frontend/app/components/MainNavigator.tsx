@@ -78,6 +78,24 @@ function MainNavigator() {
             >
               About
             </Nav.Link>
+
+            {/* New Post Button - only when logged in */}
+            {isAuthenticated && (
+              <Link
+                to="/post/create"
+                className="ms-lg-3 mt-1 mt-lg-0"
+              >
+                <Button 
+                  variant="outline-info" 
+                  className="write-post-btn d-flex align-items-center"
+                  aria-label="Create a new post"
+                >
+                  <span className="d-inline d-sm-none" aria-hidden="true">✏️</span>
+                  <span className="d-none d-sm-inline">Write&nbsp;Post</span>
+                  <span className="visually-hidden d-sm-none">New Post</span>
+                </Button>
+              </Link>
+            )}
             
             {isAuthenticated ? (
               <Dropdown align="end" className="ms-lg-3">

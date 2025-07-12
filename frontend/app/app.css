@@ -925,6 +925,36 @@
   background: #FF7D87;
 }
 
+/* Write-Post button styling - aligned with CI */
+.write-post-btn {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+  text-decoration: none !important;
+}
+
+.write-post-btn:hover {
+  transform: translateY(-2px);
+  text-decoration: none !important;
+}
+
+.write-post-btn:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Remove underline from Link wrapper */
+a:has(.write-post-btn) {
+  text-decoration: none !important;
+}
+
+/* Shrink padding on XS where only the icon is visible */
+@media (max-width: 576px) {
+  .write-post-btn {
+    padding: 0.45rem 0.75rem;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .post-create-container {
