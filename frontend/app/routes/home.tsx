@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { PostCard } from "~/components/Card";
 import { TagInput } from "~/components/TagInput";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
@@ -27,89 +27,58 @@ export default function Home() {
   const [tagsFilter, setTagsFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<PostSortingMethod>(PostSortingMethod.DATE);
 
+  /* 1️⃣ build the filter object once per render */
+  const currentFilter = useMemo(
+    () => ({
+      sort_by: sortBy,
+      ...(keywordFilter.length ? { keywords: keywordFilter } : {}),
+      ...(tagsFilter.length    ? { tags: tagsFilter }     : {}),
+      ...(authorFilter         ? { author_name: authorFilter } : {})
+    }),
+    [sortBy, keywordFilter, tagsFilter, authorFilter]
+  );
+
+  /* 2️⃣ single request function that depends on the current filter */
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
 
       const response = await makeAuthenticatedRequest("/api/filter/", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sort_by: sortBy,
-          ...( keywordFilter.length !== 0 ? { keywords: keywordFilter } : {} ),
-          ...( tagsFilter.length !== 0 ? { tags: tagsFilter } : {} ),
-          ...( authorFilter ? { author_name: authorFilter } : {} ),
-        })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(currentFilter)
       });
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts');
-      }
-      let data = await response.json();
+      if (!response.ok) throw new Error("Failed to fetch posts");
 
-      data = await Promise.all(data.post_ids.map(async (id: number) => {
-        const response = await fetch(`/api/post/by-id/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch posts');
-        }
-        return await response.json();
-      }))
+      const { post_ids } = await response.json();
+      const data = await Promise.all(
+        post_ids.map(async (id: number) => {
+          const r = await fetch(`/api/post/by-id/${id}`);
+          if (!r.ok) throw new Error("Failed to fetch post");
+          return r.json();
+        })
+      );
 
       setPosts(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentFilter]);
+
+  /* 3️⃣ fetch whenever the filter changes or on first mount */
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   useEffect(() => {
     const keywords = querySearch ? querySearch.split(" ").filter(Boolean) : [];
     setKeywordFilter(keywords);
   }, [querySearch]);
 
-  useEffect(() => {
-    // Only fetch posts on initial load
-    fetchPosts();
-  }, []); // Only run once on mount
-
   const handleSearch = () => {
-    // Create a fresh fetchPosts call with current filter values
-    const searchPosts = async () => {
-      try {
-        setLoading(true);
-
-        const response = await makeAuthenticatedRequest("/api/filter/", {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sort_by: sortBy,
-            ...( keywordFilter.length !== 0 ? { keywords: keywordFilter } : {} ),
-            ...( tagsFilter.length !== 0 ? { tags: tagsFilter } : {} ),
-            ...( authorFilter ? { author_name: authorFilter } : {} ),
-          })
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch posts');
-        }
-        let data = await response.json();
-
-        data = await Promise.all(data.post_ids.map(async (id: number) => {
-          const response = await fetch(`/api/post/by-id/${id}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch posts');
-          }
-          return await response.json();
-        }))
-
-        setPosts(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    searchPosts();
+    /* nothing to do – changing filter state elsewhere triggers fetchPosts() */
   };
 
   const handleReset = () => {
@@ -117,10 +86,7 @@ export default function Home() {
     setAuthorFilter("");
     setTagsFilter([]);
     setSortBy(PostSortingMethod.DATE);
-    // Fetch posts with cleared filters
-    setTimeout(() => {
-      handleSearch();
-    }, 0);
+    /* fetchPosts will run automatically because state changes update currentFilter */
   };
 
   if (loading) {
@@ -147,64 +113,75 @@ export default function Home() {
 
   return (
     <Container className="py-4 main-centered-container" style={{ maxWidth: '1400px' }}>
-      {/* Slim toolbar filter ------------------------------------------------ */}
-      <div className="filter-bar bg-light rounded p-2 mb-4 d-flex flex-wrap gap-2">
-        {/* Author */}
-        <Form.Control
-          size="sm"
-          type="text"
-          placeholder="Author"
-          className="flex-grow-1 flex-basis-150"
-          value={authorFilter}
-          onChange={(e) => setAuthorFilter(e.target.value)}
-        />
-
-        {/* Tags */}
-        <div className="flex-grow-1 flex-basis-200 position-relative">
-          <div className="tag-scroll-inner overflow-auto flex-column">
-            <TagInput
-              tags={tagsFilter}
-              onTagsChange={setTagsFilter}
-              size="sm"
-              placeholder="Tags…"
-            />
+      {/* Compact Filter Section */}
+      <Row className="mb-4">
+        <Col xs={12}>
+          <div className="bg-light p-3 rounded">
+            <Row className="g-3 align-items-end">
+              <Col md={4}>
+                <Form.Group className="mb-0">
+                  <Form.Control
+                    size="sm"
+                    type="text"
+                    placeholder="Author"
+                    value={authorFilter}
+                    onChange={(e) => setAuthorFilter(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-0">
+                  <TagInput
+                    tags={tagsFilter}
+                    onTagsChange={setTagsFilter}
+                    size="sm"
+                    placeholder="Tags"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={2}>
+                <Form.Group className="mb-0">
+                  <Form.Select
+                    aria-label="Sort posts"
+                    size="sm"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
+                  >
+                    <option value={PostSortingMethod.DATE}>Newest</option>
+                    <option value={PostSortingMethod.LIKES}>Popular</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={2}>
+                <div className="d-flex gap-2">
+                  <Button size="sm" variant="primary" onClick={handleSearch}>
+                    Filter
+                  </Button>
+                  <Button size="sm" variant="outline-secondary" onClick={handleReset}>
+                    Clear
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </div>
-        </div>
+        </Col>
+      </Row>
 
-        {/* Sort */}
-        <Form.Select
-          size="sm"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
-          className="flex-basis-120"
-        >
-          <option value={PostSortingMethod.DATE}>Newest</option>
-          <option value={PostSortingMethod.LIKES}>Popular</option>
-        </Form.Select>
-
-        {/* Actions */}
-        <Button size="sm" variant="primary" onClick={handleSearch}>
-          Filter
-        </Button>
-        <Button size="sm" variant="outline-secondary" onClick={handleReset}>
-          Clear
-        </Button>
-      </div>
-      {/* ------------------------------------------------------------------- */}
-
-      {posts.length === 0 ? (
-        <div className="text-center">
-          <p>No posts available yet.</p>
-        </div>
-      ) : (
-        <Row className="g-4">
-          {posts.map((post) => (
-            <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
-              <PostCard post={post} />
-            </Col>
-          ))}
-        </Row>
-      )}
+      <Row className="g-4">
+        {posts.length === 0 ? (
+          <div className="text-center">
+            <p>No posts available yet.</p>
+          </div>
+        ) : (
+          <div className="masonry-grid">
+            {posts.map((post) => (
+              <div key={post.id} className="masonry-item">
+                <PostCard post={post} />
+              </div>
+            ))}
+          </div>
+        )}
+      </Row>
     </Container>
   );
 }

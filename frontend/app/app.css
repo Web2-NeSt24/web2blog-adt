@@ -1061,3 +1061,19 @@ a:has(.write-post-btn) {
 /* remove old track-offset rule that pushed bar up */
 .tag-input-scroller::-webkit-scrollbar-track { margin-top: 0; }
 /* ----------------------------------------------------------------------- */
+
+/* --- Masonry grid ------------------------------------------------------- */
+.masonry-grid {
+  column-count: 4;          /* desktop */
+  column-gap: 1.5rem;       /* same visual gap as Bootstrap g-4 */
+}
+
+@media (max-width: 1200px) { .masonry-grid { column-count: 3; } }
+@media (max-width: 992px)  { .masonry-grid { column-count: 2; } }
+@media (max-width: 576px)  { .masonry-grid { column-count: 1; } }
+
+.masonry-item {
+  break-inside: avoid-column;
+  margin-bottom: 1.5rem;    /* vertical gap */
+}
+/* ----------------------------------------------------------------------- */

@@ -122,8 +122,9 @@ export const TagInput: React.FC<TagInputProps> = ({
         className="tag-input-field border-0"
         style={{ 
           outline: 'none', 
-          minWidth: '60px',
-          width: inputValue ? `${Math.max(60, inputValue.length * 8 + 20)}px` : '60px',
+          /* allow full “Type tags …” placeholder */
+          minWidth: '80px',
+          width: inputValue ? `${Math.max(80, inputValue.length * 8 + 20)}px` : '80px',
           backgroundColor: 'transparent',
           fontSize: size === 'sm' ? '0.875rem' : '1rem'
         }}
