@@ -7,6 +7,7 @@
   transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s;
   overflow: hidden;
   border: none !important;
+  height: auto; /* Allow dynamic height for masonry */
 }
 
 .blog-card:hover {
@@ -34,6 +35,7 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
+  flex-grow: 0; /* Don't force expansion in masonry */
 }
 
 .blog-card .tags {
@@ -1061,3 +1063,78 @@ a:has(.write-post-btn) {
 /* remove old track-offset rule that pushed bar up */
 .tag-input-scroller::-webkit-scrollbar-track { margin-top: 0; }
 /* ----------------------------------------------------------------------- */
+
+/* Masonry Grid Layout */
+.masonry-grid {
+  columns: 1;
+  column-gap: 1.5rem;
+  margin: 0;
+  column-fill: balance;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+}
+
+/* Responsive masonry columns */
+@media (min-width: 576px) {
+  .masonry-grid {
+    columns: 2;
+  }
+}
+
+@media (min-width: 768px) {
+  .masonry-grid {
+    columns: 3;
+  }
+}
+
+@media (min-width: 1200px) {
+  .masonry-grid {
+    columns: 4;
+  }
+}
+
+@media (min-width: 1400px) {
+  .masonry-grid {
+    columns: 5;
+  }
+}
+
+/* Enhanced blog card for masonry layout */
+.blog-card {
+  height: auto; /* Allow dynamic height for masonry */
+}
+
+.blog-card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card .card-text {
+  flex-grow: 0; /* Don't force expansion in masonry */
+}
+
+/* Compact card variant for shorter content */
+.blog-card.compact .card-img-top {
+  height: 120px; /* Smaller image for short posts */
+}
+
+.blog-card.compact .card-body {
+  padding: 1rem;
+}
+
+.blog-card.compact .card-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.blog-card.compact .card-text {
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}

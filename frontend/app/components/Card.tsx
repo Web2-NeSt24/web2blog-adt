@@ -32,6 +32,9 @@ export function PostCard({ post }: PostCardProps) {
     cleanContent.substring(0, 200) + "..." :
     cleanContent;
 
+  // Determine if this is a compact post (short content)
+  const isCompact = cleanContent.length < 150 && (!post.image || post.image === null);
+  
   const handleCardClick = () => {
     navigate(redirect);
   };
@@ -45,8 +48,8 @@ export function PostCard({ post }: PostCardProps) {
   };
 
   return (
-    <div onClick={handleCardClick} style={{ cursor: 'pointer', height: "100%" }} className="text-decoration-none">
-      <Card className="blog-card h-100" key={post.id}>
+    <div onClick={handleCardClick} style={{ cursor: 'pointer' }} className="text-decoration-none">
+      <Card className={`blog-card ${isCompact ? 'compact' : ''}`} key={post.id}>
         {post.image && (
           <Card.Img variant="top" src={getImageSrc(post.image) || ''} className="card-img-top" />
         )}

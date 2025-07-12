@@ -2,8 +2,8 @@ import type { Route } from "./+types/home";
 import { useState, useEffect, useCallback } from "react";
 import { PostCard } from "~/components/Card";
 import { TagInput } from "~/components/TagInput";
-import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import type { Post, PostFilter } from "~/types/api";
+import { Container, Form, Button } from "react-bootstrap";
+import type { Post } from "~/types/api";
 import { PostSortingMethod } from "~/types/api";
 import { makeAuthenticatedRequest } from "~/utils/auth";
 import { useSearchParams } from "react-router";
@@ -197,13 +197,13 @@ export default function Home() {
           <p>No posts available yet.</p>
         </div>
       ) : (
-        <Row className="g-4">
+        <div className="masonry-grid">
           {posts.map((post) => (
-            <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
+            <div key={post.id} className="masonry-item">
               <PostCard post={post} />
-            </Col>
+            </div>
           ))}
-        </Row>
+        </div>
       )}
     </Container>
   );
