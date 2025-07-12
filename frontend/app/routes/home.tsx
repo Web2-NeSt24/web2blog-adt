@@ -163,21 +163,19 @@ export default function Home() {
         </Col>
       </Row>
 
-      <Row className="g-4">
-        {posts.length === 0 ? (
-          <Col xs={12}>
-            <div className="text-center">
-              <p>No posts available yet.</p>
-            </div>
-          </Col>
-        ) : (
-          posts.map((post, idx) => (
-            <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
+      {posts.length === 0 ? (
+        <div className="text-center">
+          <p>No posts available yet.</p>
+        </div>
+      ) : (
+        <div className="masonry-grid">
+          {posts.map((post) => (
+            <div key={post.id} className="masonry-item">
               <PostCard post={post} />
-            </Col>
-          ))
-        )}
-      </Row>
+            </div>
+          ))}
+        </div>
+      )}
     </Container>
   );
 }
