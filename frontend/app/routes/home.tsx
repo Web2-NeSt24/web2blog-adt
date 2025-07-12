@@ -172,7 +172,7 @@ export default function Home() {
           </Col>
         ) : (
           posts.map((post, idx) => (
-            <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
+            <Col key={post.id} xs={12} sm={6} md={4} lg={3} className="d-flex">
               <PostCard post={post} />
             </Col>
           ))
