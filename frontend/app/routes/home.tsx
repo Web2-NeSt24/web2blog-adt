@@ -60,7 +60,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, []); // Remove all dependencies to prevent auto-fetching
+  }, []);
 
   useEffect(() => {
     const keywords = querySearch ? querySearch.split(" ").filter(Boolean) : [];
@@ -119,7 +119,7 @@ export default function Home() {
     setSortBy(PostSortingMethod.DATE);
     // Fetch posts with cleared filters
     setTimeout(() => {
-      fetchPosts();
+      handleSearch();
     }, 0);
   };
 
