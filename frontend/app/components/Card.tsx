@@ -45,7 +45,7 @@ export function PostCard({ post }: PostCardProps) {
   };
 
   return (
-    <div onClick={handleCardClick} style={{ cursor: 'pointer' }} className="text-decoration-none">
+    <div onClick={handleCardClick} style={{ cursor: 'pointer', height: "100%" }} className="text-decoration-none">
       <Card className="blog-card h-100" key={post.id}>
         {post.image && (
           <Card.Img variant="top" src={getImageSrc(post.image) || ''} className="card-img-top" />
