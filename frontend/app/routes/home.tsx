@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { PostCard } from "~/components/Card";
 import { TagInput } from "~/components/TagInput";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
@@ -22,71 +22,65 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [keywordFilter, setKeywordFilter] = useState<string[]>([]);
+  let [keywordFilter, setKeywordFilter] = useState<string[]>([])
   const [authorFilter, setAuthorFilter] = useState("");
   const [tagsFilter, setTagsFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<PostSortingMethod>(PostSortingMethod.DATE);
 
-  /* 1️⃣ build the filter object once per render */
-  const currentFilter = useMemo(
-    () => ({
-      sort_by: sortBy,
-      ...(keywordFilter.length ? { keywords: keywordFilter } : {}),
-      ...(tagsFilter.length    ? { tags: tagsFilter }     : {}),
-      ...(authorFilter         ? { author_name: authorFilter } : {})
-    }),
-    [sortBy, keywordFilter, tagsFilter, authorFilter]
-  );
+  useEffect(() => {
+    keywordFilter = querySearch && querySearch.split(" ") || []
+    setKeywordFilter(keywordFilter)
+    fetchPosts();
+  }, [queryParams]);
 
-  /* 2️⃣ single request function that depends on the current filter */
-  const fetchPosts = useCallback(async () => {
+  useEffect(() => {
+
+  }, [keywordFilter])
+
+  const fetchPosts = async () => {
     try {
       setLoading(true);
 
       const response = await makeAuthenticatedRequest("/api/filter/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(currentFilter)
-      });
-      if (!response.ok) throw new Error("Failed to fetch posts");
-
-      const { post_ids } = await response.json();
-      const data = await Promise.all(
-        post_ids.map(async (id: number) => {
-          const r = await fetch(`/api/post/by-id/${id}`);
-          if (!r.ok) throw new Error("Failed to fetch post");
-          return r.json();
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sort_by: sortBy,
+          ...( keywordFilter.length !== 0 ? { keywords: keywordFilter } : {} ),
+          ...( tagsFilter.length !== 0 ? { tags: tagsFilter } : {} ),
+          ...( authorFilter ? { author_name: authorFilter } : {} ),
         })
-      );
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      let data = await response.json();
+
+      data = await Promise.all(data.post_ids.map(async (id: number) => {
+        const response = await fetch(`/api/post/by-id/${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+        return await response.json();
+      }))
 
       setPosts(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
-  }, [currentFilter]);
-
-  /* 3️⃣ fetch whenever the filter changes or on first mount */
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
-
-  useEffect(() => {
-    const keywords = querySearch ? querySearch.split(" ").filter(Boolean) : [];
-    setKeywordFilter(keywords);
-  }, [querySearch]);
+  };
 
   const handleSearch = () => {
-    /* nothing to do – changing filter state elsewhere triggers fetchPosts() */
+    fetchPosts();
   };
 
   const handleReset = () => {
-    setKeywordFilter([]);
     setAuthorFilter("");
     setTagsFilter([]);
     setSortBy(PostSortingMethod.DATE);
-    /* fetchPosts will run automatically because state changes update currentFilter */
+    fetchPosts();
   };
 
   if (loading) {
@@ -119,30 +113,32 @@ export default function Home() {
           <div className="bg-light p-3 rounded">
             <Row className="g-3 align-items-end">
               <Col md={4}>
-                <Form.Group className="mb-0">
+                <Form.Group>
+                  <Form.Label className="small">Author</Form.Label>
                   <Form.Control
                     size="sm"
                     type="text"
-                    placeholder="Author"
+                    placeholder="Username"
                     value={authorFilter}
                     onChange={(e) => setAuthorFilter(e.target.value)}
                   />
                 </Form.Group>
               </Col>
               <Col md={4}>
-                <Form.Group className="mb-0">
+                <Form.Group>
+                  <Form.Label className="small">Tags</Form.Label>
                   <TagInput
                     tags={tagsFilter}
                     onTagsChange={setTagsFilter}
                     size="sm"
-                    placeholder="Tags"
+                    placeholder="Type tags and press space..."
                   />
                 </Form.Group>
               </Col>
               <Col md={2}>
-                <Form.Group className="mb-0">
+                <Form.Group>
+                  <Form.Label className="small">Sort</Form.Label>
                   <Form.Select
-                    aria-label="Sort posts"
                     size="sm"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
@@ -169,17 +165,17 @@ export default function Home() {
 
       <Row className="g-4">
         {posts.length === 0 ? (
-          <div className="text-center">
-            <p>No posts available yet.</p>
-          </div>
+          <Col xs={12}>
+            <div className="text-center">
+              <p>No posts available yet.</p>
+            </div>
+          </Col>
         ) : (
-          <div className="masonry-grid">
-            {posts.map((post) => (
-              <div key={post.id} className="masonry-item">
-                <PostCard post={post} />
-              </div>
-            ))}
-          </div>
+          posts.map((post, idx) => (
+            <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
+              <PostCard post={post} />
+            </Col>
+          ))
         )}
       </Row>
     </Container>

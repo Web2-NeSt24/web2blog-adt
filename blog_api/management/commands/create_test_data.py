@@ -14,7 +14,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--posts',
             type=int,
-            default=9,
+            default=8,
             help='Number of posts to create (default: 8)'
         )
         parser.add_argument(
@@ -714,46 +714,6 @@ Good tests give you confidence to refactor and add features!''',
                 'draft': False,
                 'image_file': 'david_devops_testingreact.png',
                 'author_username': 'david_devops'
-            },
-            {
-                'title': 'GraphQL vs REST: Choosing the Right API Architecture',
-                'content': '''GraphQL and REST are two popular API paradigms. Let’s compare their strengths and weaknesses.
-
-## REST
-
-REST is resource-oriented and leverages HTTP verbs:
-
-- **GET**: Retrieve resources
-- **POST**: Create resources
-- **PUT/PATCH**: Update resources
-- **DELETE**: Remove resources
-
-## GraphQL
-
-GraphQL enables clients to specify exactly the data they need:
-
-```graphql
-query {
-  user(id: 1) {
-    id
-    name
-    posts {
-      id
-      title
-    }
-  }
-}
-```
-
-## When to Use Which?
-
-- **REST**: Simple CRUD services, straightforward caching, familiar tooling
-- **GraphQL**: Complex data graphs, multiple clients with varying requirements, reducing over/under-fetching
-
-Choose the approach that best fits your project’s needs.''',
-                'tags': ['graphql', 'api', 'backend', 'webdev'],
-                'draft': False,
-                'author_username': 'mike_backend'
             }
         ]
 
