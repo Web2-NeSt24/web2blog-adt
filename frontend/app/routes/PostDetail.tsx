@@ -229,7 +229,7 @@ const PostDetail: React.FC<{ id: string }> = ({ id }) => {
         {/* Featured Image */}
         {post.image && (
           <div className="post-image-container">
-            <ApiImage id={post.image} />
+            <ApiImage id={post.image} style={{maxWidth: "100%"}} />
           </div>
         )}
 
