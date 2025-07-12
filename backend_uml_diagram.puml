@@ -1,0 +1,281 @@
+@startuml Backend Architecture - Blog API
+!theme plain
+
+title Django Blog API - Backend Architecture
+
+package "Django Framework" {
+    class User <<built-in>> {
+        +id: int
+        +username: string
+        +email: string
+        +password: string
+        +is_authenticated: bool
+    }
+}
+
+package "blog_api.models" {
+    class Profile {
+        +id: int
+        +user: OneToOneField(User)
+        +biography: TextField
+        +profile_picture: ForeignKey(Image)
+        --
+        +__str__(): string
+    }
+
+    class Image {
+        +id: int
+        +type: CharField(ImageType)
+        +data: BinaryField
+        --
+        +__str__(): string
+    }
+
+    class Hashtag {
+        +id: int
+        +value: TextField <<unique>>
+        --
+        +__str__(): string
+    }
+
+    class Post {
+        +id: int
+        +profile: ForeignKey(Profile)
+        +title: TextField
+        +content: TextField
+        +image: ForeignKey(Image)
+        +tags: ManyToManyField(Hashtag)
+        +draft: BooleanField
+        --
+        +__str__(): string
+    }
+
+    class Comment {
+        +id: int
+        +post: ForeignKey(Post)
+        +author_profile: ForeignKey(Profile)
+        +content: TextField
+    }
+
+    class Like {
+        +id: int
+        +post: ForeignKey(Post)
+        +liker_profile: ForeignKey(Profile)
+        --
+        constraint: unique(post_id, liker_profile_id)
+    }
+
+    class Bookmark {
+        +id: int
+        +post: ForeignKey(Post)
+        +creator_profile: ForeignKey(Profile)
+        +title: TextField
+        --
+        constraint: unique(post_id, creator_profile_id)
+    }
+
+    enum ImageType {
+        PNG
+        JPEG
+        SVG
+    }
+}
+
+package "blog_api.serializers" {
+    class RegisterSerializer {
+        +username: CharField
+        +email: EmailField
+        +password: CharField
+    }
+
+    class LoginSerializer {
+        +username: CharField
+        +password: CharField
+    }
+
+    class ProfileSerializer {
+        +user: UserSerializer
+        +biography: TextField
+        +profile_picture: int
+        +post_ids: SerializerMethodField
+        --
+        +get_post_ids(): list[int]
+    }
+
+    class PostSerializer {
+        +profile: ProfileSerializer
+        +tags: SlugRelatedField
+        +like_count: SerializerMethodField
+        +comment_count: SerializerMethodField
+        +bookmark_count: SerializerMethodField
+        +is_liked: SerializerMethodField
+        +is_bookmarked: SerializerMethodField
+        --
+        +get_like_count(): int
+        +get_comment_count(): int
+        +get_bookmark_count(): int
+        +get_is_liked(): bool
+        +get_is_bookmarked(): bool
+    }
+
+    class CommentSerializer {
+        +author_profile: ProfileSerializer
+        +content: TextField
+    }
+
+    class BookmarkSerializer {
+        +post: PostSerializer
+        +creator_profile: ProfileSerializer
+        +title: TextField
+    }
+
+    class PostFilterSerializer {
+        +author_id: IntegerField
+        +author_name: CharField
+        +keywords: ListField
+        +tags: ListField
+        +sort_by: ChoiceField
+    }
+
+    enum PostSortingMethod {
+        DATE
+        LIKES
+    }
+}
+
+package "blog_api.views" {
+    abstract class APIView <<Django REST>> {
+        +permission_classes: list
+        +get(): Response
+        +post(): Response
+        +patch(): Response
+        +delete(): Response
+    }
+
+    class PostView {
+        +get(post_id): Post details
+        +patch(post_id): Update post
+        +delete(post_id): Delete post
+    }
+
+    class PostListView {
+        +get(): List all published posts
+    }
+
+    class PostFilterView {
+        +post(): Filter posts by criteria
+    }
+
+    class ProfileView {
+        +get(user_id): Profile details
+        +patch(user_id): Update profile
+    }
+
+    class CommentView {
+        +get(post_id): List comments
+        +post(post_id): Create comment
+    }
+
+    class CommentInstanceView {
+        +patch(comment_id): Update comment
+        +delete(comment_id): Delete comment
+    }
+
+    class BookmarkPostView {
+        +post(post_id): Create bookmark
+    }
+
+    class BookmarkListView {
+        +get(): List user bookmarks
+    }
+
+    class BookmarkInstanceView {
+        +patch(bookmark_id): Update bookmark
+        +delete(bookmark_id): Delete bookmark
+    }
+
+    class LikeView {
+        +get(post_id): Check like status
+        +post(post_id): Toggle like
+    }
+
+    class DraftsView {
+        +get(): List user drafts
+        +post(): Create draft
+    }
+
+    class DraftPublishView {
+        +post(draft_id): Publish draft
+    }
+
+    package "auth views" {
+        class AuthViews {
+            +csrf_token(): CSRF token
+            +register(): User registration
+            +login(): User login
+            +logout(): User logout
+            +password(): Change password
+        }
+    }
+
+    package "image views" {
+        class ImageViews {
+            +image(id): Get image
+            +upload_image(): Upload image
+        }
+    }
+}
+
+' Relationships between models
+User ||--|| Profile : "one-to-one"
+Profile ||--o{ Post : "creates"
+Post }o--o{ Hashtag : "tagged with"
+Post ||--o{ Comment : "has"
+Post ||--o{ Like : "liked by"
+Post ||--o{ Bookmark : "bookmarked by"
+Profile ||--o{ Comment : "authors"
+Profile ||--o{ Like : "likes"
+Profile ||--o{ Bookmark : "bookmarks"
+Image ||--o{ Post : "featured in"
+Image ||--o{ Profile : "profile picture"
+Image ..> ImageType : "uses"
+
+' View relationships
+APIView <|-- PostView
+APIView <|-- PostListView
+APIView <|-- PostFilterView
+APIView <|-- ProfileView
+APIView <|-- CommentView
+APIView <|-- CommentInstanceView
+APIView <|-- BookmarkPostView
+APIView <|-- BookmarkListView
+APIView <|-- BookmarkInstanceView
+APIView <|-- LikeView
+APIView <|-- DraftsView
+APIView <|-- DraftPublishView
+
+' Serializer relationships
+PostFilterSerializer ..> PostSortingMethod : "uses"
+
+' Views use serializers
+PostView ..> PostSerializer : "uses"
+PostListView ..> PostSerializer : "uses"
+PostFilterView ..> PostFilterSerializer : "uses"
+ProfileView ..> ProfileSerializer : "uses"
+CommentView ..> CommentSerializer : "uses"
+BookmarkListView ..> BookmarkSerializer : "uses"
+
+' Views interact with models
+PostView ..> Post : "manages"
+ProfileView ..> Profile : "manages"
+CommentView ..> Comment : "manages"
+LikeView ..> Like : "manages"
+BookmarkPostView ..> Bookmark : "manages"
+
+note top of User : Built-in Django User model\nExtended by Profile
+
+note right of Post : Can be draft or published\nSupports tags, comments, likes, bookmarks
+
+note bottom of PostFilterView : Supports filtering by:\n- Author (ID or username)\n- Keywords (OR logic)\n- Tags (AND logic)\n- Sorting (date/likes)
+
+@enduml

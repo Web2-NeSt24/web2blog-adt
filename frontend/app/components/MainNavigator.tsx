@@ -82,7 +82,7 @@ function MainNavigator() {
             {/* New Post Button - only when logged in */}
             {isAuthenticated && (
               <Link
-                to="/post/edit"
+                to="/post/edit/new"
                 className="ms-lg-3 mt-1 mt-lg-0"
               >
                 <Button 
@@ -113,7 +113,7 @@ function MainNavigator() {
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Link to="/auth" className="ms-lg-5 mt-1 mt-lg-2">
+              <Link to="/auth" className="ms-lg-5">
                 <Button variant="outline-info">
                   Login
                 </Button>

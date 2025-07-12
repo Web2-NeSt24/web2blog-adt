@@ -1,0 +1,155 @@
+@startuml Database Schema - Blog API
+!theme plain
+
+title Django Blog API - Database Schema
+
+' Layout arrangement to minimize connector overlap
+' Top row: User and Image (independent entities)
+' Middle row: Profile and Post (core entities)
+' Bottom row: Related entities (Comment, Like, Bookmark, Hashtag, Junction table)
+
+' User table (Django built-in) - Top Left
+entity "auth_user" as user {
+  * id : INTEGER <<PK>>
+  --
+  * username : VARCHAR(150) <<UNIQUE>>
+  * email : VARCHAR(254)
+  * password : VARCHAR(128)
+  * first_name : VARCHAR(150)
+  * last_name : VARCHAR(150)
+  * is_staff : BOOLEAN
+  * is_active : BOOLEAN
+  * is_superuser : BOOLEAN
+  * date_joined : DATETIME
+  * last_login : DATETIME
+}
+
+' Image table - Top Right
+entity "blog_api_image" as image {
+  * id : INTEGER <<PK>>
+  --
+  * type : VARCHAR(4)
+  * data : BLOB
+}
+
+' Profile table - Middle Left
+entity "blog_api_profile" as profile {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>> <<UNIQUE>>
+  * biography : TEXT
+  * profile_picture_id : INTEGER <<FK>> <<NULL>>
+}
+
+' Post table - Middle Right
+entity "blog_api_post" as post {
+  * id : INTEGER <<PK>>
+  --
+  * profile_id : INTEGER <<FK>>
+  * title : TEXT
+  * content : TEXT
+  * image_id : INTEGER <<FK>> <<NULL>>
+  * draft : BOOLEAN
+}
+
+' Comment table - Bottom Left
+entity "blog_api_comment" as comment {
+  * id : INTEGER <<PK>>
+  --
+  * post_id : INTEGER <<FK>>
+  * author_profile_id : INTEGER <<FK>>
+  * content : TEXT
+}
+
+' Like table - Bottom Center Left
+entity "blog_api_like" as like {
+  * id : INTEGER <<PK>>
+  --
+  * post_id : INTEGER <<FK>>
+  * liker_profile_id : INTEGER <<FK>>
+  --
+  CONSTRAINT: blog_api_unique_like
+  UNIQUE(post_id, liker_profile_id)
+}
+
+' Bookmark table - Bottom Center Right
+entity "blog_api_bookmark" as bookmark {
+  * id : INTEGER <<PK>>
+  --
+  * post_id : INTEGER <<FK>>
+  * creator_profile_id : INTEGER <<FK>>
+  * title : TEXT
+  --
+  CONSTRAINT: blog_api_unique_bookmark
+  UNIQUE(post_id, creator_profile_id)
+}
+
+' Hashtag table - Bottom Right
+entity "blog_api_hashtag" as hashtag {
+  * id : INTEGER <<PK>>
+  --
+  * value : TEXT <<UNIQUE>>
+}
+
+' Post-Hashtag Many-to-Many relationship table - Far Right
+entity "blog_api_post_tags" as post_tags {
+  * id : INTEGER <<PK>>
+  --
+  * post_id : INTEGER <<FK>>
+  * hashtag_id : INTEGER <<FK>>
+  --
+  UNIQUE(post_id, hashtag_id)
+}
+
+' Positioning hints for cleaner layout
+user -right- image
+profile -right- post
+comment -right- like
+like -right- bookmark
+bookmark -right- hashtag
+hashtag -right- post_tags
+
+user -down- profile
+image -down- post
+
+' Relationships - organized to minimize crossover
+user ||--|| profile : "user_id"
+image ||--o{ profile : "profile_picture_id"
+image ||--o{ post : "image_id"
+profile ||--o{ post : "profile_id"
+profile ||--o{ comment : "author_profile_id"
+profile ||--o{ like : "liker_profile_id"
+profile ||--o{ bookmark : "creator_profile_id"
+post ||--o{ comment : "post_id"
+post ||--o{ like : "post_id"
+post ||--o{ bookmark : "post_id"
+post ||--o{ post_tags : "post_id"
+hashtag ||--o{ post_tags : "hashtag_id"
+
+' Notes
+note right of user : Django's built-in User model\nExtended by Profile table
+
+note right of profile : One-to-one relationship with User\nOptional profile picture
+
+note right of post : Can be draft or published\nOptional featured image
+
+note right of post_tags : Many-to-many relationship\nbetween Posts and Hashtags
+
+note right of like : Unique constraint prevents\nduplicate likes from same user
+
+note right of bookmark : Unique constraint prevents\nduplicate bookmarks from same user\nCustom title for organization
+
+note right of image : Stores binary image data\nSupports PNG, JPEG, SVG formats
+
+' Indexes (typical Django auto-generated)
+note bottom of profile : Indexes:\n- user_id (unique)\n- profile_picture_id
+
+note bottom of post : Indexes:\n- profile_id\n- image_id
+
+note bottom of comment : Indexes:\n- post_id\n- author_profile_id
+
+note bottom of like : Indexes:\n- post_id\n- liker_profile_id\n- (post_id, liker_profile_id) unique
+
+note bottom of bookmark : Indexes:\n- post_id\n- creator_profile_id\n- (post_id, creator_profile_id) unique
+
+@enduml
