@@ -37,7 +37,6 @@ const LikesPage: React.FC = () => {
         if (!response.ok) throw new Error("Failed to fetch posts");
         
         const allPosts: Post[] = await response.json();
-        // Filter only posts that are liked by the current user
         const liked = allPosts.filter(post => post.is_liked);
         setLikedPosts(liked);
       } catch (err: any) {

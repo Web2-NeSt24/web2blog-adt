@@ -107,77 +107,64 @@ export default function Home() {
 
   return (
     <Container className="py-4 main-centered-container" style={{ maxWidth: '1400px' }}>
-      {/* Compact Filter Section */}
-      <Row className="mb-4">
-        <Col xs={12}>
-          <div className="bg-light p-3 rounded">
-            <Row className="g-3 align-items-end">
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label className="small">Author</Form.Label>
-                  <Form.Control
-                    size="sm"
-                    type="text"
-                    placeholder="Username"
-                    value={authorFilter}
-                    onChange={(e) => setAuthorFilter(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label className="small">Tags</Form.Label>
-                  <TagInput
-                    tags={tagsFilter}
-                    onTagsChange={setTagsFilter}
-                    size="sm"
-                    placeholder="Type tags and press space..."
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={2}>
-                <Form.Group>
-                  <Form.Label className="small">Sort</Form.Label>
-                  <Form.Select
-                    size="sm"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
-                  >
-                    <option value={PostSortingMethod.DATE}>Newest</option>
-                    <option value={PostSortingMethod.LIKES}>Popular</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={2}>
-                <div className="d-flex gap-2">
-                  <Button size="sm" variant="primary" onClick={handleSearch}>
-                    Filter
-                  </Button>
-                  <Button size="sm" variant="outline-secondary" onClick={handleReset}>
-                    Clear
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </Col>
-      </Row>
+      {/* Slim toolbar filter ------------------------------------------------ */}
+      <div className="filter-bar bg-light rounded p-2 mb-4 d-flex flex-wrap gap-2">
+        {/* Author */}
+        <Form.Control
+          size="sm"
+          type="text"
+          placeholder="Author"
+          className="flex-grow-1 flex-basis-150"
+          value={authorFilter}
+          onChange={(e) => setAuthorFilter(e.target.value)}
+        />
 
-      <Row className="g-4">
-        {posts.length === 0 ? (
-          <Col xs={12}>
-            <div className="text-center">
-              <p>No posts available yet.</p>
-            </div>
-          </Col>
-        ) : (
-          posts.map((post, idx) => (
+        {/* Tags */}
+        <div className="flex-grow-1 flex-basis-200 position-relative">
+          <div className="tag-scroll-inner overflow-auto flex-column">
+            <TagInput
+              tags={tagsFilter}
+              onTagsChange={setTagsFilter}
+              size="sm"
+              placeholder="Tags…"
+            />
+          </div>
+        </div>
+
+        {/* Sort */}
+        <Form.Select
+          size="sm"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
+          className="flex-basis-120"
+        >
+          <option value={PostSortingMethod.DATE}>Newest</option>
+          <option value={PostSortingMethod.LIKES}>Popular</option>
+        </Form.Select>
+
+        {/* Actions */}
+        <Button size="sm" variant="primary" onClick={handleSearch}>
+          Filter
+        </Button>
+        <Button size="sm" variant="outline-secondary" onClick={handleReset}>
+          Clear
+        </Button>
+      </div>
+      {/* ------------------------------------------------------------------- */}
+
+      {posts.length === 0 ? (
+        <div className="text-center">
+          <p>No posts available yet.</p>
+        </div>
+      ) : (
+        <Row className="g-4">
+          {posts.map((post) => (
             <Col key={post.id} xs={12} sm={6} md={4} lg={3}>
               <PostCard post={post} />
             </Col>
-          ))
-        )}
-      </Row>
+          ))}
+        </Row>
+      )}
     </Container>
   );
 }

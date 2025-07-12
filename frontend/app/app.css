@@ -1011,3 +1011,53 @@ a:has(.write-post-btn) {
     padding: 1rem;
   }
 }
+
+/* ---- Slim filter toolbar ------------------------------------------------ */
+.filter-bar {
+  align-items: flex-start;        /* keep other controls at top edge        */
+}
+.filter-bar > *            { min-width: 110px; }   /* keep inputs compact   */
+.flex-basis-120            { flex: 0 0 120px; }
+.flex-basis-150            { flex: 1 0 150px; }
+.flex-basis-200            { flex: 1 0 200px; }
+@media (max-width: 576px) {
+  .filter-bar { gap: .5rem; }                      /* tighter on phones     */
+}
+
+/* Tag badge horizontal scroller - hidden scrollbar but still scrollable */
+.tag-list-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;                       /* Firefox - hide scrollbar */
+  -ms-overflow-style: none;                    /* IE/Edge - hide scrollbar */
+}
+.tag-list-scroll::-webkit-scrollbar {         /* WebKit - hide scrollbar */
+  display: none;
+}
+/* ------------------------------------------------------------------------ */
+
+/* --- TagInput horizontal scroll ----------------------------------------- */
+.tag-input-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: 6px;               /* room for the bar – avoids overlap  */
+  scrollbar-width: thin;             /* Firefox                            */
+  scrollbar-color: #007bff transparent;
+}
+
+/* WebKit browsers -------------------------------------------------------- */
+.tag-input-scroller::-webkit-scrollbar          { height: 6px; }
+.tag-input-scroller::-webkit-scrollbar-track    { background: transparent; }
+.tag-input-scroller::-webkit-scrollbar-thumb    {
+  background: #007bff;                          /* CI blue                   */
+  border-radius: 3px;
+}
+.tag-input-scroller:hover::-webkit-scrollbar-thumb {
+  background: #0069d9;                         /* darker on hover           */
+}
+
+/* remove old track-offset rule that pushed bar up */
+.tag-input-scroller::-webkit-scrollbar-track { margin-top: 0; }
+/* ----------------------------------------------------------------------- */
