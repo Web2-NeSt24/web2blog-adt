@@ -18,6 +18,12 @@ export const TagInput: React.FC<TagInputProps> = ({
   const [inputValue, setInputValue] = useState('');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Keep focus whenever the tag list updates
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [tags]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -49,16 +55,17 @@ export const TagInput: React.FC<TagInputProps> = ({
 
   const addTag = () => {
     const newTag = inputValue.trim();
-    if (newTag && !tags.includes(newTag)) {
+    if (newTag && !tags.some(tag => tag.toLowerCase() === newTag.toLowerCase())) {
       onTagsChange([...tags, newTag]);
       // Auto-scroll to the end to show the newly added tag
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         if (scrollContainerRef.current) {
           scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
         }
-      }, 0);
+      });
     }
     setInputValue('');
+    // Focus is now handled by useEffect when tags change
   };
 
   const removeTag = (indexToRemove: number) => {
@@ -71,8 +78,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       className={`form-control tag-input-container ${size === 'sm' ? 'form-control-sm' : ''} d-flex align-items-center`}
       style={{ minHeight: size === 'sm' ? '31px' : '38px', cursor: 'text' }}
       onClick={() => {
-        const input = document.querySelector('.tag-input-field') as HTMLInputElement;
-        input?.focus();
+        inputRef.current?.focus();
       }}
     >
       {/* scrollable badge row */}
@@ -104,6 +110,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 
       {/* input stays fixed at the right edge */}
       <input
+        ref={inputRef}
         type="text"
         className="tag-input-field border-0"
         style={{ 

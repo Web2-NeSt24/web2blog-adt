@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PostCard } from "~/components/Card";
 import { TagInput } from "~/components/TagInput";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
@@ -22,22 +22,12 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  let [keywordFilter, setKeywordFilter] = useState<string[]>([])
+  const [keywordFilter, setKeywordFilter] = useState<string[]>([]);
   const [authorFilter, setAuthorFilter] = useState("");
   const [tagsFilter, setTagsFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<PostSortingMethod>(PostSortingMethod.DATE);
 
-  useEffect(() => {
-    keywordFilter = querySearch && querySearch.split(" ") || []
-    setKeywordFilter(keywordFilter)
-    fetchPosts();
-  }, [queryParams]);
-
-  useEffect(() => {
-
-  }, [keywordFilter])
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -70,13 +60,23 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sortBy, keywordFilter, tagsFilter, authorFilter]);
+
+  useEffect(() => {
+    const keywords = querySearch ? querySearch.split(" ").filter(Boolean) : [];
+    setKeywordFilter(keywords);
+  }, [querySearch]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const handleSearch = () => {
     fetchPosts();
   };
 
   const handleReset = () => {
+    setKeywordFilter([]);
     setAuthorFilter("");
     setTagsFilter([]);
     setSortBy(PostSortingMethod.DATE);
