@@ -26,6 +26,7 @@ export default function Home() {
   const [authorFilter, setAuthorFilter] = useState("");
   const [tagsFilter, setTagsFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<PostSortingMethod>(PostSortingMethod.DATE);
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
   useEffect(() => {
     keywordFilter = querySearch && querySearch.split(" ") || []
@@ -80,6 +81,7 @@ export default function Home() {
     setAuthorFilter("");
     setTagsFilter([]);
     setSortBy(PostSortingMethod.DATE);
+    setIsFilterExpanded(false); // Close the filter after reset
     fetchPosts();
   };
 
@@ -107,58 +109,96 @@ export default function Home() {
 
   return (
     <Container className="py-4 main-centered-container" style={{ maxWidth: '1400px' }}>
-      {/* Compact Filter Section */}
+      {/* Collapsible Filter Section */}
       <Row className="mb-4">
         <Col xs={12}>
-          <div className="bg-light p-3 rounded">
-            <Row className="g-3 align-items-end">
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label className="small">Author</Form.Label>
-                  <Form.Control
-                    size="sm"
-                    type="text"
-                    placeholder="Username"
-                    value={authorFilter}
-                    onChange={(e) => setAuthorFilter(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label className="small">Tags</Form.Label>
-                  <TagInput
-                    tags={tagsFilter}
-                    onTagsChange={setTagsFilter}
-                    size="sm"
-                    placeholder="Type tags and press space..."
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={2}>
-                <Form.Group>
-                  <Form.Label className="small">Sort</Form.Label>
-                  <Form.Select
-                    size="sm"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
-                  >
-                    <option value={PostSortingMethod.DATE}>Newest</option>
-                    <option value={PostSortingMethod.LIKES}>Popular</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={2}>
-                <div className="d-flex gap-2">
-                  <Button size="sm" variant="primary" onClick={handleSearch}>
-                    Filter
-                  </Button>
-                  <Button size="sm" variant="outline-secondary" onClick={handleReset}>
-                    Clear
-                  </Button>
+          <div className="filter-container">
+            {/* Filter Toggle Header */}
+            <div 
+              className="filter-header"
+              onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center gap-2">
+                  <h5 className="mb-0">
+                    <i className={`fas fa-filter me-2`}></i>
+                    Filters
+                  </h5>
+                  {/* Show active filter count */}
+                  {(authorFilter || tagsFilter.length > 0 || sortBy !== PostSortingMethod.DATE) && (
+                    <span className="badge bg-primary">
+                      {[authorFilter, ...tagsFilter, sortBy !== PostSortingMethod.DATE ? 'sorted' : ''].filter(Boolean).length}
+                    </span>
+                  )}
+                  {/* Show filter summary when collapsed */}
+                  {!isFilterExpanded && (authorFilter || tagsFilter.length > 0 || sortBy !== PostSortingMethod.DATE) && (
+                    <span className="filter-summary">
+                      {authorFilter && `Author: ${authorFilter}`}
+                      {authorFilter && tagsFilter.length > 0 && ' • '}
+                      {tagsFilter.length > 0 && `Tags: ${tagsFilter.join(', ')}`}
+                      {(authorFilter || tagsFilter.length > 0) && sortBy !== PostSortingMethod.DATE && ' • '}
+                      {sortBy !== PostSortingMethod.DATE && `Sort: ${sortBy}`}
+                    </span>
+                  )}
                 </div>
-              </Col>
-            </Row>
+                <i className={`fas fa-chevron-${isFilterExpanded ? 'up' : 'down'} transition-transform`}></i>
+              </div>
+            </div>
+            
+            {/* Collapsible Filter Content */}
+            <div className={`filter-content ${isFilterExpanded ? 'expanded' : 'collapsed'}`}>
+              <div className="bg-light p-3 rounded-bottom">
+                <Row className="g-3 align-items-end">
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label className="small">Author</Form.Label>
+                      <Form.Control
+                        size="sm"
+                        type="text"
+                        placeholder="Username"
+                        value={authorFilter}
+                        onChange={(e) => setAuthorFilter(e.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label className="small">Tags</Form.Label>
+                      <TagInput
+                        tags={tagsFilter}
+                        onTagsChange={setTagsFilter}
+                        size="sm"
+                        placeholder="Type tags and press space..."
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={2}>
+                    <Form.Group>
+                      <Form.Label className="small">Sort</Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as PostSortingMethod)}
+                      >
+                        <option value={PostSortingMethod.DATE}>Newest</option>
+                        <option value={PostSortingMethod.LIKES}>Popular</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={2}>
+                    <div className="d-flex gap-2">
+                      <Button size="sm" variant="primary" onClick={handleSearch}>
+                        Filter
+                      </Button>
+                      <Button size="sm" variant="outline-secondary" onClick={handleReset}>
+                        Clear
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </div>
           </div>
         </Col>
       </Row>

@@ -924,59 +924,156 @@
   background: #FF7D87;
 }
 
-/* Responsive Design */
+/* Collapsible Filter Bar Styles */
+.filter-container {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(0,0,0,0.08);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.filter-header {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  color: #495057;
+  padding: 1rem 1.5rem;
+  border-radius: 18px 18px 0 0;
+  transition: all 0.3s ease;
+  user-select: none;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.filter-header:hover {
+  background: rgba(248, 249, 250, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header h5 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #495057;
+}
+
+.filter-header .badge {
+  background: #667eea !important;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.filter-content {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.filter-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.filter-content.expanded {
+  max-height: 300px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.filter-content .bg-light {
+  background: #f8f9fa !important;
+  border-radius: 0 0 18px 18px;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Chevron animation */
+.transition-transform {
+  transition: transform 0.3s ease;
+  color: #6c757d;
+}
+
+.filter-header:hover .transition-transform {
+  transform: scale(1.1);
+  color: #495057;
+}
+
+/* Filter form improvements */
+.filter-content .form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.filter-content .form-control,
+.filter-content .form-select {
+  border: 1px solid #ced4da;
+  transition: all 0.2s ease;
+}
+
+.filter-content .form-control:focus,
+.filter-content .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.filter-content .btn {
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.filter-content .btn-primary {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+.filter-content .btn-primary:hover {
+  background: #5a67d8;
+  border-color: #5a67d8;
+  transform: translateY(-1px);
+}
+
+.filter-content .btn-outline-secondary:hover {
+  transform: translateY(-1px);
+}
+
+/* Mobile responsiveness for filter */
 @media (max-width: 768px) {
-  .post-create-container {
-    margin: 1rem;
-    padding: 1.5rem;
+  .filter-header {
+    padding: 0.75rem 1rem;
   }
   
-  .header-section {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+  .filter-header h5 {
+    font-size: 1rem;
   }
   
-  .tag-input-wrapper {
-    flex-direction: column;
+  .filter-content .bg-light {
+    padding: 1rem !important;
   }
   
-  .tag-add-button {
-    align-self: stretch;
+  .filter-content.expanded {
+    max-height: 400px;
   }
-  
-  .post-detail-container {
-    padding: 1rem;
-  }
-  
-  .post-title {
-    font-size: 2rem;
-    padding: 1rem;
-  }
-  
-  .post-content {
-    padding: 1rem;
-  }
-  
-  .post-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .action-buttons {
-    justify-content: center;
-  }
-  
-  .share-buttons {
-    justify-content: center;
-  }
-  
-  .meta-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .comments-section {
-    padding: 1rem;
+}
+
+/* Filter summary styles */
+.filter-summary {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  font-weight: 400;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .filter-summary {
+    max-width: 200px;
+    font-size: 0.8rem;
   }
 }

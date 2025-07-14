@@ -191,7 +191,7 @@ const AboutUs: React.FC = () => {
       <section 
         className="card text-center border-0 shadow-sm mx-auto p-5"
         style={{ 
-          maxWidth: '800px',
+          maxWidth: '1200px',
           borderRadius: '15px',
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
