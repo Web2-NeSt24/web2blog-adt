@@ -997,3 +997,21 @@
   margin-bottom: 1.5rem;    /* vertical gap */
 }
 /* ----------------------------------------------------------------------- */
+
+/* Write Post Button - Remove link formatting */
+.write-post-btn {
+  text-decoration: none !important;
+}
+
+.write-post-btn:hover {
+  text-decoration: none !important;
+}
+
+/* Link wrapper for Write Post button */
+a:has(.write-post-btn) {
+  text-decoration: none !important;
+}
+
+a:has(.write-post-btn):hover {
+  text-decoration: none !important;
+}
